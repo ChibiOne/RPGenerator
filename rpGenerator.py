@@ -138,7 +138,7 @@ async def parse_action(message):
         if match in actions:
             print(f"Action recognized: {match}")
             return match, actions[match]
-    await show_actions(message)
+        await show_actions(message)
     print("No action recognized.")
     return None, None 
 

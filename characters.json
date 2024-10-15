@@ -28,5 +28,20 @@
             "Athletics": 5,
             "Acrobatics": 5
         }
+    },
+    "nothingwicked": {
+        "name": "nothingwicked",
+        "stats": {
+            "Strength": 10,
+            "Dexterity": 10,
+            "Constitution": 10,
+            "Intelligence": 10,
+            "Wisdom": 10,
+            "Charisma": 10
+        },
+        "skills": {
+            "Athletics": 5,
+            "Acrobatics": 5
+        }
     }
 }
