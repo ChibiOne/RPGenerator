@@ -2,12 +2,12 @@
 
 import discord
 from discord.ext import commands
-import openai
 import requests
 import random
 import json
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
 
 # Load environment variables
 load_dotenv()
@@ -23,7 +23,8 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-openai.api_key = OPENAI_API_KEY
+# Instantiate OpenAI client
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 class Character:
     def __init__(self, name, stats=None, skills=None):
@@ -88,19 +89,21 @@ def update_world_anvil(character, action, result):
         print(f'Error updating World Anvil: {response.status_code}')
 
 def get_chatgpt_response(prompt):
-    response = openai.ChatCompletion.create(
-        model='gpt-4',
-        messages=[
-            {'role': 'system', 'content': 'You are a game master for a fantasy role-playing game.'},
-            {'role': 'user', 'content': prompt}
-        ],
-        max_tokens=150,
-        n=1,
-        stop=None,
-        temperature=0.7,
-    )
-    message = response.choices[0].message.content.strip()
-    return message
+    try:
+        completion = client.chat.completions.create(
+            model='gpt-4',
+            messages=[
+                {"role": "system", "content": "You are a game master for a fantasy role-playing game."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=150,
+            temperature=0.7,
+        )
+        message = completion.choices[0].message.content.strip()
+        return message
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return "Sorry, I couldn't process that request."
 
 def perform_ability_check(character, stat):
     modifier = character.get_stat_modifier(stat)
@@ -144,7 +147,7 @@ async def on_message(message):
             f"Player {character.name} attempts to {action}. "
             f"Their {stat} check result is {total} (rolled {roll} + modifier {character.get_stat_modifier(stat)}).\n"
             f"World data: {world_data}\n"
-            f"As the game master, describe what happens next."
+            f"As the game master, describe what happens next in vivid detail. Always end by asking the players what they wish to do next."
         )
         response = get_chatgpt_response(prompt)
         await message.channel.send(response)
