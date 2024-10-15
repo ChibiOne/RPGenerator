@@ -15,7 +15,7 @@ load_dotenv()
 DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 WORLD_ANVIL_API_KEY = os.getenv('WORLD_ANVIL_API_KEY')
-WORLD_ANVIL_BASE_URL = 'https://www.worldanvil.com/api/aragorn'
+WORLD_ANVIL_BASE_URL = 'https://www.worldanvil.com/api/boromir'
 CHARACTER_DATA_FILE = 'characters.json'
 
 intents = discord.Intents.default()
