@@ -23,15 +23,15 @@ CHARACTER_DATA_FILE = 'characters.json'
 intents = discord.Intents.default()
 intents.message_content = True  # Enable if you want to read message content
 # Remove or comment out the following line if you don't need member intents
-# intents.members = True  # Needed if you are accessing guild members
+intents.members = True  # Needed if you are accessing guild members
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Instantiate OpenAI client
-client = OpenAI(api_key=OPENAI_API_KEY)
+# client = OpenAI(api_key=OPENAI_API_KEY)
 # For asynchronous calls, use AsyncOpenAI
-# from openai import AsyncOpenAI
-# client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+from openai import AsyncOpenAI
+client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
 class Character:
     def __init__(self, name, stats=None, skills=None):
@@ -99,6 +99,7 @@ def perform_ability_check(character, stat):
     modifier = character.get_stat_modifier(stat)
     roll = random.randint(1, 20)
     total = roll + modifier
+    print(f'You rolled a " {roll} " plus " {modifier} " for a total of :" {total} ')
     return roll, total
 
 def parse_action(message_content):
@@ -150,7 +151,7 @@ async def on_message(message):
         # Fetch the last 10 messages from the channel
         channel_history = [msg async for msg in message.channel.history(limit=10)]
 
-        # Filter out the bot's own messages and the current message
+        # Filter out the current message
         last_messages = [
             msg for msg in channel_history
         ]
@@ -168,7 +169,7 @@ async def on_message(message):
 
         response = await get_chatgpt_response(prompt, last_messages_content)
         await message.channel.send(response)
-#        update_world_anvil(character, action, response)
+        # update_world_anvil(character, action, response)
     else:
         # Optionally, do not send any message if no action is recognized
         pass
@@ -188,9 +189,9 @@ async def get_chatgpt_response(prompt, channel_messages):
         messages.append({"role": "user", "content": prompt})
 
         # If using AsyncOpenAI client, use await
-        # completion = await client.chat.completions.create(
+        completion = await client.chat.completions.create(
         # If using OpenAI client synchronously
-        completion = client.chat.completions.create(
+        # completion = client.chat.completions.create(
             model='gpt-4',
             messages=messages,
             max_tokens=150,
