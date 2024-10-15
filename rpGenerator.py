@@ -7,7 +7,8 @@ import random
 import json
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI  # Use AsyncOpenAI if using asynchronous calls
+import asyncio
 
 # Load environment variables
 load_dotenv()
@@ -15,16 +16,21 @@ load_dotenv()
 DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 WORLD_ANVIL_API_KEY = os.getenv('WORLD_ANVIL_API_KEY')
-WORLD_ANVIL_BASE_URL = 'https://www.worldanvil.com/api/boromir'
+WORLD_ANVIL_BASE_URL = 'https://www.worldanvil.com/api/aragorn'
 CHARACTER_DATA_FILE = 'characters.json'
 
 intents = discord.Intents.default()
-intents.message_content = True
+intents.message_content = True  # Enable if you want to read message content
+intents.members = True  # Needed if you are accessing guild members
+intents.presences = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Instantiate OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
+# For asynchronous calls, use AsyncOpenAI
+# from openai import AsyncOpenAI
+# client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
 class Character:
     def __init__(self, name, stats=None, skills=None):
@@ -88,23 +94,6 @@ def update_world_anvil(character, action, result):
     else:
         print(f'Error updating World Anvil: {response.status_code}')
 
-def get_chatgpt_response(prompt):
-    try:
-        completion = client.chat.completions.create(
-            model='gpt-4',
-            messages=[
-                {"role": "system", "content": "You are a game master for a fantasy role-playing game."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=150,
-            temperature=0.7,
-        )
-        message = completion.choices[0].message.content.strip()
-        return message
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return "Sorry, I couldn't process that request."
-
 def perform_ability_check(character, stat):
     modifier = character.get_stat_modifier(stat)
     roll = random.randint(1, 20)
@@ -116,7 +105,9 @@ def parse_action(message_content):
         'climb': 'Strength',
         'sneak': 'Dexterity',
         'perceive': 'Wisdom',
-        # Add other actions and associated stats
+        'attack': 'Strength',
+        'cast': 'Intelligence',
+        # Add more actions and associated stats
     }
     for action, stat in actions.items():
         if action in message_content.lower():
@@ -133,6 +124,7 @@ async def on_message(message):
         return
 
     player_name = str(message.author)
+
     if player_name not in characters:
         characters[player_name] = Character(name=player_name)
         save_characters(characters)
@@ -143,18 +135,67 @@ async def on_message(message):
     if stat:
         roll, total = perform_ability_check(character, stat)
         world_data = {}  # Replace with actual world data fetching if needed
+
+        # Fetch the last 10 messages from the channel
+        channel_history = [msg async for msg in message.channel.history(limit=10)]
+
+        # Filter out the bot's own messages and the current message
+        last_messages = [
+            msg for msg in channel_history
+            if msg.author != bot.user and msg.id != message.id
+        ]
+
+        # Get the content of the last 5 messages
+        last_messages_content = [msg.content for msg in last_messages[:5]]
+
+        # Construct the prompt
         prompt = (
             f"Player {character.name} attempts to {action}. "
             f"Their {stat} check result is {total} (rolled {roll} + modifier {character.get_stat_modifier(stat)}).\n"
             f"World data: {world_data}\n"
-            f"As the game master, describe what happens next in vivid detail. Always end by asking the players what they wish to do next."
+            f"As the game master, describe what happens next."
         )
-        response = get_chatgpt_response(prompt)
+
+        response = await get_chatgpt_response(prompt, last_messages_content)
         await message.channel.send(response)
         update_world_anvil(character, action, response)
     else:
         await message.channel.send("Action not recognized. Please try again.")
 
     await bot.process_commands(message)
+
+async def get_chatgpt_response(prompt, channel_messages):
+    try:
+        messages = [
+            {"role": "system", "content": "You are a game master for a fantasy role-playing game."}
+        ]
+
+        # Add the last 5 channel messages in chronological order
+        for msg_content in reversed(channel_messages):
+            messages.append({"role": "user", "content": msg_content})
+
+        messages.append({"role": "user", "content": prompt})
+
+        # If using AsyncOpenAI client, use await
+        # completion = await client.chat.completions.create(
+        # If using OpenAI client synchronously
+        completion = client.chat.completions.create(
+            model='gpt-4',
+            messages=messages,
+            max_tokens=150,
+            temperature=0.7,
+        )
+        message = completion.choices[0].message.content.strip()
+        return message
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return "Sorry, I couldn't process that request."
+
+# If you have any commands, you can add them here
+# Example: Command to reset conversation history (if implemented)
+# @bot.command()
+# async def reset_history(ctx):
+#     # Your code here
+#     pass
 
 bot.run(DISCORD_BOT_TOKEN)
