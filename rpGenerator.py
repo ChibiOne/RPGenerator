@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI  # Use AsyncOpenAI if using asynchronous calls
 import asyncio
+import re  # Import the 're' module for regex
 
 # Load environment variables
 load_dotenv()
@@ -21,8 +22,8 @@ CHARACTER_DATA_FILE = 'characters.json'
 
 intents = discord.Intents.default()
 intents.message_content = True  # Enable if you want to read message content
-intents.members = True  # Needed if you are accessing guild members
-intents.presences = True
+# Remove or comment out the following line if you don't need member intents
+# intents.members = True  # Needed if you are accessing guild members
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
@@ -44,8 +45,8 @@ class Character:
             'Charisma': 10
         }
         self.skills = skills if skills else {
-            'Athletics': 0,
-            'Acrobatics': 0,
+            'Athletics': 5,
+            'Acrobatics': 5,
             # Add other skills as needed
         }
 
@@ -101,18 +102,28 @@ def perform_ability_check(character, stat):
     return roll, total
 
 def parse_action(message_content):
+    # Define the actions and their associated stats
     actions = {
         'climb': 'Strength',
         'sneak': 'Dexterity',
         'perceive': 'Wisdom',
         'attack': 'Strength',
         'cast': 'Intelligence',
-        # Add more actions and associated stats
+        # Add more actions as needed
     }
-    for action, stat in actions.items():
-        if action in message_content.lower():
-            return action, stat
-    return None, None
+
+    # Use regex to find words starting with '?' not followed by a space
+    matches = re.findall(r'\?[A-Za-z]+', message_content.lower())
+    print(f"Parsing message: '{message_content}'")
+    print(f"Matches found: {matches}")
+    for match in matches:
+        match = match.lstrip('?')
+        print(f"Parsing word: {match}")
+        if match in actions:
+            print(f"Action recognized: {match}")
+            return match, actions[match]
+    print("No action recognized.")
+    return None, None 
 
 @bot.event
 async def on_ready():
@@ -132,7 +143,7 @@ async def on_message(message):
 
     character = characters[player_name]
     action, stat = parse_action(message.content)
-    if stat:
+    if action and stat:
         roll, total = perform_ability_check(character, stat)
         world_data = {}  # Replace with actual world data fetching if needed
 
@@ -142,7 +153,6 @@ async def on_message(message):
         # Filter out the bot's own messages and the current message
         last_messages = [
             msg for msg in channel_history
-            if msg.author != bot.user and msg.id != message.id
         ]
 
         # Get the content of the last 5 messages
@@ -158,9 +168,10 @@ async def on_message(message):
 
         response = await get_chatgpt_response(prompt, last_messages_content)
         await message.channel.send(response)
-        update_world_anvil(character, action, response)
+#        update_world_anvil(character, action, response)
     else:
-        await message.channel.send("Action not recognized. Please try again.")
+        # Optionally, do not send any message if no action is recognized
+        pass
 
     await bot.process_commands(message)
 
@@ -170,7 +181,7 @@ async def get_chatgpt_response(prompt, channel_messages):
             {"role": "system", "content": "You are a game master for a fantasy role-playing game."}
         ]
 
-        # Add the last 5 channel messages in chronological order
+        # Add the last channel messages in chronological order
         for msg_content in reversed(channel_messages):
             messages.append({"role": "user", "content": msg_content})
 
