@@ -2,6 +2,21 @@
     "chibione": {
         "name": "chibione",
         "stats": {
+            "Strength": 15,
+            "Dexterity": 15,
+            "Constitution": 15,
+            "Intelligence": 15,
+            "Wisdom": 15,
+            "Charisma": 15
+        },
+        "skills": {
+            "Athletics": 0,
+            "Acrobatics": 0
+        }
+    },
+    "remisiel": {
+        "name": "remisiel",
+        "stats": {
             "Strength": 10,
             "Dexterity": 10,
             "Constitution": 10,
@@ -10,8 +25,8 @@
             "Charisma": 10
         },
         "skills": {
-            "Athletics": 0,
-            "Acrobatics": 0
+            "Athletics": 5,
+            "Acrobatics": 5
         }
     }
 }
