@@ -43,5 +43,35 @@
             "Athletics": 5,
             "Acrobatics": 5
         }
+    },
+    "holidae9718": {
+        "name": "holidae9718",
+        "stats": {
+            "Strength": 10,
+            "Dexterity": 10,
+            "Constitution": 10,
+            "Intelligence": 10,
+            "Wisdom": 10,
+            "Charisma": 10
+        },
+        "skills": {
+            "Athletics": 5,
+            "Acrobatics": 5
+        }
+    },
+    "mrspectralfire": {
+        "name": "mrspectralfire",
+        "stats": {
+            "Strength": 10,
+            "Dexterity": 10,
+            "Constitution": 10,
+            "Intelligence": 10,
+            "Wisdom": 10,
+            "Charisma": 10
+        },
+        "skills": {
+            "Athletics": 5,
+            "Acrobatics": 5
+        }
     }
 }

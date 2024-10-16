@@ -169,7 +169,7 @@ async def on_message(message):
     action, stat = await parse_action(message)
     if action and stat:
         roll, total = perform_ability_check(character, stat)
-        world_data = {}  # Replace with actual world data fetching if needed
+        # world_data = {}  # Replace with actual world data fetching if needed
 
         # Fetch the last 10 messages from the channel
         channel_history = [msg async for msg in message.channel.history(limit=10)]
@@ -183,33 +183,64 @@ async def on_message(message):
         last_messages_content = [msg.content for msg in last_messages[:5]]
 
         # Construct the prompt
-        prompt = (
+        difficulty_prompt = (
             f"Player {character.name} attempts to {action}. "
-            f"Their {stat} check result is {total} (rolled {roll} + modifier {character.get_stat_modifier(stat)}).\n"
-            f"Based on the context of the action and the surrounding circumstances, determine \n"
-            f"how difficult the task is, (Its DC). \n"
-            f"This should be represented with a number between 10 and 30, with 10 being very easy, \n"
-            f"12 being easy, 15 being challenging, 17 being difficult, \n"
-            f"20 being extremely difficult. Above 20 should be reserved for actions that are \n"
-            f"increasingly impossible. No difficulty should ever go above 30, which should be reserved \n"
-            f"for actions that are almost certainly impossible, but a freak chance of luck exists.\n"
-            f"If the player's total is higher than the DC, they succeed. If the player's total is lower than the DC, \n"
-            f"they fail. If the player's total is equal to the DC, they succeed with a complication. They achieve what they were \n" 
-            f"attempting, but are in a new predicament. The complication should make the situation \n" 
-            f"more intense. For example, if trying to leap across a crevasse, a success with a \n"
-            f"complication might mean that they make it across barely, grabbing the ledge on the \n"
-            f"other side. Now they are dangling precariously and someone must help them up. \n"
-            f"If the player's roll was a 20 (not the total, the roll), they succeed with a critical success. In this case, they \n"
-            f"should achieve more than they hoped and find themselves in a significantly better \n"
-            f"situation. \n"
-            f"World data: {world_data}\n"
-            f"As the game master, describe what happens next in vivid detail. \n"
-            f"Always end with 'What do you do? The DC was: <assigned difficutly number> \n" 
-            f"And a brief explanation on the reasoning behind why you assigned that number as DC. \n"
+            f"Keeping in mind that player characters are meant to be a cut above, \n"
+            f"based on the context of the action and the surrounding \n"
+            f"circumstances, talk yourself through the nuances of the \n"
+            f"scene and determine the difficulty (DC) of the task. "
+            f"This should be represented with a number between 5 and 30, \n"
+            f"with 5 being trivial, 10 being very easy, 12 being easy, "
+            f"15 being challenging, 17 being difficult, 20 being extremely \n"
+            f"difficult. \n"
+            f"Above 20 should be reserved for actions that are increasingly \n"
+            f"impossible. "
+            f"No difficulty should ever go above 30, which should be reserved \n"
+            f"for actions that are almost certainly impossible, but a freak \n"
+            f"chance of luck exists.\n"
+            f"Just provide the number."
+        )
+
+        last_messages_content = [msg.content async for msg in message.channel.history(limit=10)]
+        difficulty_response = await get_chatgpt_response(
+            difficulty_prompt, last_messages_content, stat, total, roll, character, include_roll_info=False
+        )
+        try:
+            difficulty = int(re.search(r'\d+', difficulty_response).group())
+            print(f"Difficulty determined: {difficulty}")
+        except (AttributeError, ValueError):
+            COOLDOWN_PERIOD = 5  # Cooldown period in seconds
+            current_time = asyncio.get_event_loop().time()
+            if last_error_time is None or current_time - last_error_time > COOLDOWN_PERIOD:
+                message.channel.send("Sorry, I couldn't determine the difficulty of the task.")
+                last_error_time = current_time
+            return
+
+        # Determine the result based on the difficulty
+        if total > difficulty:
+            result = "succeed"
+        if total == difficulty:
+            result = "succeed, but with a complication that heightens the tension"
+        if roll == 20:
+            result = "succeed with a critical success"
+        if total < difficulty:
+            result = "fail"
+        
+        print(f"Player {character.name} attempted to {action}. The DC was {difficulty}. It was a {result}.")
+
+        # Construct the final prompt
+        prompt = (
+            #f"The current setting is: {world_data}\n"
+            f"{character.name} attempted to {action} and they {result}.\n"
+            f"As the game master, describe their action and how the narrative and scene and NPCs react to this action. \n"
+            f"Always end with 'What do you do? The DC was: {difficulty}] \n" 
+            f"And a brief explanation on the reasoning behind that number as DC. \n"
             f"Limit responses to 100 words.\n"
         )
 
-        response = await get_chatgpt_response(prompt, last_messages_content, stat, total, roll, character)
+        response = await get_chatgpt_response(
+           prompt, last_messages_content, stat, total, roll, character, include_roll_info=True
+        )
         await message.channel.send(response)
         # update_world_anvil(character, action, response)
     else:
@@ -218,7 +249,7 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-async def get_chatgpt_response(prompt, channel_messages, stat, total, roll, character):
+async def get_chatgpt_response(prompt, channel_messages, stat, total, roll, character, include_roll_info=True):
     try:
         messages = [
             {"role": "system", "content": "You are a game master for a fantasy role-playing game. Your job is to narrate the settings the players journey through, the results of their actions, and provide a sense of atmosphere through vivid and engaging descriptins."}
@@ -234,12 +265,15 @@ async def get_chatgpt_response(prompt, channel_messages, stat, total, roll, char
         completion = await client.chat.completions.create(
         # If using OpenAI client synchronously
         # completion = client.chat.completions.create(
-            model='gpt-4',
+            model='gpt-4o',
             messages=messages,
             max_tokens=300,
             temperature=0.7,
         )
-        message = f"*{character.name}, your {stat} check result is {total} (rolled {roll} + modifier {character.get_stat_modifier(stat)}).* \n\n{completion.choices[0].message.content.strip()}"
+        if include_roll_info:
+            message = f"*{character.name}, your {stat} check result is {total} (rolled {roll} + modifier {character.get_stat_modifier(stat)}).* \n\n{completion.choices[0].message.content.strip()}"
+        else:
+            message = completion.choices[0].message.content.strip()
         return message
     except Exception as e:
         print(f"An error occurred: {e}")
