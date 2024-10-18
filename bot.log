@@ -1,0 +1,4 @@
+2024-10-18 14:29:53,701:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 14:29:53,957:INFO:actions.json loaded successfully.
+2024-10-18 14:29:53,958:INFO:Characters loaded successfully.
+2024-10-18 14:29:53,960:INFO:logging in using static token

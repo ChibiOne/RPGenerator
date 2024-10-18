@@ -1,6 +1,8 @@
 {
-    "chibione": {
-        "name": "chibione",
+    "266384402450350082": {
+        "name": "Ralynn",
+        "race": "Human",
+        "char_class": "Warrior",
         "stats": {
             "Strength": 15,
             "Dexterity": 15,
@@ -9,69 +11,49 @@
             "Wisdom": 15,
             "Charisma": 15
         },
-        "skills": {
-            "Athletics": 0,
-            "Acrobatics": 0
-        }
+        "skills": {},
+        "inventory": {},
+        "equipment": {},
+        "currency": {},
+        "spells": {},
+        "abilities": {}
     },
-    "remisiel": {
-        "name": "remisiel",
+    "266736292505583621": {
+        "name": "Metacom",
+        "race": "Elf",
+        "char_class": "Mage",
         "stats": {
-            "Strength": 10,
-            "Dexterity": 10,
-            "Constitution": 10,
-            "Intelligence": 10,
-            "Wisdom": 10,
-            "Charisma": 10
+            "Intelligence": 20,
+            "Strength": 20,
+            "Dexterity": 20,
+            "Constitution": 20,
+            "Wisdom": 20,
+            "Charisma": 20
         },
-        "skills": {
-            "Athletics": 5,
-            "Acrobatics": 5
-        }
+        "skills": {},
+        "inventory": {},
+        "equipment": {},
+        "currency": {},
+        "spells": {},
+        "abilities": {}
     },
-    "nothingwicked": {
-        "name": "nothingwicked",
+    "83772494888046592": {
+        "name": "son of grumple",
+        "race": "Orc",
+        "char_class": "Mage",
         "stats": {
-            "Strength": 10,
-            "Dexterity": 10,
-            "Constitution": 10,
-            "Intelligence": 10,
-            "Wisdom": 10,
-            "Charisma": 10
+            "Strength": 20,
+            "Constitution": 20,
+            "Intelligence": 20,
+            "Dexterity": 20,
+            "Wisdom": 20,
+            "Charisma": 20
         },
-        "skills": {
-            "Athletics": 5,
-            "Acrobatics": 5
-        }
-    },
-    "holidae9718": {
-        "name": "holidae9718",
-        "stats": {
-            "Strength": 10,
-            "Dexterity": 10,
-            "Constitution": 10,
-            "Intelligence": 10,
-            "Wisdom": 10,
-            "Charisma": 10
-        },
-        "skills": {
-            "Athletics": 5,
-            "Acrobatics": 5
-        }
-    },
-    "mrspectralfire": {
-        "name": "mrspectralfire",
-        "stats": {
-            "Strength": 10,
-            "Dexterity": 10,
-            "Constitution": 10,
-            "Intelligence": 10,
-            "Wisdom": 10,
-            "Charisma": 10
-        },
-        "skills": {
-            "Athletics": 5,
-            "Acrobatics": 5
-        }
+        "skills": {},
+        "inventory": {},
+        "equipment": {},
+        "currency": {},
+        "spells": {},
+        "abilities": {}
     }
 }
