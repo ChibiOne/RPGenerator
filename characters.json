@@ -1,53 +1,18 @@
 {
     "266384402450350082": {
         "name": "Ralynn",
-        "race": "Human",
+        "species": "Human",
         "char_class": "Warrior",
+        "gender": "Female",
+        "pronouns": "She/Her",
+        "description": "Awesome",
         "stats": {
             "Strength": 15,
             "Dexterity": 15,
             "Constitution": 15,
-            "Intelligence": 15,
-            "Wisdom": 15,
-            "Charisma": 15
-        },
-        "skills": {},
-        "inventory": {},
-        "equipment": {},
-        "currency": {},
-        "spells": {},
-        "abilities": {}
-    },
-    "266736292505583621": {
-        "name": "Metacom",
-        "race": "Elf",
-        "char_class": "Mage",
-        "stats": {
-            "Intelligence": 20,
-            "Strength": 20,
-            "Dexterity": 20,
-            "Constitution": 20,
-            "Wisdom": 20,
-            "Charisma": 20
-        },
-        "skills": {},
-        "inventory": {},
-        "equipment": {},
-        "currency": {},
-        "spells": {},
-        "abilities": {}
-    },
-    "83772494888046592": {
-        "name": "son of grumple",
-        "race": "Orc",
-        "char_class": "Mage",
-        "stats": {
-            "Strength": 20,
-            "Constitution": 20,
-            "Intelligence": 20,
-            "Dexterity": 20,
-            "Wisdom": 20,
-            "Charisma": 20
+            "Intelligence": 14,
+            "Wisdom": 10,
+            "Charisma": 11
         },
         "skills": {},
         "inventory": {},

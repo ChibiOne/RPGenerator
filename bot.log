@@ -2,3 +2,657 @@
 2024-10-18 14:29:53,957:INFO:actions.json loaded successfully.
 2024-10-18 14:29:53,958:INFO:Characters loaded successfully.
 2024-10-18 14:29:53,960:INFO:logging in using static token
+2024-10-18 14:29:55,081:INFO:Shard ID None has connected to Gateway (Session ID: b6b36285d1ef21f8b555ec35b565d297).
+2024-10-18 14:30:55,548:INFO:Parsing message: 'Ralynn'
+2024-10-18 14:30:55,549:INFO:Matches found: []
+2024-10-18 14:30:55,549:INFO:No action recognized.
+2024-10-18 14:35:27,346:INFO:Parsing message: 'Tall, about 5'10". Short, tousled sandy-blonde hair. Blousy shirt white with long-sleeves, blue jacket and tight blue leather pants. A brown belt with a rapier scabbarded. A sly grin and a mischievous glint in her eye, that can turn to an angry snarl when challenged.'
+2024-10-18 14:35:27,348:INFO:Matches found: []
+2024-10-18 14:35:27,348:INFO:No action recognized.
+2024-10-18 14:35:52,977:INFO:Parsing message: 'Ralynn'
+2024-10-18 14:35:52,978:INFO:Matches found: []
+2024-10-18 14:35:52,978:INFO:No action recognized.
+2024-10-18 14:36:05,950:INFO:Parsing message: 'Tall, about 5'10". Short, tousled sandy-blonde hair. Blousy shirt white with long-sleeves, blue jacket and tight blue leather pants. A brown belt with a rapier scabbarded. A sly grin and a mischievous glint in her eye, that can turn to an angry snarl when challenged.'
+2024-10-18 14:36:05,951:INFO:Matches found: []
+2024-10-18 14:36:05,951:INFO:No action recognized.
+2024-10-18 14:36:33,846:INFO:Parsing message: '10'
+2024-10-18 14:36:33,847:INFO:Matches found: []
+2024-10-18 14:36:33,847:INFO:No action recognized.
+2024-10-18 14:36:44,292:INFO:Parsing message: '15'
+2024-10-18 14:36:44,293:INFO:Matches found: []
+2024-10-18 14:36:44,293:INFO:No action recognized.
+2024-10-18 14:36:50,615:INFO:Parsing message: '14'
+2024-10-18 14:36:50,615:INFO:Matches found: []
+2024-10-18 14:36:50,615:INFO:No action recognized.
+2024-10-18 14:37:00,527:INFO:Parsing message: '12'
+2024-10-18 14:37:00,528:INFO:Matches found: []
+2024-10-18 14:37:00,528:INFO:No action recognized.
+2024-10-18 14:37:07,847:INFO:Parsing message: '12'
+2024-10-18 14:37:07,848:INFO:Matches found: []
+2024-10-18 14:37:07,848:INFO:No action recognized.
+2024-10-18 14:37:15,121:INFO:Parsing message: '14'
+2024-10-18 14:37:15,121:INFO:Matches found: []
+2024-10-18 14:37:15,121:INFO:No action recognized.
+2024-10-18 14:40:26,968:INFO:Parsing message: 'Ralynn'
+2024-10-18 14:40:26,968:INFO:Matches found: []
+2024-10-18 14:40:26,969:INFO:No action recognized.
+2024-10-18 14:40:53,655:INFO:Parsing message: 'Tall, sandy blonde hair'
+2024-10-18 14:40:53,656:INFO:Matches found: []
+2024-10-18 14:40:53,656:INFO:No action recognized.
+2024-10-18 14:41:11,490:INFO:Parsing message: '15'
+2024-10-18 14:41:11,490:INFO:Matches found: []
+2024-10-18 14:41:11,490:INFO:No action recognized.
+2024-10-18 14:41:17,564:INFO:Parsing message: '15'
+2024-10-18 14:41:17,565:INFO:Matches found: []
+2024-10-18 14:41:17,565:INFO:No action recognized.
+2024-10-18 14:41:24,574:INFO:Parsing message: '14'
+2024-10-18 14:41:24,575:INFO:Matches found: []
+2024-10-18 14:41:24,575:INFO:No action recognized.
+2024-10-18 14:41:36,821:INFO:Parsing message: '12'
+2024-10-18 14:41:36,822:INFO:Matches found: []
+2024-10-18 14:41:36,822:INFO:No action recognized.
+2024-10-18 14:41:48,530:INFO:Parsing message: '14'
+2024-10-18 14:41:48,531:INFO:Matches found: []
+2024-10-18 14:41:48,531:INFO:No action recognized.
+2024-10-18 14:42:00,010:INFO:Parsing message: '12'
+2024-10-18 14:42:00,010:INFO:Matches found: []
+2024-10-18 14:42:00,011:INFO:No action recognized.
+2024-10-18 14:42:03,396:INFO:Parsing message: '11'
+2024-10-18 14:42:03,396:INFO:Matches found: []
+2024-10-18 14:42:03,397:INFO:No action recognized.
+2024-10-18 14:58:27,554:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 14:58:27,804:INFO:actions.json loaded successfully.
+2024-10-18 14:58:27,805:INFO:Characters loaded successfully.
+2024-10-18 14:58:27,806:INFO:logging in using static token
+2024-10-18 14:58:28,659:INFO:Shard ID None has connected to Gateway (Session ID: 20f556fc6c2f31942f644328e22c3b21).
+2024-10-18 14:58:52,261:INFO:Parsing message: 'Ralynn'
+2024-10-18 14:58:52,262:INFO:Matches found: []
+2024-10-18 14:58:52,263:INFO:No action recognized.
+2024-10-18 14:59:39,675:INFO:Parsing message: 'Tall, swashbuckling Errol Flynn type lady pirate, sandy blonde hair, sly grin.'
+2024-10-18 14:59:39,676:INFO:Matches found: []
+2024-10-18 14:59:39,676:INFO:No action recognized.
+2024-10-18 14:59:48,172:ERROR:Error in ClassDropdown callback: could not find open space for item
+2024-10-18 15:08:38,386:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 15:08:38,603:INFO:actions.json loaded successfully.
+2024-10-18 15:08:38,603:INFO:Characters loaded successfully.
+2024-10-18 15:08:38,605:INFO:logging in using static token
+2024-10-18 15:08:39,523:INFO:Shard ID None has connected to Gateway (Session ID: c5041bc5e573e94bcf6e7d9c24badb11).
+2024-10-18 15:08:55,830:INFO:Parsing message: '/creae'
+2024-10-18 15:08:55,831:INFO:Matches found: []
+2024-10-18 15:08:55,831:INFO:No action recognized.
+2024-10-18 15:08:55,831:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "creae" is not found
+2024-10-18 15:09:08,641:INFO:Parsing message: 'Ralynn'
+2024-10-18 15:09:08,642:INFO:Matches found: []
+2024-10-18 15:09:08,643:INFO:No action recognized.
+2024-10-18 15:09:27,247:INFO:Parsing message: 'Awesome'
+2024-10-18 15:09:27,248:INFO:Matches found: []
+2024-10-18 15:09:27,248:INFO:No action recognized.
+2024-10-18 15:09:34,539:INFO:AbilitySelect initialized for Strength.
+2024-10-18 15:09:34,539:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 15:09:34,540:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 15:09:34,540:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 15:09:34,540:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 15:09:34,541:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 15:09:34,732:ERROR:Error in ClassDropdown callback: could not find open space for item
+2024-10-18 15:10:29,038:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 15:10:29,279:INFO:actions.json loaded successfully.
+2024-10-18 15:10:29,279:INFO:Characters loaded successfully.
+2024-10-18 15:10:29,281:INFO:logging in using static token
+2024-10-18 15:10:30,218:INFO:Shard ID None has connected to Gateway (Session ID: 487566f4d96008ba92cd93fc1d8f0fbe).
+2024-10-18 15:13:08,124:ERROR:Attempting a reconnect in 0.38s
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\connector.py", line 1317, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\connector.py", line 971, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\connector.py", line 1002, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\resolver.py", line 38, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\asyncio\base_events.py", line 901, in getaddrinfo
+    return await self.run_in_executor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\socket.py", line 976, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno 11001] getaddrinfo failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 664, in connect
+    self.ws = await asyncio.wait_for(coro, timeout=60.0)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\asyncio\tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\gateway.py", line 374, in from_client
+    socket = await client.http.ws_connect(str(url))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\http.py", line 550, in ws_connect
+    return await self.__session.ws_connect(url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\client.py", line 937, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\client.py", line 663, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\connector.py", line 563, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\connector.py", line 1032, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\aiohttp\connector.py", line 1323, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-d.discord.gg:443 ssl:default [getaddrinfo failed]
+2024-10-18 15:13:08,944:INFO:Shard ID None has successfully RESUMED session 487566f4d96008ba92cd93fc1d8f0fbe.
+2024-10-18 15:13:25,820:INFO:Parsing message: 'Ralynn'
+2024-10-18 15:13:25,820:INFO:Matches found: []
+2024-10-18 15:13:25,820:INFO:No action recognized.
+2024-10-18 15:13:35,957:INFO:Parsing message: 'awesome'
+2024-10-18 15:13:35,958:INFO:Matches found: []
+2024-10-18 15:13:35,958:INFO:No action recognized.
+2024-10-18 15:13:41,456:INFO:AbilitySelect initialized for Strength.
+2024-10-18 15:13:41,456:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 15:13:41,457:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 15:13:41,457:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 15:13:41,457:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 15:13:41,457:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 15:13:41,608:ERROR:Error in ClassDropdown callback: could not find open space for item
+2024-10-18 15:41:04,346:INFO:Shard ID None has successfully RESUMED session 487566f4d96008ba92cd93fc1d8f0fbe.
+2024-10-18 15:45:22,002:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 15:45:22,005:INFO:actions.json loaded successfully.
+2024-10-18 15:45:22,006:INFO:Characters loaded successfully.
+2024-10-18 15:45:22,008:INFO:logging in using static token
+2024-10-18 15:45:22,588:INFO:Shard ID None has connected to Gateway (Session ID: 1aac613ca546887eb13c4baa31e0329e).
+2024-10-18 15:45:24,807:INFO:Bot is ready and command tree synchronized.
+2024-10-18 15:46:17,897:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 15:46:26,685:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 15:46:26,686:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 15:46:26,687:INFO:Matches found: []
+2024-10-18 15:46:26,687:INFO:No action recognized.
+2024-10-18 15:46:30,038:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 15:46:32,483:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 15:46:38,276:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-18 15:46:38,277:INFO:Parsing message from user 266384402450350082: 'Awesome'
+2024-10-18 15:46:38,277:INFO:Matches found: []
+2024-10-18 15:46:38,277:INFO:No action recognized.
+2024-10-18 15:46:41,388:INFO:User 266384402450350082 selected race: Human
+2024-10-18 15:46:44,241:INFO:User 266384402450350082 selected class: Warrior
+2024-10-18 15:46:44,241:INFO:AbilitySelect initialized for Strength.
+2024-10-18 15:46:44,242:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 15:46:44,242:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 15:46:44,242:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 15:46:44,243:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 15:46:44,243:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 15:46:44,628:ERROR:Error in class_callback for user 266384402450350082: could not find open space for item
+2024-10-18 15:56:37,130:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 15:56:37,132:INFO:actions.json loaded successfully.
+2024-10-18 15:56:37,133:INFO:Characters loaded successfully.
+2024-10-18 15:56:37,135:INFO:logging in using static token
+2024-10-18 15:56:37,878:INFO:Shard ID None has connected to Gateway (Session ID: bd1aaf224a49b2c96466c0357006dfaa).
+2024-10-18 15:56:40,112:INFO:Bot is ready and command tree synchronized.
+2024-10-18 15:56:56,171:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 15:57:04,034:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 15:57:04,035:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 15:57:04,035:INFO:Matches found: []
+2024-10-18 15:57:04,036:INFO:No action recognized.
+2024-10-18 15:57:08,369:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 15:57:10,812:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 15:57:18,098:INFO:User 266384402450350082 provided description with 2 words.
+2024-10-18 15:57:18,098:INFO:Parsing message from user 266384402450350082: ',m. n,n,ljko'
+2024-10-18 15:57:18,099:INFO:Matches found: []
+2024-10-18 15:57:18,099:INFO:No action recognized.
+2024-10-18 15:57:21,013:INFO:User 266384402450350082 selected race: Human
+2024-10-18 15:57:24,246:INFO:User 266384402450350082 selected class: Warrior
+2024-10-18 15:57:24,246:INFO:AbilitySelect initialized for Strength.
+2024-10-18 15:57:24,246:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 15:57:24,247:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 15:57:24,247:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 15:57:24,247:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 15:57:24,247:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 15:57:24,551:ERROR:Error in class_callback for user 266384402450350082: could not find open space for item
+2024-10-18 16:04:37,271:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 16:04:37,272:INFO:actions.json loaded successfully.
+2024-10-18 16:04:37,273:INFO:Characters loaded successfully.
+2024-10-18 16:04:37,275:INFO:logging in using static token
+2024-10-18 16:04:37,943:INFO:Shard ID None has connected to Gateway (Session ID: a6d2e2aebb5a23d6525f4307fff1f01f).
+2024-10-18 16:04:40,105:INFO:Bot is ready and command tree synchronized.
+2024-10-18 16:04:56,720:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 16:05:09,478:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 16:05:09,479:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 16:05:09,479:INFO:Matches found: []
+2024-10-18 16:05:09,479:INFO:No action recognized.
+2024-10-18 16:05:13,291:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 16:05:15,436:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 16:05:21,669:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-18 16:05:21,670:INFO:Parsing message from user 266384402450350082: 'awesome'
+2024-10-18 16:05:21,671:INFO:Matches found: []
+2024-10-18 16:05:21,671:INFO:No action recognized.
+2024-10-18 16:05:24,771:INFO:User 266384402450350082 selected race: Elf
+2024-10-18 16:05:26,932:INFO:User 266384402450350082 selected class: Rogue
+2024-10-18 16:05:26,933:INFO:AbilitySelect initialized for Strength.
+2024-10-18 16:05:26,933:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 16:05:26,933:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 16:05:26,933:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 16:05:26,934:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 16:05:26,934:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 16:05:27,048:ERROR:Error in class_callback for user 266384402450350082: could not find open space for item
+2024-10-18 16:12:43,575:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 16:12:43,575:INFO:actions.json loaded successfully.
+2024-10-18 16:12:43,576:INFO:Characters loaded successfully.
+2024-10-18 16:12:43,578:INFO:logging in using static token
+2024-10-18 16:12:44,224:INFO:Shard ID None has connected to Gateway (Session ID: d757ae7cc47840c8b593f6da44ade41d).
+2024-10-18 16:12:46,469:INFO:Bot is ready and command tree synchronized.
+2024-10-18 16:12:56,700:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 16:13:05,062:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 16:13:05,063:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 16:13:05,063:INFO:Matches found: []
+2024-10-18 16:13:05,064:INFO:No action recognized.
+2024-10-18 16:13:09,315:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 16:13:11,499:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 16:13:15,428:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-18 16:13:15,429:INFO:Parsing message from user 266384402450350082: 'Awesome'
+2024-10-18 16:13:15,429:INFO:Matches found: []
+2024-10-18 16:13:15,430:INFO:No action recognized.
+2024-10-18 16:13:19,714:INFO:User 266384402450350082 selected race: Human
+2024-10-18 16:13:22,057:INFO:User 266384402450350082 selected class: Warrior
+2024-10-18 16:13:22,058:INFO:AbilitySelect initialized for Strength.
+2024-10-18 16:13:22,058:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 16:13:22,058:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 16:13:22,059:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 16:13:22,059:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 16:13:22,059:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 16:13:22,172:ERROR:Error in class_callback for user 266384402450350082: could not find open space for item
+2024-10-18 16:32:07,717:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 16:32:07,718:INFO:actions.json loaded successfully.
+2024-10-18 16:32:07,719:INFO:Characters loaded successfully.
+2024-10-18 16:32:07,721:INFO:logging in using static token
+2024-10-18 16:32:08,336:INFO:Shard ID None has connected to Gateway (Session ID: 13cc40002e72399b37c0491802ee94e1).
+2024-10-18 16:32:10,537:INFO:Bot is ready and command tree synchronized.
+2024-10-18 16:32:27,898:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 16:32:34,760:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 16:32:34,761:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 16:32:34,761:INFO:Matches found: []
+2024-10-18 16:32:34,761:INFO:No action recognized.
+2024-10-18 16:32:38,256:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 16:32:40,807:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 16:32:44,177:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-18 16:32:44,178:INFO:Parsing message from user 266384402450350082: 'awesome'
+2024-10-18 16:32:44,178:INFO:Matches found: []
+2024-10-18 16:32:44,178:INFO:No action recognized.
+2024-10-18 16:32:47,443:INFO:User 266384402450350082 selected race: Human
+2024-10-18 16:32:50,294:INFO:User 266384402450350082 selected class: Warrior
+2024-10-18 16:32:50,295:INFO:AbilitySelect initialized for Strength.
+2024-10-18 16:32:50,295:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 16:32:50,295:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 16:32:50,295:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-18 16:33:02,479:INFO:User 266384402450350082 set Strength to 10. Cost: 0. Total points spent: 0.
+2024-10-18 16:33:11,144:INFO:User 266384402450350082 set Dexterity to 14. Cost: 5. Total points spent: 5.
+2024-10-18 16:33:16,753:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 7.
+2024-10-18 16:33:23,405:INFO:User 266384402450350082 set Constitution to 14. Cost: 5. Total points spent: 12.
+2024-10-18 16:33:30,937:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 16:33:30,937:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 16:33:30,937:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 16:33:30,938:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-18 16:33:31,055:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-18 16:33:46,456:INFO:User 266384402450350082 set Intelligence to 12. Cost: 2. Total points spent: 14.
+2024-10-18 16:33:53,857:INFO:User 266384402450350082 set Wisdom to 14. Cost: 5. Total points spent: 19.
+2024-10-18 16:33:57,935:INFO:User 266384402450350082 set Charisma to 15. Cost: 7. Total points spent: 26.
+2024-10-18 16:34:04,418:INFO:User 266384402450350082 set Intelligence to 13. Cost: 3. Total points spent: 27.
+2024-10-18 16:34:10,852:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-18 16:34:11,122:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-18 16:34:14,177:INFO:Characters saved successfully.
+2024-10-18 16:34:14,177:INFO:Character 'Ralynn' created successfully for user 266384402450350082.
+2024-10-18 16:34:43,222:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 16:34:43,222:INFO:Matches found: ['?dattack']
+2024-10-18 16:34:43,223:INFO:Parsing action: dattack
+2024-10-18 16:34:43,223:INFO:Action recognized: dattack
+2024-10-18 16:34:43,223:INFO:Ability check for Ralynn: Rolled 8 + modifier 2 = 10
+2024-10-18 16:34:43,380:ERROR:Error in get_chatgpt_response: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2024-10-18 16:34:43,520:ERROR:Failed to parse difficulty for user 266384402450350082.
+2024-10-18 16:39:09,203:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 16:39:09,204:INFO:actions.json loaded successfully.
+2024-10-18 16:39:09,205:INFO:Characters loaded successfully.
+2024-10-18 16:39:09,207:INFO:logging in using static token
+2024-10-18 16:39:09,742:INFO:Shard ID None has connected to Gateway (Session ID: 5e3d2144274605d32b2359a109890467).
+2024-10-18 16:39:11,913:INFO:Bot is ready and command tree synchronized.
+2024-10-18 16:39:26,025:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 16:39:36,093:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 16:39:36,094:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 16:39:36,094:INFO:Matches found: []
+2024-10-18 16:39:36,094:INFO:No action recognized.
+2024-10-18 16:39:39,789:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 16:39:42,056:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 16:41:25,209:INFO:User 266384402450350082 provided description with 38 words.
+2024-10-18 16:41:25,210:INFO:Parsing message from user 266384402450350082: 'Tall, well muscled woman. Sandy blonde hair, a watchful eye but a grinning face. Loose blousy white shirt with long sleeves, under a dark blue coat. brown belt with scabbarded rapier. tight blue leather pants, thigh-high brown boots.'
+2024-10-18 16:41:25,211:INFO:Matches found: []
+2024-10-18 16:41:25,211:INFO:No action recognized.
+2024-10-18 16:41:29,531:INFO:User 266384402450350082 selected race: Human
+2024-10-18 16:41:32,360:INFO:User 266384402450350082 selected class: Warrior
+2024-10-18 16:41:32,360:INFO:AbilitySelect initialized for Strength.
+2024-10-18 16:41:32,361:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 16:41:32,361:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 16:41:32,361:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-18 16:41:38,336:INFO:User 266384402450350082 set Strength to 10. Cost: 0. Total points spent: 0.
+2024-10-18 16:41:43,438:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 7.
+2024-10-18 16:41:57,450:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 14.
+2024-10-18 16:41:59,658:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 16:41:59,658:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 16:41:59,659:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 16:41:59,659:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-18 16:41:59,834:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-18 16:42:05,140:INFO:User 266384402450350082 set Intelligence to 10. Cost: 0. Total points spent: 14.
+2024-10-18 16:42:10,490:INFO:User 266384402450350082 set Charisma to 15. Cost: 7. Total points spent: 21.
+2024-10-18 16:42:15,322:INFO:User 266384402450350082 set Wisdom to 14. Cost: 5. Total points spent: 26.
+2024-10-18 16:42:18,774:INFO:User 266384402450350082 set Intelligence to 11. Cost: 1. Total points spent: 27.
+2024-10-18 16:42:23,070:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-18 16:42:23,168:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-18 16:42:27,177:INFO:Characters saved successfully.
+2024-10-18 16:42:27,178:INFO:Character 'Ralynn' created successfully for user 266384402450350082.
+2024-10-18 16:42:42,710:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 16:42:42,710:INFO:Matches found: ['?dattack']
+2024-10-18 16:42:42,710:INFO:Parsing action: dattack
+2024-10-18 16:42:42,710:INFO:Action recognized: dattack
+2024-10-18 16:42:42,711:INFO:Ability check for Ralynn: Rolled 6 + modifier 2 = 8
+2024-10-18 16:42:42,887:ERROR:Error in get_chatgpt_response: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2024-10-18 16:42:43,031:ERROR:Failed to parse difficulty for user 266384402450350082.
+2024-10-18 16:47:36,377:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 16:47:36,378:INFO:actions.json loaded successfully.
+2024-10-18 16:47:36,378:INFO:Characters loaded successfully.
+2024-10-18 16:47:36,380:INFO:logging in using static token
+2024-10-18 16:47:36,917:INFO:Shard ID None has connected to Gateway (Session ID: f808e28f60812c1d3147321a4641cb6b).
+2024-10-18 16:47:39,201:INFO:Bot is ready and command tree synchronized.
+2024-10-18 16:47:44,323:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 16:47:44,323:INFO:Matches found: ['?dattack']
+2024-10-18 16:47:44,324:INFO:Parsing action: dattack
+2024-10-18 16:47:44,324:INFO:Action recognized: dattack
+2024-10-18 16:47:44,324:INFO:Ability check for Ralynn: Rolled 19 + modifier 2 = 21
+2024-10-18 16:47:44,552:ERROR:Error in get_chatgpt_response: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2024-10-18 16:47:44,674:ERROR:Failed to parse difficulty for user 266384402450350082.
+2024-10-18 16:50:56,704:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 16:50:56,705:INFO:actions.json loaded successfully.
+2024-10-18 16:50:56,706:INFO:Characters loaded successfully.
+2024-10-18 16:50:56,708:INFO:logging in using static token
+2024-10-18 16:50:57,294:INFO:Shard ID None has connected to Gateway (Session ID: ba3c4193ba9b3edacf10d87f8d00a598).
+2024-10-18 16:51:00,067:INFO:Bot is ready and command tree synchronized.
+2024-10-18 16:51:18,874:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 16:51:18,874:INFO:Matches found: ['?dattack']
+2024-10-18 16:51:18,875:INFO:Parsing action: dattack
+2024-10-18 16:51:18,875:INFO:Action recognized: dattack
+2024-10-18 16:51:18,875:INFO:Ability check for Ralynn: Rolled 16 + modifier 2 = 18
+2024-10-18 16:51:19,021:ERROR:Error in get_chatgpt_response: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface. 
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
+
+2024-10-18 16:51:19,146:ERROR:Failed to parse difficulty for user 266384402450350082.
+2024-10-18 16:51:51,380:INFO:Parsing message from user 266384402450350082: 'i'm still getting this error:
+
+2024-10-18 16:51:19,021:ERROR:Error in get_chatgpt_response: 
+
+You tried to access openai.ChatCompletion, but this is no longer supported in openai>=1.0.0 - see the README at https://github.com/openai/openai-python for the API.
+
+You can run `openai migrate` to automatically upgrade your codebase to use the 1.0.0 interface.        
+
+Alternatively, you can pin your installation to the old version, e.g. `pip install openai==0.28`       
+
+A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742  
+
+2024-10-18 16:51:19,146:ERROR:Failed to parse difficulty for user 266384402450350082.'
+2024-10-18 16:51:51,382:INFO:Matches found: []
+2024-10-18 16:51:51,383:INFO:No action recognized.
+2024-10-18 16:57:39,171:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 16:57:39,172:INFO:actions.json loaded successfully.
+2024-10-18 16:57:39,173:INFO:Characters loaded successfully.
+2024-10-18 16:57:39,175:INFO:logging in using static token
+2024-10-18 16:57:39,807:INFO:Shard ID None has connected to Gateway (Session ID: 13e55eb7fd4206a5f236552dfe924331).
+2024-10-18 16:57:42,011:INFO:Bot is ready and command tree synchronized.
+2024-10-18 16:58:13,302:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 16:58:13,303:INFO:Matches found: ['?dattack']
+2024-10-18 16:58:13,303:INFO:Parsing action: dattack
+2024-10-18 16:58:13,304:INFO:Action recognized: dattack
+2024-10-18 16:58:13,304:INFO:Ability check for Ralynn: Rolled 2 + modifier 2 = 4
+2024-10-18 16:58:23,996:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 16:58:23,999:INFO:Difficulty determined for user 266384402450350082: 20
+2024-10-18 16:58:24,000:INFO:Player Ralynn (user 266384402450350082) attempted to dattack. The DC was 20. It was a fail.
+2024-10-18 16:58:29,215:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 16:58:29,365:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:06:34,970:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 17:06:34,971:INFO:actions.json loaded successfully.
+2024-10-18 17:06:34,972:ERROR:Error loading characters: Character.__init__() got an unexpected keyword argument 'race'
+2024-10-18 17:06:34,974:INFO:logging in using static token
+2024-10-18 17:06:35,480:INFO:Shard ID None has connected to Gateway (Session ID: 7557cf81c2cc9408d4add90f9fdfd0a0).
+2024-10-18 17:06:37,718:INFO:Bot is ready and command tree synchronized.
+2024-10-18 17:07:19,438:INFO:Characters saved successfully.
+2024-10-18 17:07:19,619:INFO:Character created for user 266384402450350082 with name chibione.
+2024-10-18 17:07:19,620:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 17:07:19,620:INFO:Matches found: ['?dattack']
+2024-10-18 17:07:19,621:INFO:Parsing action: dattack
+2024-10-18 17:07:19,621:INFO:Action recognized: dattack
+2024-10-18 17:07:19,621:INFO:Ability check for chibione: Rolled 9 + modifier 0 = 9
+2024-10-18 17:07:20,268:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:07:20,272:INFO:Difficulty determined for user 266384402450350082: 20
+2024-10-18 17:07:20,272:INFO:Player chibione (user 266384402450350082) attempted to dattack. The DC was 20. It was a fail..
+2024-10-18 17:07:25,150:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:07:25,261:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:07:54,565:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 17:08:09,801:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 17:08:09,802:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 17:08:09,803:INFO:Matches found: []
+2024-10-18 17:08:09,803:INFO:No action recognized.
+2024-10-18 17:08:13,531:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 17:08:24,419:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 17:10:24,893:WARNING:User 266384402450350082 timed out during description input.
+2024-10-18 17:11:23,648:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 17:11:32,894:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 17:11:32,895:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 17:11:32,896:INFO:Matches found: []
+2024-10-18 17:11:32,896:INFO:No action recognized.
+2024-10-18 17:11:36,602:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 17:11:38,974:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 17:11:42,911:INFO:User 266384402450350082 provided description with 48 words.
+2024-10-18 17:11:42,912:INFO:Parsing message from user 266384402450350082: 'Tall, about 5'10". Well muscled woman. Loose, blousy white shirt with long puffy sleeves under dark blue jacket. Brown belt with scabbarded rapier (unless she's using it). Tight blue leather pants, brown thigh-high boots. Sandy blonde hair. Easy to grin and laugh, but just as easy to anger.'
+2024-10-18 17:11:42,913:INFO:Matches found: []
+2024-10-18 17:11:42,913:INFO:No action recognized.
+2024-10-18 17:11:47,176:INFO:User 266384402450350082 selected species: Human
+2024-10-18 17:11:50,013:INFO:User 266384402450350082 selected class: Warrior
+2024-10-18 17:11:50,014:INFO:AbilitySelect initialized for Strength.
+2024-10-18 17:11:50,014:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 17:11:50,014:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 17:11:50,015:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-18 17:11:54,422:INFO:User 266384402450350082 set Strength to 10. Cost: 0. Total points spent: 0.
+2024-10-18 17:11:57,660:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 7.
+2024-10-18 17:12:01,044:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 14.
+2024-10-18 17:12:07,596:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 17:12:07,597:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 17:12:07,597:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 17:12:07,597:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-18 17:12:07,794:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-18 17:12:15,857:INFO:User 266384402450350082 set Intelligence to 12. Cost: 2. Total points spent: 16.
+2024-10-18 17:12:19,023:INFO:User 266384402450350082 set Wisdom to 14. Cost: 5. Total points spent: 21.
+2024-10-18 17:12:21,644:INFO:User 266384402450350082 set Charisma to 15. Cost: 7. Total points spent: 28.
+2024-10-18 17:12:21,755:WARNING:User 266384402450350082 overspent points while assigning Charisma.
+2024-10-18 17:12:27,531:INFO:AbilitySelect initialized for Strength.
+2024-10-18 17:12:27,532:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 17:12:27,532:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 17:12:27,533:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-18 17:12:27,654:INFO:User 266384402450350082 navigated back to PhysicalAbilitiesView.
+2024-10-18 17:12:42,085:INFO:User 266384402450350082 set Strength to 13. Cost: 3. Total points spent: 24.
+2024-10-18 17:12:47,035:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 24.
+2024-10-18 17:12:49,473:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 24.
+2024-10-18 17:12:56,397:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 17:12:56,397:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 17:12:56,398:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 17:12:56,398:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-18 17:12:56,527:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-18 17:13:16,226:INFO:User 266384402450350082 set Intelligence to 13. Cost: 3. Total points spent: 25.
+2024-10-18 17:13:19,071:INFO:User 266384402450350082 set Wisdom to 14. Cost: 5. Total points spent: 25.
+2024-10-18 17:13:23,123:INFO:User 266384402450350082 set Charisma to 12. Cost: 2. Total points spent: 27.
+2024-10-18 17:13:26,499:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-18 17:13:26,607:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-18 17:13:28,334:INFO:Characters saved successfully.
+2024-10-18 17:13:28,335:INFO:Character 'Ralynn' created successfully for user 266384402450350082.
+2024-10-18 17:13:39,697:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 17:13:39,698:INFO:Matches found: ['?dattack']
+2024-10-18 17:13:39,698:INFO:Parsing action: dattack
+2024-10-18 17:13:39,699:INFO:Action recognized: dattack
+2024-10-18 17:13:39,699:INFO:Ability check for Ralynn: Rolled 8 + modifier 2 = 10
+2024-10-18 17:13:40,687:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:13:40,688:INFO:Difficulty determined for user 266384402450350082: 20
+2024-10-18 17:13:40,688:INFO:Player Ralynn (user 266384402450350082) attempted to dattack. The DC was 20. It was a fail..
+2024-10-18 17:13:47,106:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:13:47,275:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:13:58,927:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 17:13:58,928:INFO:Matches found: ['?dattack']
+2024-10-18 17:13:58,928:INFO:Parsing action: dattack
+2024-10-18 17:13:58,928:INFO:Action recognized: dattack
+2024-10-18 17:13:58,928:INFO:Ability check for Ralynn: Rolled 20 + modifier 2 = 22
+2024-10-18 17:13:59,618:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:13:59,620:INFO:Difficulty determined for user 266384402450350082: 20
+2024-10-18 17:13:59,620:INFO:Player Ralynn (user 266384402450350082) attempted to dattack. The DC was 20. It was a succeed with a critical success, obtaining an unexpected advantage or extraordinary result..
+2024-10-18 17:14:04,869:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:14:05,031:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:21:35,974:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 17:21:35,975:INFO:actions.json loaded successfully.
+2024-10-18 17:21:35,976:INFO:Characters loaded successfully.
+2024-10-18 17:21:35,977:INFO:logging in using static token
+2024-10-18 17:21:36,583:INFO:Shard ID None has connected to Gateway (Session ID: 86278ee7fd1c486c64c5a3d6d56dcaea).
+2024-10-18 17:21:38,783:INFO:Bot is ready and command tree synchronized.
+2024-10-18 17:22:04,381:INFO:Parsing message from user 266384402450350082: '?dattack guardians'
+2024-10-18 17:22:04,382:INFO:Matches found: ['?dattack']
+2024-10-18 17:22:04,382:INFO:Parsing action: dattack
+2024-10-18 17:22:04,382:INFO:Action recognized: dattack
+2024-10-18 17:22:04,382:INFO:Ability check for Ralynn: Rolled 3 + modifier 2 = 5
+2024-10-18 17:22:05,419:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:22:05,422:INFO:Difficulty determined for user 266384402450350082: 18
+2024-10-18 17:22:05,423:INFO:Player Ralynn (user 266384402450350082) attempted to dattack. The DC was 18. It was a fail..
+2024-10-18 17:22:10,097:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:22:10,235:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:34:53,932:INFO:Parsing message from user 266384402450350082: '?hunt for a rabbit'
+2024-10-18 17:34:53,933:INFO:Matches found: ['?hunt']
+2024-10-18 17:34:53,933:INFO:Parsing action: hunt
+2024-10-18 17:34:53,934:INFO:Action recognized: hunt
+2024-10-18 17:34:53,934:INFO:Ability check for Ralynn: Rolled 15 + modifier 2 = 17
+2024-10-18 17:34:54,951:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:34:54,952:INFO:Difficulty determined for user 266384402450350082: 10
+2024-10-18 17:34:54,952:INFO:Player Ralynn (user 266384402450350082) attempted to hunt. The DC was 10. It was a succeed..
+2024-10-18 17:35:01,546:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:35:01,674:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:40:11,245:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 17:40:11,247:INFO:actions.json loaded successfully.
+2024-10-18 17:40:11,249:INFO:Characters loaded successfully.
+2024-10-18 17:40:11,251:INFO:logging in using static token
+2024-10-18 17:40:11,955:INFO:Shard ID None has connected to Gateway (Session ID: f2a6832027ebafeed2d6adff2f684186).
+2024-10-18 17:40:14,170:INFO:Bot is ready and command tree synchronized.
+2024-10-18 17:40:47,723:INFO:User 266384402450350082 requested action list.
+2024-10-18 17:41:01,556:INFO:Parsing message from user 266384402450350082: '?forage for herbs to cook the rabbit with'
+2024-10-18 17:41:01,556:INFO:Matches found: []
+2024-10-18 17:41:01,556:INFO:No action recognized.
+2024-10-18 17:41:50,346:INFO:Parsing message from user 266384402450350082: 'i ?forage'
+2024-10-18 17:41:50,346:INFO:Matches found: []
+2024-10-18 17:41:50,346:INFO:No action recognized.
+2024-10-18 17:41:59,317:INFO:Parsing message from user 266384402450350082: 'i ?hunt'
+2024-10-18 17:41:59,317:INFO:Matches found: []
+2024-10-18 17:41:59,318:INFO:No action recognized.
+2024-10-18 17:50:42,526:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 17:50:42,528:INFO:actions.json loaded successfully.
+2024-10-18 17:50:42,528:INFO:Characters loaded successfully.
+2024-10-18 17:50:42,530:INFO:logging in using static token
+2024-10-18 17:50:43,269:INFO:Shard ID None has connected to Gateway (Session ID: fc1c4916978d0ee12346977ee7cfb9bd).
+2024-10-18 17:50:45,480:INFO:Bot is ready and command tree synchronized.
+2024-10-18 17:51:06,591:INFO:Parsing message from user 266384402450350082: '?hunt'
+2024-10-18 17:51:06,592:INFO:Matches found: ['?hunt']
+2024-10-18 17:51:06,592:INFO:Parsing action: hunt
+2024-10-18 17:51:06,593:INFO:Action recognized: hunt
+2024-10-18 17:51:06,593:INFO:Ability check for Ralynn: Rolled 1 + modifier 2 = 3
+2024-10-18 17:51:07,321:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:51:07,324:INFO:Difficulty determined for user 266384402450350082: 15
+2024-10-18 17:51:07,324:INFO:Player Ralynn (user 266384402450350082) attempted to hunt. The DC was 15. It was a fail..
+2024-10-18 17:51:13,073:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:51:13,193:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:51:26,922:INFO:Parsing message from user 266384402450350082: '?shoot squirrel'
+2024-10-18 17:51:26,922:INFO:Matches found: ['?shoot']
+2024-10-18 17:51:26,922:INFO:Parsing action: shoot
+2024-10-18 17:51:26,923:INFO:Action recognized: shoot
+2024-10-18 17:51:26,923:INFO:Ability check for Ralynn: Rolled 17 + modifier 2 = 19
+2024-10-18 17:51:27,537:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:51:27,538:INFO:Difficulty determined for user 266384402450350082: 15
+2024-10-18 17:51:27,539:INFO:Player Ralynn (user 266384402450350082) attempted to shoot. The DC was 15. It was a succeed..
+2024-10-18 17:51:32,996:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 17:51:33,141:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 17:52:33,101:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 17:52:46,245:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 17:52:46,247:INFO:Parsing message from user 266384402450350082: 'Ralynn'
+2024-10-18 17:52:46,247:INFO:Matches found: []
+2024-10-18 17:52:46,247:INFO:No action recognized.
+2024-10-18 17:52:50,963:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 17:52:54,116:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-18 17:53:02,896:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-18 17:53:02,897:INFO:Parsing message from user 266384402450350082: 'Awesome'
+2024-10-18 17:53:02,897:INFO:Matches found: []
+2024-10-18 17:53:02,898:INFO:No action recognized.
+2024-10-18 17:53:06,261:INFO:User 266384402450350082 selected species: Human
+2024-10-18 17:53:08,780:INFO:User 266384402450350082 selected class: Warrior
+2024-10-18 17:53:08,780:INFO:AbilitySelect initialized for Strength.
+2024-10-18 17:53:08,781:INFO:AbilitySelect initialized for Dexterity.
+2024-10-18 17:53:08,781:INFO:AbilitySelect initialized for Constitution.
+2024-10-18 17:53:08,781:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-18 17:53:12,962:INFO:User 266384402450350082 set Strength to 15. Cost: 7. Total points spent: 7.
+2024-10-18 17:53:17,034:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 14.
+2024-10-18 17:53:22,732:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 21.
+2024-10-18 17:53:24,293:INFO:AbilitySelect initialized for Intelligence.
+2024-10-18 17:53:24,293:INFO:AbilitySelect initialized for Wisdom.
+2024-10-18 17:53:24,294:INFO:AbilitySelect initialized for Charisma.
+2024-10-18 17:53:24,294:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-18 17:53:24,433:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-18 17:53:29,998:INFO:User 266384402450350082 set Intelligence to 14. Cost: 5. Total points spent: 26.
+2024-10-18 17:53:34,144:INFO:User 266384402450350082 set Wisdom to 10. Cost: 0. Total points spent: 26.
+2024-10-18 17:53:37,411:INFO:User 266384402450350082 set Charisma to 11. Cost: 1. Total points spent: 27.
+2024-10-18 17:54:38,325:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-18 17:54:38,467:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-18 17:54:40,632:INFO:Characters saved successfully.
+2024-10-18 17:54:40,633:INFO:Character 'Ralynn' created successfully for user 266384402450350082.
+2024-10-18 17:59:26,786:INFO:Shard ID None has successfully RESUMED session fc1c4916978d0ee12346977ee7cfb9bd.
