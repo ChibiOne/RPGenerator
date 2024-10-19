@@ -124,14 +124,19 @@ def load_characters():
     try:
         with open(CHARACTER_DATA_FILE, 'r') as f:
             data = json.load(f)
-            characters = {user_id: Character(**char_data) for user_id, char_data in data.items()}
+            characters = {}
+            for user_id, char_data in data.items():
+                try:
+                    characters[user_id] = Character(**char_data)
+                except TypeError as e:
+                    logging.error(f"Error initializing character for user {user_id}: {e}")
             logging.info("Characters loaded successfully.")
             return characters
     except FileNotFoundError:
         logging.warning("characters.json not found. Starting with an empty character list.")
         return {}
-    except TypeError as e:
-        logging.error(f"Error loading characters: {e}")
+    except json.JSONDecodeError as e:
+        logging.error(f"Error decoding characters.json: {e}")
         return {}
 
 def save_characters(characters):
@@ -439,7 +444,7 @@ class StartCharacterButton(Button):
                 "Unable to send you a DM. Please check your privacy settings.",
                 ephemeral=True
             )
-            logging.warning(f"Could not send DM to user {user_id} for character creation.")
+            logging.warning(f"Could not send DM to user {interaction.user.id} for character creation.")
         except Exception as e:
             await interaction.response.send_message(
                 "An unexpected error occurred during character creation. Please try again.",
@@ -494,7 +499,7 @@ class SpeciesSelectionView(View):
             discord.SelectOption(label="Elf", description="Graceful and attuned to magic."),
             discord.SelectOption(label="Dwarf", description="Sturdy and resilient."),
             discord.SelectOption(label="Orc", description="Strong and fierce."),
-            # Add more speciess as needed
+            # Add more species as needed
         ]
         self.add_item(GenericDropdown(
             placeholder="Choose your species...",
@@ -898,12 +903,14 @@ async def on_ready():
         logging.error(f"Error in on_ready event: {e}")
 
 @bot.event
-async def on_message(message):
+async def on_message(message: discord.Message):
     """
     Event handler for processing messages to handle in-game actions.
     """
     if message.author == bot.user:
         return
+
+    logging.info(f"on_message triggered for message from {message.author.id}: '{message.content}'")
 
     # Check for '?listactions' command
     if message.content.strip() == '?listactions':
@@ -914,7 +921,7 @@ async def on_message(message):
         else:
             await message.channel.send("No actions are currently recognized.")
             logging.info(f"User {message.author.id} requested action list, but no actions are loaded.")
-        return
+        return  # Early return to prevent further processing
 
     user_id = str(message.author.id)
 
@@ -927,14 +934,16 @@ async def on_message(message):
     character = characters[user_id]
     action, stat = await parse_action(message)
     if action and stat:
+        logging.info(f"Processing action '{action}' for user {user_id} associated with stat '{stat}'.")
         roll, total = perform_ability_check(character, stat)
         if roll is None or total is None:
+            logging.error(f"Ability check failed for user {user_id}.")
             return  # Ability check failed due to an error
 
-        # Fetch the last 10 messages from the channel
-        channel_history = [msg async for msg in message.channel.history(limit=10)]
-
-        # Get the content of the last 5 messages
+        # Fetch the last 10 messages from the channel, excluding action commands
+        channel_history = [msg async for msg in message.channel.history(limit=10) if not msg.content.startswith('?')]
+        
+        # Get the content of the last 5 non-action messages
         last_messages_content = [msg.content for msg in channel_history[:5]]
 
         # Construct the prompt for difficulty determination
@@ -956,6 +965,7 @@ async def on_message(message):
             f"Just provide the number."
         )
 
+        logging.info("Calling get_chatgpt_response for difficulty determination.")
         difficulty_response = await get_chatgpt_response(
             difficulty_prompt,
             last_messages_content,
@@ -965,6 +975,8 @@ async def on_message(message):
             character,
             include_roll_info=False
         )
+        logging.info("Completed get_chatgpt_response for difficulty determination.")
+
         try:
             difficulty = int(re.search(r'\d+', difficulty_response).group())
             logging.info(f"Difficulty determined for user {user_id}: {difficulty}")
@@ -993,13 +1005,14 @@ async def on_message(message):
         prompt = (
             f"{character.name} attempted to {action} and they {result}.\n"
             f"Their gender is {character.gender} and their pronouns are {character.pronouns}.\n"
-            f"Their species is: {character.species}A brief description of their character: {character.description}.\n"
+            f"Their species is: {character.species}\nA brief description of their character: {character.description}.\n"
             f"As the game master, describe their action and how the narrative and scene and NPCs react to this action. \n"
             f"Always end with 'What do you do? The DC was: {difficulty}.' \n" 
             f"And a brief explanation on the reasoning behind that number as DC. \n"
             f"Limit responses to 100 words.\n"
         )
 
+        logging.info("Calling get_chatgpt_response for narrative response.")
         response = await get_chatgpt_response(
            prompt,
            last_messages_content,
@@ -1009,12 +1022,16 @@ async def on_message(message):
            character,
            include_roll_info=True
         )
+        logging.info("Completed get_chatgpt_response for narrative response.")
+
+        logging.info(f"Sending narrative response to channel: {response}")
         await message.channel.send(response)
         logging.info(f"Narrative response sent to user {user_id}.")
         # Uncomment and implement update_world_anvil if needed
         # await update_world_anvil(character, action, response)
     else:
         # Optionally, do not send any message if no action is recognized
+        logging.info("No valid action found in the message.")
         pass
 
     await bot.process_commands(message)
@@ -1050,21 +1067,31 @@ async def parse_action(message):
     Returns:
         tuple: (action, stat) or (None, None)
     """
-    message_content = message.content
-    action_list = ', '.join(actions.keys())
-
-    # Use regex to find words starting with '?' followed by letters
-    matches = re.findall(r'(?<!\w)\?[A-Za-z]+(?!\w)', message_content.lower())
+    message_content = message.content.lower()
     logging.info(f"Parsing message from user {message.author.id}: '{message_content}'")
-    logging.info(f"Matches found: {matches}")
+
+    # Updated regex pattern with negative lookbehind and lookahead
+    pattern = r'(?<!\w)\?[A-Za-z]+(?!\w)'
+    matches = re.findall(pattern, message_content)
+    logging.info(f"Regex matches found: {matches}")
+
+    # Track if multiple actions are found
+    if len(matches) > 1:
+        logging.warning(f"Multiple actions detected in message: {matches}")
+        await message.channel.send("Please specify only one action at a time.")
+        return None, None
+
     for match in matches:
         action = match.lstrip('?')
-        logging.info(f"Parsing action: {action}")
+        logging.info(f"Parsed action: '{action}'")
         if action in actions:
-            logging.info(f"Action recognized: {action}")
+            logging.info(f"Action recognized: '{action}'")
             return action, actions[action]
-        await show_actions(message)
-    logging.info("No action recognized.")
+        else:
+            await show_actions(message)
+            logging.info(f"Action '{action}' not recognized.")
+    
+    logging.info("No valid action recognized in the message.")
     return None, None 
 
 async def show_actions(message):

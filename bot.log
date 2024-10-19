@@ -656,3 +656,129 @@ A detailed migration guide is available here: https://github.com/openai/openai-p
 2024-10-18 17:54:40,632:INFO:Characters saved successfully.
 2024-10-18 17:54:40,633:INFO:Character 'Ralynn' created successfully for user 266384402450350082.
 2024-10-18 17:59:26,786:INFO:Shard ID None has successfully RESUMED session fc1c4916978d0ee12346977ee7cfb9bd.
+2024-10-18 18:01:40,672:INFO:Matches found: []
+2024-10-18 18:01:40,672:INFO:No action recognized.
+2024-10-18 18:02:31,506:INFO:Characters saved successfully.
+2024-10-18 18:02:31,782:INFO:Character created for user 266736292505583621 with name mrspectralfire.
+2024-10-18 18:02:31,783:INFO:Parsing message from user 266736292505583621: 'I ?persuade <@266384402450350082> to let me keep my character with 20 in every attribute.'
+2024-10-18 18:02:31,783:INFO:Matches found: ['?persuade']
+2024-10-18 18:02:31,783:INFO:Parsing action: persuade
+2024-10-18 18:02:31,784:INFO:Action recognized: persuade
+2024-10-18 18:02:31,784:INFO:Ability check for mrspectralfire: Rolled 8 + modifier 0 = 8
+2024-10-18 18:02:32,457:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 18:02:32,458:INFO:Difficulty determined for user 266736292505583621: 25
+2024-10-18 18:02:32,458:INFO:Player mrspectralfire (user 266736292505583621) attempted to persuade. The DC was 25. It was a fail..
+2024-10-18 18:02:37,746:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 18:02:37,885:INFO:Narrative response sent to user 266736292505583621.
+2024-10-18 18:03:12,229:INFO:Parsing message from user 266736292505583621: 'https://tenor.com/view/chefs-kiss-french-chef-perfect-dish-excellent-food-perfection-gif-4293238202955520616'
+2024-10-18 18:03:12,229:INFO:Matches found: []
+2024-10-18 18:03:12,230:INFO:No action recognized.
+2024-10-18 18:42:24,806:INFO:Shard ID None has successfully RESUMED session fc1c4916978d0ee12346977ee7cfb9bd.
+2024-10-18 19:17:53,507:INFO:Shard ID None has successfully RESUMED session fc1c4916978d0ee12346977ee7cfb9bd.
+2024-10-18 20:10:37,053:INFO:Shard ID None has successfully RESUMED session fc1c4916978d0ee12346977ee7cfb9bd.
+2024-10-18 22:40:48,137:INFO:Shard ID None has successfully RESUMED session fc1c4916978d0ee12346977ee7cfb9bd.
+2024-10-18 23:23:00,148:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 23:23:00,149:INFO:actions.json loaded successfully.
+2024-10-18 23:23:00,150:INFO:Characters loaded successfully.
+2024-10-18 23:23:00,152:INFO:logging in using static token
+2024-10-18 23:23:00,896:INFO:Shard ID None has connected to Gateway (Session ID: 7afb5e2b4dbe8c7f6d3fea39dae21d4b).
+2024-10-18 23:23:03,141:INFO:Bot is ready and command tree synchronized.
+2024-10-18 23:23:55,530:INFO:on_message triggered for message from 266384402450350082: '?dattack tree'
+2024-10-18 23:23:55,530:INFO:Parsing message from user 266384402450350082: '?dattack tree'
+2024-10-18 23:23:55,531:INFO:Regex matches found: ['?dattack']
+2024-10-18 23:23:55,531:INFO:Parsed action: 'dattack'
+2024-10-18 23:23:55,531:INFO:Action recognized: 'dattack'
+2024-10-18 23:23:55,532:INFO:Processing action 'dattack' for user 266384402450350082 associated with stat 'Dexterity'.
+2024-10-18 23:23:55,532:INFO:Ability check for Ralynn: Rolled 17 + modifier 2 = 19
+2024-10-18 23:23:55,691:INFO:Calling get_chatgpt_response for difficulty determination.
+2024-10-18 23:23:56,157:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 23:23:56,160:INFO:Completed get_chatgpt_response for difficulty determination.
+2024-10-18 23:23:56,160:INFO:Difficulty determined for user 266384402450350082: 15
+2024-10-18 23:23:56,160:INFO:Player Ralynn (user 266384402450350082) attempted to dattack. The DC was 15. It was a succeed..
+2024-10-18 23:23:56,160:INFO:Calling get_chatgpt_response for narrative response.
+2024-10-18 23:23:59,785:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 23:23:59,786:INFO:Completed get_chatgpt_response for narrative response.
+2024-10-18 23:23:59,787:INFO:Sending narrative response to channel: *Ralynn, your Dexterity check result is 19 (rolled 17 + modifier 2).* 
+
+*Ralynn, your Strength check result is 21 (rolled 19 + modifier 2).* 
+
+With a primal roar, Ralynn charges at the tree, her sword gleaming in the last of the sun's rays. With a mighty swing, she embeds her blade into the bark. The tree shudders under the force of her attack, a shower of leaves falling around her. The forest creatures watch in surprised silence, the audacity of her action rendering them mute. 
+
+What do you do? The DC was: 15.
+
+This DC was chosen as it represents a moderate challenge for attacking an inanimate object, requiring raw strength and determination.
+2024-10-18 23:23:59,903:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 23:57:45,724:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-18 23:57:45,732:INFO:actions.json loaded successfully.
+2024-10-18 23:57:45,739:INFO:Characters loaded successfully.
+2024-10-18 23:57:45,741:INFO:logging in using static token
+2024-10-18 23:57:46,247:INFO:Shard ID None has connected to Gateway (Session ID: 92074bbd096eaeb2e1608733f8655a8b).
+2024-10-18 23:57:48,421:INFO:Bot is ready and command tree synchronized.
+2024-10-18 23:58:35,406:INFO:on_message triggered for message from 266384402450350082: '?dattack myself'
+2024-10-18 23:58:35,406:INFO:Parsing message from user 266384402450350082: '?dattack myself'
+2024-10-18 23:58:35,407:INFO:Regex matches found: ['?dattack']
+2024-10-18 23:58:35,407:INFO:Parsed action: 'dattack'
+2024-10-18 23:58:35,408:INFO:Action recognized: 'dattack'
+2024-10-18 23:58:35,408:INFO:Processing action 'dattack' for user 266384402450350082 associated with stat 'Dexterity'.
+2024-10-18 23:58:35,409:INFO:Ability check for Ralynn: Rolled 20 + modifier 2 = 22
+2024-10-18 23:58:35,610:INFO:Calling get_chatgpt_response for difficulty determination.
+2024-10-18 23:58:36,133:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 23:58:36,138:INFO:Completed get_chatgpt_response for difficulty determination.
+2024-10-18 23:58:36,138:INFO:Difficulty determined for user 266384402450350082: 17
+2024-10-18 23:58:36,139:INFO:Player Ralynn (user 266384402450350082) attempted to dattack. The DC was 17. It was a succeed with a critical success, obtaining an unexpected advantage or extraordinary result..
+2024-10-18 23:58:36,140:INFO:Calling get_chatgpt_response for narrative response.
+2024-10-18 23:58:39,362:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-18 23:58:39,363:INFO:Completed get_chatgpt_response for narrative response.
+2024-10-18 23:58:39,364:INFO:Sending narrative response to channel: *Ralynn, your Dexterity check result is 22 (rolled 20 + modifier 2).* 
+
+Ralynn, her eyes ablaze, rips her sword from the tree. With a thunderous crash, the tree splits, revealing a hidden cache of gold coins and jewels, left by previous adventurers. The forest awakens in startled chatter, the woodland creatures in awe of her might and fortune. 
+
+What do you do? The DC was: 17. 
+
+This DC was chosen as it represents a high challenge, considering the unexpected bonus Ralynn obtained from her critical success - the hidden treasure. It requires luck and an extraordinary feat of strength.
+2024-10-18 23:58:39,472:INFO:Narrative response sent to user 266384402450350082.
+2024-10-18 23:59:30,800:INFO:User 266384402450350082 initiated character creation.
+2024-10-18 23:59:40,866:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-18 23:59:40,866:INFO:on_message triggered for message from 266384402450350082: 'Ralynn'
+2024-10-18 23:59:40,867:INFO:Parsing message from user 266384402450350082: 'ralynn'
+2024-10-18 23:59:40,867:INFO:Regex matches found: []
+2024-10-18 23:59:40,867:INFO:No valid action recognized in the message.
+2024-10-18 23:59:40,868:INFO:No valid action found in the message.
+2024-10-18 23:59:44,950:INFO:User 266384402450350082 selected gender: Female
+2024-10-18 23:59:47,536:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-19 00:01:23,322:INFO:User 266384402450350082 provided description with 45 words.
+2024-10-19 00:01:23,323:INFO:on_message triggered for message from 266384402450350082: 'Tall, sandy blonde hair. White, blousy shirt with long puffy sleeves under a dark blue coat. Brown belt, scabbarded rapier (unless she's using it). Tight blue leather pants, worn dark brown boots. Easy to laugh, quick to anger. Sardonic smile, dangerous twinkle in her eyes'
+2024-10-19 00:01:23,324:INFO:Parsing message from user 266384402450350082: 'tall, sandy blonde hair. white, blousy shirt with long puffy sleeves under a dark blue coat. brown belt, scabbarded rapier (unless she's using it). tight blue leather pants, worn dark brown boots. easy to laugh, quick to anger. sardonic smile, dangerous twinkle in her eyes'
+2024-10-19 00:01:23,325:INFO:Regex matches found: []
+2024-10-19 00:01:23,325:INFO:No valid action recognized in the message.
+2024-10-19 00:01:23,325:INFO:No valid action found in the message.
+2024-10-19 00:01:28,258:INFO:User 266384402450350082 selected species: Human
+2024-10-19 00:01:31,855:INFO:User 266384402450350082 selected class: Warrior
+2024-10-19 00:01:31,856:INFO:AbilitySelect initialized for Strength.
+2024-10-19 00:01:31,856:INFO:AbilitySelect initialized for Dexterity.
+2024-10-19 00:01:31,857:INFO:AbilitySelect initialized for Constitution.
+2024-10-19 00:01:31,857:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-19 00:01:36,676:INFO:User 266384402450350082 set Strength to 15. Cost: 7. Total points spent: 7.
+2024-10-19 00:01:42,486:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 14.
+2024-10-19 00:01:45,375:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 21.
+2024-10-19 00:01:48,168:INFO:AbilitySelect initialized for Intelligence.
+2024-10-19 00:01:48,168:INFO:AbilitySelect initialized for Wisdom.
+2024-10-19 00:01:48,168:INFO:AbilitySelect initialized for Charisma.
+2024-10-19 00:01:48,169:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-19 00:01:48,358:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-19 00:01:50,709:INFO:AbilitySelect initialized for Strength.
+2024-10-19 00:01:50,710:INFO:AbilitySelect initialized for Dexterity.
+2024-10-19 00:01:50,710:INFO:AbilitySelect initialized for Constitution.
+2024-10-19 00:01:50,710:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-19 00:01:50,864:INFO:User 266384402450350082 navigated back to PhysicalAbilitiesView.
+2024-10-19 00:01:57,725:INFO:AbilitySelect initialized for Intelligence.
+2024-10-19 00:01:57,725:INFO:AbilitySelect initialized for Wisdom.
+2024-10-19 00:01:57,726:INFO:AbilitySelect initialized for Charisma.
+2024-10-19 00:01:57,726:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-19 00:01:57,874:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-19 00:02:01,729:INFO:User 266384402450350082 set Intelligence to 13. Cost: 3. Total points spent: 24.
+2024-10-19 00:02:06,182:INFO:User 266384402450350082 set Charisma to 13. Cost: 3. Total points spent: 27.
+2024-10-19 00:02:09,735:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-19 00:02:09,919:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-19 00:02:11,609:INFO:Characters saved successfully.
+2024-10-19 00:02:11,610:INFO:Character 'Ralynn' created successfully for user 266384402450350082.
