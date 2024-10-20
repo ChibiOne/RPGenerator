@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ui import View, Button, Select
+from discord import SelectOption, Embed
 import json
 import os
 from dotenv import load_dotenv
@@ -217,246 +218,233 @@ def is_valid_point_allocation(allocation):
     
     if total_cost > POINT_BUY_TOTAL:
         return False, f"Total points spent ({total_cost}) exceed the allowed pool of {POINT_BUY_TOTAL}."
+    elif total_cost < POINT_BUY_TOTAL:
+        return False, f"Total points spent ({total_cost}) are less than the allowed pool of {POINT_BUY_TOTAL}."
+
     if total_cost < min_total_cost:
         return False, f"Total points spent ({total_cost}) are too low. Ensure you spend exactly {POINT_BUY_TOTAL} points."
-    for score in allocation.values():
-        if score < 8 or score > 15:
-            return False, f"Ability scores must be between 8 and 15. Found {score}."
+        for score in allocation.values():
+            if score < 8 or score > 15:
+                return False, f"Ability scores must be between 8 and 15. Found {score}."
     return True, "Valid allocation."
 
 # ---------------------------- #
 #      UI Component Classes    #
 # ---------------------------- #
 
-class GenericDropdown(Select):
+class GenericDropdown(discord.ui.Select):
     """
     A generic dropdown class that can be reused for various selections.
     """
-    def __init__(self, placeholder, options, callback_func):
+    def __init__(self, placeholder, options, callback_func, user_id):
         super().__init__(placeholder=placeholder, min_values=1, max_values=1, options=options)
         self.callback_func = callback_func
+        self.user_id = user_id
 
     async def callback(self, interaction: discord.Interaction):
-        await self.callback_func(self, interaction)
+        await self.callback_func(self, interaction, self.user_id)
 
 # Callback functions for dropdowns
-async def gender_callback(dropdown, interaction):
+async def gender_callback(dropdown, interaction, user_id):
     """
     Callback for gender selection.
     """
     try:
-        await interaction.response.defer(ephemeral=True)
-        user_id = str(interaction.user.id)
         selected_gender = dropdown.values[0]
         character_creation_sessions[user_id]['gender'] = selected_gender
         logging.info(f"User {user_id} selected gender: {selected_gender}")
 
         # Proceed to pronouns selection
-        await interaction.user.send(
-            f"Gender set to **{selected_gender}**! Please select your pronouns:",
-            view=PronounsSelectionView()
+        await interaction.response.edit_message(
+            content=f"Gender set to **{selected_gender}**! Please select your pronouns:",
+            view=PronounsSelectionView(user_id)
         )
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "Unable to send you a DM. Please check your privacy settings.",
-            ephemeral=True
-        )
-        del character_creation_sessions[user_id]
-        logging.warning(f"Could not send DM to user {user_id} for pronouns selection.")
     except Exception as e:
-        await interaction.user.send(f"An error occurred: {e}")
+        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
         logging.error(f"Error in gender_callback for user {user_id}: {e}")
 
-async def pronouns_callback(dropdown, interaction):
+async def pronouns_callback(dropdown, interaction, user_id):
     """
     Callback for pronouns selection.
     """
     try:
-        await interaction.response.defer(ephemeral=True)
-        user_id = str(interaction.user.id)
         selected_pronouns = dropdown.values[0]
         character_creation_sessions[user_id]['pronouns'] = selected_pronouns
         logging.info(f"User {user_id} selected pronouns: {selected_pronouns}")
 
-        # Proceed to description input
-        await interaction.user.send(
-            "Please enter a brief description of your character (max 200 words):\n"
-            "You have 200 words to describe your character's appearance, personality, background, etc."
-        )
-        await interaction.user.send("Enter your description below:")
-        
-        # Wait for description input
-        def check_description(m):
-            return m.author.id == interaction.user.id and isinstance(m.channel, discord.DMChannel)
-
-        try:
-            while True:
-                description_message = await bot.wait_for('message', check=check_description, timeout=120)
-                description = description_message.content
-                word_count = len(description.split())
-                if word_count > 200:
-                    await interaction.user.send(
-                        f"Description is too long ({word_count} words). Please limit it to 200 words."
-                    )
-                    continue  # Prompt again
-                else:
-                    character_creation_sessions[user_id]['description'] = description
-                    logging.info(f"User {user_id} provided description with {word_count} words.")
-                    break  # Valid input received
-
-            await interaction.user.send(
-                "Description set! Please select a species:",
-                view=SpeciesSelectionView()
-            )
-        except asyncio.TimeoutError:
-            await interaction.user.send("Character creation timed out during description input. Please try again.")
-            del character_creation_sessions[user_id]
-            logging.warning(f"User {user_id} timed out during description input.")
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "Unable to send you a DM. Please check your privacy settings.",
-            ephemeral=True
-        )
-        del character_creation_sessions[user_id]
-        logging.warning(f"Could not send DM to user {user_id} for description input.")
+        # Proceed to description input using a modal
+        await interaction.response.send_modal(DescriptionModal(user_id))
     except Exception as e:
-        await interaction.user.send(f"An error occurred: {e}")
-        user_id = str(interaction.user.id)
+        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
         logging.error(f"Error in pronouns_callback for user {user_id}: {e}")
 
-async def species_callback(dropdown, interaction):
+async def species_callback(dropdown, interaction, user_id):
     """
     Callback for species selection.
     """
     try:
-        await interaction.response.defer(ephemeral=True)
-        user_id = str(interaction.user.id)
         selected_species = dropdown.values[0]
         character_creation_sessions[user_id]['species'] = selected_species
         logging.info(f"User {user_id} selected species: {selected_species}")
 
         # Proceed to class selection
-        await interaction.user.send(
-            f"Species set to **{selected_species}**! Please select a class:",
-            view=ClassSelectionView()
+        await interaction.response.edit_message(
+            content=f"Species set to **{selected_species}**! Please select a class:",
+            view=ClassSelectionView(user_id)
         )
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "Unable to send you a DM. Please check your privacy settings.",
-            ephemeral=True
-        )
-        del character_creation_sessions[user_id]
-        logging.warning(f"Could not send DM to user {user_id} for class selection.")
     except Exception as e:
-        await interaction.user.send(f"An error occurred: {e}")
+        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
         logging.error(f"Error in species_callback for user {user_id}: {e}")
 
-async def class_callback(dropdown, interaction):
+async def class_callback(dropdown, interaction, user_id):
     """
     Callback for class selection.
     """
     try:
-        await interaction.response.defer(ephemeral=True)
-        user_id = str(interaction.user.id)
         selected_class = dropdown.values[0]
         character_creation_sessions[user_id]['char_class'] = selected_class
         logging.info(f"User {user_id} selected class: {selected_class}")
 
         # Proceed to ability score assignment
-        await interaction.user.send(
-            f"Class set to **{selected_class}**! Now, assign your ability scores using the point-buy system.",
+
+        # Send the embed with the PhysicalAbilitiesView
+        await interaction.response.edit_message(
+            content="Let's begin your character creation!\n\n"
+            f"You have **{POINT_BUY_TOTAL} points** to distribute among your abilities using the point-buy system.\n\n"
+            "Here's how the costs work:\n"
+            "- **8:** Gain 2 points\n"
+            "- **9:** Gain 1 point\n"
+            "- **10:** 0 points\n"
+            "- **11:** Spend 1 point\n"
+            "- **12:** Spend 2 points\n"
+            "- **13:** Spend 3 points\n"
+            "- **14:** Spend 5 points\n"
+            "- **15:** Spend 7 points\n\n"
+            "No ability score can be raised above **15**, and none can be lowered below **8**.\n\n"
+            "Please assign your **Physical Attributes**:",
             view=PhysicalAbilitiesView(user_id)
         )
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "Unable to send you a DM. Please check your privacy settings.",
-            ephemeral=True
-        )
-        del character_creation_sessions[user_id]
-        logging.warning(f"Could not send DM to user {user_id} for ability score assignment.")
     except Exception as e:
-        await interaction.user.send(f"An error occurred: {e}")
+        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
         logging.error(f"Error in class_callback for user {user_id}: {e}")
 
+def generate_ability_embed(user_id):
+    """
+    Generates an embed reflecting the current ability scores and remaining points.
+    """
+    try:
+        remaining_points = POINT_BUY_TOTAL - character_creation_sessions[user_id]['points_spent']
+        assignments = character_creation_sessions[user_id]['stats']
+
+        embed = discord.Embed(title="Character Creation - Ability Scores", color=discord.Color.blue())
+        embed.add_field(name="Remaining Points", value=f"{remaining_points}/{POINT_BUY_TOTAL}", inline=False)
+
+        # Add assigned scores
+        for ability in ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma']:
+            score = assignments.get(ability, 10)
+            embed.add_field(name=ability, value=str(score), inline=True)
+
+        embed.set_footer(text="Assign your ability scores using the dropdowns below.")
+
+        return embed
+    except Exception as e:
+        logging.error(f"Error generating embed for user {user_id}: {e}")
+        return None
+    
 # Character Creation Views
-class CharacterCreationView(View):
+class CharacterCreationView(discord.ui.View):
     """
     Initial view for character creation with a start button.
     """
-    def __init__(self):
+    def __init__(self, bot):
         super().__init__()
-        self.add_item(StartCharacterButton())
+        self.bot = bot
+        self.add_item(StartCharacterButton(bot))
 
-class StartCharacterButton(Button):
-    """
-    Button to initiate character creation.
-    """
-    def __init__(self):
+class StartCharacterButton(discord.ui.Button):
+    def __init__(self, bot):
         super().__init__(label="Start Character Creation", style=discord.ButtonStyle.green)
+        self.bot = bot
 
     async def callback(self, interaction: discord.Interaction):
-        """
-        Callback for the start button.
-        """
         try:
-            await interaction.response.defer(ephemeral=True)
             user_id = str(interaction.user.id)
 
             # Initialize session
+            if not hasattr(self.bot, 'character_creation_sessions'):
+                self.bot.character_creation_sessions = {}
             character_creation_sessions[user_id] = {'stats': {}, 'points_spent': 0}
 
-            # Send instructions
-            await interaction.user.send(
-                "Let's begin your character creation!\n\n"
-                f"You have **{POINT_BUY_TOTAL} points** to distribute among your abilities using the point-buy system.\n\n"
-                "Here's how the costs work:\n"
-                "- **8:** Gain 2 points\n"
-                "- **9:** Gain 1 point\n"
-                "- **10:** 0 points\n"
-                "- **11:** Spend 1 point\n"
-                "- **12:** Spend 2 points\n"
-                "- **13:** Spend 3 points\n"
-                "- **14:** Spend 5 points\n"
-                "- **15:** Spend 7 points\n\n"
-                "No ability score can be raised above **15**, and none can be lowered below **8**.\n\n"
-                "Please enter your character's name:"
-            )
+            # Create initial embed
+            embed = Embed(title="Character Creation - Ability Scores", color=discord.Color.blue())
+            embed.add_field(name="Remaining Points", value=f"{POINT_BUY_TOTAL}/{POINT_BUY_TOTAL}", inline=False)
+            embed.set_footer(text="Assign your ability scores using the dropdowns below.")
 
-            # Wait for the user's response for the character name
-            def check_name(m):
-                return m.author.id == interaction.user.id and isinstance(m.channel, discord.DMChannel)
-
-            try:
-                name_message = await bot.wait_for('message', check=check_name, timeout=60)
-                character_creation_sessions[user_id]['name'] = name_message.content
-                logging.info(f"User {user_id} entered name: {name_message.content}")
-
-                await interaction.user.send(
-                    "Character name set! Please select your gender:",
-                    view=GenderSelectionView()
-                )
-            except asyncio.TimeoutError:
-                await interaction.user.send("Character creation timed out. Please try again.")
-                del character_creation_sessions[user_id]
-                logging.warning(f"User {user_id} timed out during name input.")
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                "Unable to send you a DM. Please check your privacy settings.",
-                ephemeral=True
-            )
-            logging.warning(f"Could not send DM to user {interaction.user.id} for character creation.")
+            # Present the modal to get the character's name
+            await interaction.response.send_modal(CharacterNameModal(user_id))
         except Exception as e:
-            await interaction.response.send_message(
-                "An unexpected error occurred during character creation. Please try again.",
-                ephemeral=True
-            )
+            await interaction.response.send_message(f"An unexpected error occurred: {e}", ephemeral=True)
             logging.error(f"Error in StartCharacterButton callback for user {user_id}: {e}")
 
-class GenderSelectionView(View):
+
+class CharacterNameModal(discord.ui.Modal):
+    def __init__(self, user_id):
+        super().__init__(title="Enter Character Name")
+        self.user_id = user_id
+        self.character_name = discord.ui.TextInput(label="Character Name")
+        self.add_item(self.character_name)
+
+
+    async def on_submit(self, interaction: discord.Interaction):
+        character_name = self.children[0].value
+        character_creation_sessions[self.user_id]['name'] = character_name
+        logging.info(f"User {self.user_id} entered name: {character_name}")
+
+        # Send or edit the message to proceed to gender selection
+        await interaction.response.send_message(
+            content="Character name set! Please select your gender:",
+            view=GenderSelectionView(self.user_id),
+            ephemeral=True
+        )
+        # Store the message object in the session for later editing
+        character_creation_sessions[self.user_id]['message'] = await interaction.original_response()
+
+class DescriptionModal(discord.ui.Modal):
+    def __init__(self, user_id):
+        super().__init__(title="Enter Character Description")
+        self.user_id = user_id
+        self.description = discord.ui.TextInput(
+            label="Character Description",
+            style=discord.TextStyle.long,
+            max_length=1000  # Optional: Limit input length
+        )
+        self.add_item(self.description)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        description = self.children[0].value
+        word_count = len(description.split())
+        if word_count > 200:
+            await interaction.response.send_message(
+                f"Description is too long ({word_count} words). Please limit it to 200 words.",
+                ephemeral=True
+            )
+            # Re-show the modal for input
+            await interaction.response.send_modal(DescriptionModal(self.user_id))
+        else:
+            character_creation_sessions[self.user_id]['description'] = description
+            logging.info(f"User {self.user_id} provided description with {word_count} words.")
+
+            # Proceed to species selection
+            await interaction.response.edit_message(
+                content="Description set! Please select a species:",
+                view=SpeciesSelectionView(self.user_id)
+            )
+
+class GenderSelectionView(discord.ui.View):
     """
     View for gender selection using a dropdown.
     """
-    def __init__(self):
+    def __init__(self, user_id):
         super().__init__()
         options = [
             discord.SelectOption(label="Male", description="Male gender"),
@@ -467,14 +455,15 @@ class GenderSelectionView(View):
         self.add_item(GenericDropdown(
             placeholder="Choose your character's gender...",
             options=options,
-            callback_func=gender_callback
+            callback_func=gender_callback,
+            user_id=user_id
         ))
 
-class PronounsSelectionView(View):
+class PronounsSelectionView(discord.ui.View):
     """
     View for pronouns selection using a dropdown.
     """
-    def __init__(self):
+    def __init__(self, user_id):
         super().__init__()
         options = [
             discord.SelectOption(label="He/Him", description="He/Him pronouns"),
@@ -485,14 +474,15 @@ class PronounsSelectionView(View):
         self.add_item(GenericDropdown(
             placeholder="Choose your character's pronouns...",
             options=options,
-            callback_func=pronouns_callback
+            callback_func=pronouns_callback,
+            user_id=user_id
         ))
 
-class SpeciesSelectionView(View):
+class SpeciesSelectionView(discord.ui.View):
     """
     View for species selection using a dropdown.
     """
-    def __init__(self):
+    def __init__(self, user_id):
         super().__init__()
         options = [
             discord.SelectOption(label="Human", description="A versatile and adaptable species."),
@@ -504,14 +494,15 @@ class SpeciesSelectionView(View):
         self.add_item(GenericDropdown(
             placeholder="Choose your species...",
             options=options,
-            callback_func=species_callback
+            callback_func=species_callback,
+            user_id=user_id
         ))
 
-class ClassSelectionView(View):
+class ClassSelectionView(discord.ui.View):
     """
     View for class selection using a dropdown.
     """
-    def __init__(self):
+    def __init__(self, user_id):
         super().__init__()
         options = [
             discord.SelectOption(label="Warrior", description="A strong fighter."),
@@ -523,68 +514,74 @@ class ClassSelectionView(View):
         self.add_item(GenericDropdown(
             placeholder="Choose your class...",
             options=options,
-            callback_func=class_callback
+            callback_func=class_callback,
+            user_id=user_id
         ))
 
-class PhysicalAbilitiesView(View):
+async def update_embed(interaction, user_id):
     """
-    View for assigning physical ability scores with navigation.
+    Updates the embed in the original message to reflect the current state.
     """
+    embed = generate_ability_embed(user_id)
+    if embed:
+        await interaction.message.edit(embed=embed)
+        logging.info(f"Embed updated for user {user_id}.")
+    else:
+        logging.error(f"Failed to update embed for user {user_id}.")
+
+class PhysicalAbilitiesView(discord.ui.View):
     def __init__(self, user_id):
         super().__init__()
         self.user_id = user_id
         self.physical_abilities = ['Strength', 'Dexterity', 'Constitution']
         
-        # Add dropdowns for physical abilities
         for ability in self.physical_abilities:
-            self.add_item(AbilitySelect(user_id, ability))
-        
-        # Add the navigation button
+            current_score = character_creation_sessions[user_id]['stats'].get(ability, None)
+            self.add_item(AbilitySelect(user_id, ability, current_score))
         self.add_item(NextMentalAbilitiesButton(user_id))
         logging.info(f"PhysicalAbilitiesView created for user {user_id} with {len(self.children)} components.")
 
-class MentalAbilitiesView(View):
-    """
-    View for assigning mental ability scores with navigation.
-    """
+class MentalAbilitiesView(discord.ui.View):
     def __init__(self, user_id):
         super().__init__()
         self.user_id = user_id
         self.mental_abilities = ['Intelligence', 'Wisdom', 'Charisma']
-        
-        # Add dropdowns for mental abilities
         for ability in self.mental_abilities:
-            self.add_item(AbilitySelect(user_id, ability))
-        
-        # Add the navigation buttons
+            current_score = character_creation_sessions[user_id]['stats'].get(ability, None)
+            self.add_item(AbilitySelect(user_id, ability, current_score))
         self.add_item(BackPhysicalAbilitiesButton(user_id))
         self.add_item(FinishAssignmentButton(user_id))
         logging.info(f"MentalAbilitiesView created for user {user_id} with {len(self.children)} components.")
 
-class AbilitySelect(Select):
+class AbilitySelect(discord.ui.Select):
     """
     Dropdown for selecting an ability score for a specific ability.
     """
-    def __init__(self, user_id, ability_name):
+    def __init__(self, user_id, ability_name, current_score=None):
         self.user_id = user_id
         self.ability_name = ability_name
         options = [
-            discord.SelectOption(label="8", description="Gain 2 points"),
-            discord.SelectOption(label="9", description="Gain 1 point"),
-            discord.SelectOption(label="10", description="0 points"),
-            discord.SelectOption(label="11", description="Spend 1 point"),
-            discord.SelectOption(label="12", description="Spend 2 points"),
-            discord.SelectOption(label="13", description="Spend 3 points"),
-            discord.SelectOption(label="14", description="Spend 5 points"),
-            discord.SelectOption(label="15", description="Spend 7 points"),
+            discord.SelectOption(label="8", description="Gain 2 points", default=(current_score == 8)),
+            discord.SelectOption(label="9", description="Gain 1 point", default=(current_score == 9)),
+            discord.SelectOption(label="10", description="0 points", default=(current_score == 10)),
+            discord.SelectOption(label="11", description="Spend 1 point", default=(current_score == 11)),
+            discord.SelectOption(label="12", description="Spend 2 points", default=(current_score == 12)),
+            discord.SelectOption(label="13", description="Spend 3 points", default=(current_score == 13)),
+            discord.SelectOption(label="14", description="Spend 5 points", default=(current_score == 14)),
+            discord.SelectOption(label="15", description="Spend 7 points", default=(current_score == 15)),
         ]
+        # Set the placeholder to show the current score
+        if current_score is not None:
+            placeholder_text = f"{self.ability_name}: {current_score}"
+        else:
+            placeholder_text = f"Assign {ability_name} score..."
         super().__init__(
-            placeholder=f"Assign {ability_name} score...",
+            placeholder=placeholder_text,
             min_values=1,
             max_values=1,
             options=options
         )
-        logging.info(f"AbilitySelect initialized for {ability_name}.")
+        logging.info(f"AbilitySelect initialized for {ability_name} with current_score={current_score}.")
 
     async def callback(self, interaction: discord.Interaction):
         """
@@ -594,7 +591,9 @@ class AbilitySelect(Select):
             selected_score = int(self.values[0])
             cost = calculate_score_cost(selected_score)
             user_id = self.user_id
-
+            cur_view=self.view
+            cur_message=interaction.message.content
+            
             # Retrieve previous score and cost
             previous_score = character_creation_sessions[user_id]['stats'].get(self.ability_name, 10)
             previous_cost = calculate_score_cost(previous_score)
@@ -611,114 +610,105 @@ class AbilitySelect(Select):
                 character_creation_sessions[user_id]['stats'][self.ability_name] = previous_score
                 character_creation_sessions[user_id]['points_spent'] -= (cost - previous_cost)
                 await interaction.response.send_message(
-                    f"Insufficient points to assign **{selected_score}** to **{self.ability_name}**. You have **{POINT_BUY_TOTAL - character_creation_sessions[user_id]['points_spent']} points** remaining.",
+                    f"Insufficient points to assign **{selected_score}** to **{self.ability_name}**. You have **{remaining_points + (cost - previous_cost)} points** remaining.",
                     ephemeral=True
                 )
                 logging.warning(f"User {user_id} overspent points while assigning {self.ability_name}.")
                 return
+
+            current_score=character_creation_sessions[user_id]['stats'].get(self.ability_name, 10),
+
+            # Determine which view to recreate
+            if isinstance(self.view, PhysicalAbilitiesView):
+                new_view = PhysicalAbilitiesView(user_id)
+            elif isinstance(self.view, MentalAbilitiesView):
+                new_view = MentalAbilitiesView(user_id)
             else:
-                await interaction.response.send_message(
-                    f"**{self.ability_name}** set to **{selected_score}**. Remaining points: **{remaining_points}**.",
-                    ephemeral=True
-                )
+                # Fallback or error handling
+                new_view = self.view
+            # Generate the updated embed
+            embed = generate_ability_embed(user_id)
+
+            # Update the message content, view, and embed
+            await interaction.response.edit_message(
+                view=new_view,
+                embed=embed  
+            )
         except ValueError:
-            await interaction.response.send_message(
+            await interaction.followup.send_message(
                 f"Invalid input for **{self.ability_name}**. Please select a valid score.",
                 ephemeral=True
             )
             logging.error(f"User {self.user_id} selected an invalid score for {self.ability_name}: {self.values[0]}")
         except Exception as e:
-            await interaction.user.send(f"An error occurred: {e}")
+            await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
             logging.error(f"Error in AbilitySelect callback for {self.ability_name}, user {self.user_id}: {e}")
 
-class NextMentalAbilitiesButton(Button):
-    """
-    Button to navigate to the Mental Abilities view.
-    """
+
+class NextMentalAbilitiesButton(discord.ui.Button):
     def __init__(self, user_id):
         super().__init__(label="Next", style=discord.ButtonStyle.blurple)
         self.user_id = user_id
 
     async def callback(self, interaction: discord.Interaction):
-        """
-        Callback to navigate to MentalAbilitiesView.
-        """
         try:
-            await interaction.response.defer(ephemeral=True)
             user_id = self.user_id
 
             # Check if points_spent exceeds POINT_BUY_TOTAL
             points_spent = character_creation_sessions[user_id]['points_spent']
             if points_spent > POINT_BUY_TOTAL:
-                await interaction.user.send(
+                await interaction.response.send_message(
                     f"You have overspent your points by **{points_spent - POINT_BUY_TOTAL}** points. Please adjust your ability scores.",
                     ephemeral=True
                 )
                 logging.warning(f"User {user_id} overspent points before navigating to MentalAbilitiesView.")
                 return
 
-            # Proceed to MentalAbilitiesView
-            await interaction.user.send(
-                "Now, please assign your mental abilities:",
-                view=MentalAbilitiesView(user_id)
+            # Generate the updated embed
+            embed = generate_ability_embed(user_id)
+
+            # Update the message content, view, and embed
+            await interaction.response.edit_message(
+                content="Now, please assign your mental abilities:",
+                view=MentalAbilitiesView(user_id),
+                embed=embed  
             )
             logging.info(f"User {user_id} navigated to MentalAbilitiesView.")
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                "Unable to send you a DM. Please check your privacy settings.",
-                ephemeral=True
-            )
-            del character_creation_sessions[user_id]
-            logging.warning(f"Could not send DM to user {user_id} for MentalAbilitiesView.")
         except Exception as e:
-            await interaction.user.send(f"An error occurred: {e}")
+            await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
             logging.error(f"Error in NextMentalAbilitiesButton callback for user {self.user_id}: {e}")
 
-class BackPhysicalAbilitiesButton(Button):
-    """
-    Button to navigate back to the Physical Abilities view.
-    """
+
+class BackPhysicalAbilitiesButton(discord.ui.Button):
     def __init__(self, user_id):
         super().__init__(label="Back", style=discord.ButtonStyle.gray)
         self.user_id = user_id
 
     async def callback(self, interaction: discord.Interaction):
-        """
-        Callback to navigate back to PhysicalAbilitiesView.
-        """
         try:
-            await interaction.response.defer(ephemeral=True)
             user_id = self.user_id
 
+            # Generate the updated embed
+            embed = generate_ability_embed(user_id)
+
             # Proceed back to PhysicalAbilitiesView
-            await interaction.user.send(
-                "Returning to Physical Abilities assignment:",
-                view=PhysicalAbilitiesView(user_id)
+            await interaction.response.edit_message(
+                content="Returning to Physical Abilities assignment:",
+                view=PhysicalAbilitiesView(user_id),
+                embed=embed 
             )
             logging.info(f"User {user_id} navigated back to PhysicalAbilitiesView.")
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                "Unable to send you a DM. Please check your privacy settings.",
-                ephemeral=True
-            )
-            del character_creation_sessions[user_id]
-            logging.warning(f"Could not send DM to user {user_id} for PhysicalAbilitiesView.")
         except Exception as e:
-            await interaction.user.send(f"An error occurred: {e}")
+            await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
             logging.error(f"Error in BackPhysicalAbilitiesButton callback for user {self.user_id}: {e}")
 
-class FinishAssignmentButton(Button):
-    """
-    Button to finalize ability score assignments.
-    """
+
+class FinishAssignmentButton(discord.ui.Button):
     def __init__(self, user_id):
         super().__init__(label="Finish", style=discord.ButtonStyle.green)
         self.user_id = user_id
 
     async def callback(self, interaction: discord.Interaction):
-        """
-        Callback to finalize character creation.
-        """
         try:
             user_id = self.user_id
             allocation = character_creation_sessions[user_id]['stats']
@@ -731,10 +721,13 @@ class FinishAssignmentButton(Button):
                 logging.warning(f"User {user_id} failed point allocation validation: {message}")
                 return
 
-            await interaction.response.send_message(
-                "All ability scores have been assigned correctly. Click the button below to finish.",
-                ephemeral=True,
-                view=FinalizeCharacterView(user_id)
+            # Generate the updated embed
+            embed = generate_ability_embed(user_id)
+
+            await interaction.response.edit_message(
+                content="All ability scores have been assigned correctly. Click the button below to finish.",
+                view=FinalizeCharacterView(user_id),
+                embed=embed 
             )
             logging.info(f"User {user_id} prepared to finalize character creation.")
         except KeyError:
@@ -744,10 +737,11 @@ class FinishAssignmentButton(Button):
             )
             logging.error(f"Character data not found for user {self.user_id} during finalization.")
         except Exception as e:
-            await interaction.user.send(f"An error occurred: {e}")
+            await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
             logging.error(f"Error in FinishAssignmentButton callback for user {self.user_id}: {e}")
 
-class FinalizeCharacterView(View):
+
+class FinalizeCharacterView(discord.ui.View):
     """
     View to finalize character creation.
     """
@@ -757,32 +751,25 @@ class FinalizeCharacterView(View):
         self.add_item(FinalizeCharacterButton(user_id))
         logging.info(f"FinalizeCharacterView created for user {user_id} with {len(self.children)} components.")
 
-class FinalizeCharacterButton(Button):
-    """
-    Button to complete character creation.
-    """
+class FinalizeCharacterButton(discord.ui.Button):
     def __init__(self, user_id):
         super().__init__(label="Finish Character Creation", style=discord.ButtonStyle.green)
         self.user_id = user_id
 
     async def callback(self, interaction: discord.Interaction):
-        """
-        Callback to finalize character creation.
-        """
         try:
-            await interaction.response.defer(ephemeral=True)
             user_id = self.user_id
             session = character_creation_sessions.get(user_id, {})
 
             if not session:
-                await interaction.user.send("No character data found. Please start over.")
+                await interaction.response.send_message("No character data found. Please start over.", ephemeral=True)
                 logging.error(f"No character data found for user {user_id} during finalization.")
                 return
 
             allocation = session.get('stats', {})
             is_valid, message = is_valid_point_allocation(allocation)
             if not is_valid:
-                await interaction.user.send(f"Character creation failed: {message}")
+                await interaction.response.send_message(f"Character creation failed: {message}", ephemeral=True)
                 logging.warning(f"User {user_id} failed point allocation validation during finalization: {message}")
                 return
 
@@ -794,20 +781,30 @@ class FinalizeCharacterButton(Button):
                 del character_creation_sessions[user_id]
                 logging.info(f"Character '{character.name}' created successfully for user {user_id}.")
 
+                # Create a final character summary embed
+                embed = discord.Embed(title=f"Character '{character.name}' Created!", color=discord.Color.green())
+                embed.add_field(name="Species", value=character.species, inline=True)
+                embed.add_field(name="Class", value=character.char_class, inline=True)
+                embed.add_field(name="Gender", value=character.gender, inline=True)
+                embed.add_field(name="Pronouns", value=character.pronouns, inline=True)
+                embed.add_field(name="Description", value=character.description, inline=False)
+                for stat, value in character.stats.items():
+                    embed.add_field(name=stat, value=str(value), inline=True)
+
                 # Confirm creation
-                await interaction.user.send(
-                    f"Character '{character.name}' (Species: {character.species}, Class: {character.char_class}, Gender: {character.gender}, Pronouns: {character.pronouns}) has been created successfully!\n"
-                    f"Ability Scores: {character.stats}\n"
-                    f"Description: {character.description}"
+                await interaction.response.edit_message(
+                    content=f"Your character has been created successfully!",
+                    view=None,
+                    embed=embed
                 )
             else:
-                await interaction.user.send("Character creation failed. Please start over.")
+                await interaction.response.send_message("Character creation failed. Please start over.", ephemeral=True)
                 logging.error(f"Character creation failed for user {user_id}.")
         except KeyError:
-            await interaction.user.send("Character data not found. Please start over.")
+            await interaction.response.send_message("Character data not found. Please start over.", ephemeral=True)
             logging.error(f"Character data not found for user {self.user_id} during finalization.")
         except Exception as e:
-            await interaction.user.send(f"An error occurred: {e}")
+            await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
             logging.error(f"Error in FinalizeCharacterButton callback for user {self.user_id}: {e}")
 
 async def finalize_character(interaction: discord.Interaction, user_id):
@@ -821,14 +818,14 @@ async def finalize_character(interaction: discord.Interaction, user_id):
     """
     session = character_creation_sessions.get(user_id, {})
     if not session:
-        await interaction.user.send("No character data found.")
+        await interaction.response.send_message("No character data found.", ephemeral=True)
         logging.error(f"No session data found for user {user_id} during finalization.")
         return None
 
     allocation = session.get('stats', {})
     is_valid, message = is_valid_point_allocation(allocation)
     if not is_valid:
-        await interaction.user.send(f"Character creation failed: {message}")
+        await interaction.response.send_message(f"Character creation failed: {message}", ephemeral=True)
         logging.warning(f"User {user_id} failed point allocation validation: {message}")
         return None
 
@@ -868,7 +865,7 @@ async def create_character(interaction: discord.Interaction):
     Slash command to initiate character creation.
     """
     try:
-        await interaction.user.send("Let's create your character!", view=CharacterCreationView())
+        await interaction.user.send("Let's create your character!", view=CharacterCreationView(bot))
         await interaction.response.send_message("Check your DMs to start character creation!", ephemeral=True)
         logging.info(f"User {interaction.user.id} initiated character creation.")
     except discord.Forbidden:

@@ -5,13 +5,14 @@
         "char_class": "Warrior",
         "gender": "Female",
         "pronouns": "She/Her",
-        "description": "Tall, sandy blonde hair. White, blousy shirt with long puffy sleeves under a dark blue coat. Brown belt, scabbarded rapier (unless she's using it). Tight blue leather pants, worn dark brown boots. Easy to laugh, quick to anger. Sardonic smile, dangerous twinkle in her eyes",
+        "description": "Awesome",
         "stats": {
-            "Strength": 15,
+            "Strength": 11,
             "Dexterity": 15,
             "Constitution": 15,
-            "Intelligence": 13,
-            "Charisma": 13
+            "Intelligence": 12,
+            "Wisdom": 13,
+            "Charisma": 15
         },
         "skills": {},
         "inventory": {},
