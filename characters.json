@@ -3,45 +3,46 @@
         "name": "Ralynn",
         "species": "Human",
         "char_class": "Warrior",
-        "gender": "Female",
-        "pronouns": "She/Her",
-        "description": "Awesome",
         "stats": {
-            "Strength": 11,
+            "Strength": 12,
             "Dexterity": 15,
             "Constitution": 15,
             "Intelligence": 12,
-            "Wisdom": 13,
+            "Wisdom": 12,
             "Charisma": 15
         },
-        "skills": {},
-        "inventory": {},
-        "equipment": {},
-        "currency": {},
-        "spells": {},
-        "abilities": {},
-        "current_area_name": "Clearing"
-    },
-    "266736292505583621": {
-        "name": "mrspectralfire",
-        "species": null,
-        "char_class": null,
-        "gender": null,
-        "pronouns": null,
-        "description": null,
-        "stats": {
-            "Strength": 10,
-            "Dexterity": 10,
-            "Constitution": 10,
-            "Intelligence": 10,
-            "Wisdom": 10,
-            "Charisma": 10
+        "inventory": [],
+        "equipment": {
+            "armor": null,
+            "left_hand": null,
+            "right_hand": null,
+            "belt_slots": [
+                null,
+                null,
+                null,
+                null
+            ],
+            "back": null,
+            "magic_slots": [
+                null,
+                null,
+                null
+            ]
         },
-        "skills": {},
-        "inventory": {},
-        "equipment": {},
-        "currency": {},
-        "spells": {},
-        "abilities": {}
+        "capacity": 180,
+        "ac": 10,
+        "max_hp": 1,
+        "curr_hp": 1,
+        "movement_speed": 30,
+        "travel_end_time": null,
+        "spellslots": {},
+        "level": 1,
+        "xp": 0,
+        "reputation": {},
+        "current_area_name": "Forest Entrance",
+        "current_location": "Unknown",
+        "current_region": "Avaloria",
+        "current_continent": "Eldoria",
+        "current_world": "Endara"
     }
 }

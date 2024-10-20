@@ -1,22 +1,29 @@
 {
     "Clearing": {
         "name": "Clearing",
-        "description": "An open clearing surrounded by trees.",
+        "description": "A peaceful clearing surrounded by tall trees.",
+        "inventory": [],
+        "connected_areas": ["Forest Entrance"],
         "coordinates": [0, 0],
-        "connected_areas": ["Pond"],
-        "inventory": [],
-        "npcs": [],
-        "channel_id": null,
-        "allows_intercontinental_travel": false
+        "channel_id": "123456789012345678",
+        "npcs": []
     },
-    "Pond": {
-        "name": "Pond",
-        "description": "A small pond with crystal clear water.",
-        "coordinates": [1, 0],
-        "connected_areas": ["Clearing"],
+    "Forest Entrance": {
+        "name": "Forest Entrance",
+        "description": "The entrance to a dense forest.",
         "inventory": [],
-        "npcs": [],
-        "channel_id": null,
-        "allows_intercontinental_travel": false
+        "connected_areas": ["Clearing", "Deep Forest"],
+        "coordinates": [1, 1],
+        "channel_id": "234567890123456789",
+        "npcs": []
+    },
+    "Deep Forest": {
+        "name": "Deep Forest",
+        "description": "A dark and mysterious part of the forest.",
+        "inventory": [],
+        "connected_areas": ["Forest Entrance"],
+        "coordinates": [2, 2],
+        "channel_id": "345678901234567890",
+        "npcs": []
     }
 }

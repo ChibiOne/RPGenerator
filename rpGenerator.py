@@ -58,6 +58,12 @@ tree = bot.tree  # Shortcut for command tree
 # Initialize global variables
 character_creation_sessions = {}
 last_error_time = {}  # For global cooldowns per user
+area_lookup = {}  # Dictionary mapping area names to Area instances
+npc_lookup = {}  # Dictionary mapping NPC names to NPC instances
+characters = {}  # Dictionary mapping user IDs to Character instances
+actions = {}  # Dictionary mapping actions to their associated stats
+my_world = None  # World instance
+
 
 # ---------------------------- #
 #          Utilities           #
@@ -84,17 +90,6 @@ def load_world(filename='world.json'):
     world = World.from_dict(data)
     return world
 
-def load_areas(filename='areas.json'):
-    with open(filename, 'r') as f:
-        data = json.load(f)
-    area_lookup = {}
-    for area_name, area_data in data.items():
-        area = Area.from_dict(area_data)
-        area_lookup[area_name] = area
-    # After all areas are loaded, set connected areas and NPCs
-    for area in area_lookup.values():
-        area.connected_areas = [area_lookup[name] for name in area.connected_area_names if name in area_lookup]
-    return area_lookup
 
 def load_npcs(filename='npcs.json'):
     with open(filename, 'r') as f:
@@ -121,22 +116,45 @@ def calculate_distance(coord1, coord2):
 def get_travel_time(character, destination_area):
     current_area = character.current_area
     distance = calculate_distance(current_area.coordinates, destination_area.coordinates)
-    speed = character.get_movement_speed()
-    travel_time = get_travel_time(distance, speed)
+    speed = character.movement_speed
+    if speed == 0:
+        return float('inf')  # Avoid division by zero
+    travel_time = distance / speed
     return travel_time
 
-async def travel_task(character, user_id):
-    travel_duration = (character.travel_end_time - datetime()).total_seconds()
-    await asyncio.sleep(travel_duration)
-    character.is_traveling = False
-    character.move_to_area(character.travel_destination)
-    character.travel_destination = None
-    character.travel_end_time = None
-    save_characters(characters)
+async def travel_task(character, user_id, characters, save_characters):
+    try:
+        dt = datetime.utcnow()  # Use UTC to avoid timezone issues
+        seconds = dt.timestamp()
+        travel_duration = character.travel_end_time - seconds
+
+        # Ensure travel_duration is non-negative
+        if travel_duration > 0:
+            await asyncio.sleep(travel_duration)
+        else:
+            logging.warning(f"Negative or zero travel duration for user '{user_id}'. Skipping sleep.")
+
+        # Update character's status
+        character.is_traveling = False
+        character.move_to_area(character.travel_destination)
+        character.travel_destination = None
+        character.travel_end_time = None
+
+        # Update the global 'characters' dictionary
+        characters[user_id] = character
+
+        # Save the updated 'characters' dictionary
+        save_characters(characters)
+
+        # Notify the user of arrival
+        user = bot.get_user(int(user_id))
+        if user:
+            await user.send(f"You have arrived at **{character.current_area.name}**.")
+
+        logging.info(f"User '{user_id}' has arrived at '{character.current_area.name}'.")
     
-    user = bot.get_user(int(user_id))
-    if user:
-        await user.send(f"You have arrived at **{character.current_area.name}**.")
+    except Exception as e:
+        logging.error(f"Error in travel_task for user '{user_id}': {e}")
 
 def load_actions():
     """
@@ -146,6 +164,7 @@ def load_actions():
     """
     try:
         with open(ACTIONS_FILE, 'r') as f:
+            global actions
             actions = json.load(f)
             logging.info("actions.json loaded successfully.")
             return actions
@@ -156,6 +175,18 @@ def load_actions():
         logging.error(f"Error decoding actions.json: {e}")
         return {}
     
+def loadall():
+    # Load world structure
+    my_world = load_world()
+    # Load areas
+    area_lookup = load_areas()
+    # Load NPCs
+    npc_lookup = load_npcs()
+    # Assign NPCs to areas
+    assign_npcs_to_areas(area_lookup, npc_lookup)
+    # Load characters
+    characters = load_characters(area_lookup)
+
 def saveall():
     # Collect all areas and NPCs
     areas = []  # List of all Area instances
@@ -168,18 +199,6 @@ def saveall():
     save_npcs(npcs)
     # Save characters
     save_characters(characters)
-
-def loadall():
-    # Load world structure
-    my_world = load_world()
-    # Load areas
-    area_lookup = load_areas()
-    # Load NPCs
-    npc_lookup = load_npcs()
-    # Assign NPCs to areas
-    assign_npcs_to_areas(area_lookup, npc_lookup)
-    # Load characters
-    characters = load_characters(area_lookup)
 
 actions = load_actions()
 
@@ -489,15 +508,16 @@ class Location:
             areas=None  # Will be set after loading Areas
         )
 
-class Area(InventoryMixin):
-    def __init__(self, name, description='', inventory=None, npcs=None, connected_areas=None, coordinates=(0, 0), channel_id=None):
-        self.coordinates = coordinates  # (x, y)
+class Area:
+    def __init__(self, name, description, inventory=None, connected_areas=None, coordinates=(0, 0), channel_id=None, npcs=None):
         self.name = name
         self.description = description
-        self.inventory = inventory if inventory is not None else []
-        self.npcs = npcs if npcs is not None else []
-        self.connected_areas = connected_areas if connected_areas is not None else []  # List of connected Area instances
+        self.inventory = inventory if inventory else []
+        self.connected_areas = connected_areas if connected_areas else []  # List of Area instances
+        self.coordinates = coordinates
         self.channel_id = channel_id
+        self.npcs = npcs if npcs else []
+
     
     def add_npc(self, npc):
         if npc not in self.npcs:
@@ -533,24 +553,73 @@ class Area(InventoryMixin):
         }
     
     @classmethod
-    def from_dict(cls, data, area_lookup, npc_lookup):
-        area = cls(
+    def from_dict(cls, data):
+        return cls(
             name=data['name'],
             description=data.get('description', ''),
-            inventory=[Item.from_dict(item_data) for item_data in data.get('inventory', [])],
+            inventory=[Item.from_dict(item) for item in data.get('inventory', [])],
+            connected_areas=data.get('connected_areas', []),
             coordinates=tuple(data.get('coordinates', (0, 0))),
             channel_id=data.get('channel_id'),
+            npcs=[NPC.from_dict(npc) for npc in data.get('npcs', [])]
         )
         # Load NPCs
         area.npcs = [NPC.from_dict(npc_data) for npc_data in data.get('npcs', [])]
-        area_lookup[area.name] = area
+        area.connected_area_names = data.get('connected_areas', [])
         return area
 
-class Character(InventoryMixin):
+def load_areas(filename='areas.json'):
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    
+    area_lookup = {}
+    
+    # First pass: create Area instances without setting connected_areas
+    for area_name, area_data in data.items():
+        area = Area.from_dict(area_data)
+        area_lookup[area_name] = area
+    
+    # Second pass: resolve connected_areas to Area instances
+    for area in area_lookup.values():
+        # Replace connected area names with Area objects
+        resolved_connected_areas = []
+        for connected_area_name in area.connected_areas:
+            connected_area = area_lookup.get(connected_area_name)
+            if connected_area:
+                resolved_connected_areas.append(connected_area)
+            else:
+                print(f"Warning: Connected area '{connected_area_name}' not found for area '{area.name}'.")
+        area.connected_areas = resolved_connected_areas
+    
+    return area_lookup
+
+    
+# Load areas
+area_lookup = load_areas()
+
+# Function to retrieve an Area by name
+def get_area_by_name(area_name, area_lookup):
+    area = area_lookup.get(area_name)
+    if not area:
+        raise ValueError(f"Area '{area_name}' does not exist.")
+    return area
+
+
+class Entity(InventoryMixin):
+    def __init__(self, name, stats=None, inventory=None, **kwargs):
+        self.name = name
+        self.stats = stats if stats else {}
+        # Other shared attributes...
+
+    def get_stat_modifier(self, stat):
+        return (self.stats.get(stat, 10) - 10) // 2
+
+class Character(Entity):
     """
     Represents a player's character with various attributes.
     """
-    def __init__(self, name, species=None, char_class=None, gender=None, pronouns=None, description=None, stats=None, skills=None, inventory=None, equipment=None, currency=None, spells=None, abilities=None, ac = None, max_hp = 1, curr_hp = 1, movement = None, spellslots = None, level=None, xp=None, reputation=None, **kwargs):
+    def __init__(self, user_id, name = None, species=None, char_class=None, gender=None, pronouns=None, description=None, stats=None, skills=None, inventory=None, equipment=None, currency=None, spells=None, abilities=None, ac = None, max_hp = 1, curr_hp = 1, movement_speed = None, travel_end_time = None, spellslots = None, level=None, xp=None, reputation=None, is_traveling = False, current_area=None, current_location=None, current_region=None, current_continent=None, current_world=None, **kwargs):
+        self.user_id = user_id
         self.name = name
         self.species = species
         self.char_class = char_class
@@ -582,17 +651,23 @@ class Character(InventoryMixin):
         self.ac = ac if ac else 5
         self.max_hp = max_hp if max_hp else 1
         self.curr_hp = curr_hp if curr_hp else 1
-        self.movement = movement
+        self.movement_speed = movement_speed if movement_speed else 30
+        self.travel_end_time = travel_end_time
         self.spellslots = spellslots
         self.level = level if level else 1
         self.xp = xp if xp else 0
         self.reputation = reputation if reputation else {}
+        self.is_traveling = is_traveling if is_traveling else False
         # Location attributes
-        self.current_area = kwargs.get('current_area')
-        self.current_location = kwargs.get('current_location')
-        self.current_region = kwargs.get('current_region')
-        self.current_continent = kwargs.get('current_continent')
-        self.current_world = kwargs.get('current_world')
+        if current_area and not isinstance(current_area, Area):
+            raise TypeError("current_area must be an Area instance or None.")
+        self.current_area = current_area if current_area else area_lookup.get("Clearing")
+        self.current_area = current_area if current_area else None
+        self.current_area_name = current_area.name if current_area else area_lookup.get("Clearing")
+        self.current_location = current_location if current_location else None
+        self.current_region = current_region if current_region else None
+        self.current_continent = current_continent if current_continent else None
+        self.current_world = current_world if current_world else None
 
     def get_stat_modifier(self, stat):
         """
@@ -707,13 +782,64 @@ class Character(InventoryMixin):
                 raise ValueError(f"No item equipped in slot {slot}.")
         else:
             raise ValueError(f"Invalid equipment slot: {slot}.")
+        
+    def move_to_area(self, new_area):
+        if new_area in self.current_area.connected_areas:
+            self.current_area = new_area
+            # Update current location if necessary
+            return True
+        else:
+            return False
+    
+    def move_to_location(self, new_location):
+        # Check if new_location is adjacent or accessible from current location
+        # For simplicity, assume any location within the same region is accessible
+        if new_location in self.current_region.locations:
+            self.current_location = new_location
+            # Update current area to a default area in the new location
+            self.current_area = new_location.areas[0] if new_location.areas else None
+            return True
+        else:
+            return False
+        
+    def move_to_region(self, new_region):
+        # Check if new_region is adjacent or accessible from current region
+        # For simplicity, assume any region within the same continent is accessible
+        if new_region in self.current_continent.regions:
+            self.current_region = new_region
+            # Update current location and area
+            self.current_location = new_region.locations[0] if new_region.locations else None
+            self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
+            return True
+        else:
+            return False
+        
+    def move_to_continent(self, new_continent):
+        # Implement conditions for moving between continents (e.g., must be at a port)
+        if new_continent in self.current_world.continents:
+            # Check if the character is at a port area that allows intercontinental travel
+            if self.current_area and self.current_area.allows_intercontinental_travel:
+                self.current_continent = new_continent
+                # Update current region, location, and area
+                self.current_region = new_continent.regions[0] if new_continent.regions else "Avaloria"
+                self.current_location = self.current_region.locations[0] if self.current_region and self.current_region.locations else ""
+                self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
+                return True
+            else:
+                print("You must be at a port to travel between continents.")
+                return False
+        else:
+            return False
 
     async def start_travel(self, destination_area, travel_time):
         self.is_traveling = True
         self.travel_destination = destination_area
-        self.travel_end_time = datetime.utcnow() + timedelta(hours=travel_time)
+        user_id = self.user_id
+        dt = datetime.today()  # Get timezone naive now
+        seconds = dt.timestamp()
+        self.travel_end_time = seconds + (timedelta(hours=travel_time).total_seconds())
         # Start the travel task
-        asyncio.create_task(travel_task(self, self.user_id))
+        asyncio.create_task(travel_task(self, user_id, characters, save_characters))
 
     def to_dict(self):
         return {
@@ -734,21 +860,22 @@ class Character(InventoryMixin):
             'ac': self.ac,
             'max_hp': self.max_hp,
             'curr_hp': self.curr_hp,
-            'movement': self.movement,
+            'movement_speed': self.movement_speed,
+            'travel_end_time': self.travel_end_time,
             'spellslots': self.spellslots,
             'level': self.level,
             'xp': self.xp,
             'reputation': self.reputation,
-            'current_area': self.current_area,
+            'current_area_name': self.current_area.name if self.current_area else None,
             'current_location': self.current_location,
             'current_region': self.current_region,
             'current_continent': self.current_continent,
             'current_world': self.current_world
-        }
+            }
         
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data, user_id, area_lookup):
         inventory = [Item.from_dict(item_data) for item_data in data.get('inventory', [])]
         equipment_data = data.get('equipment', {})
         equipment = {
@@ -759,8 +886,11 @@ class Character(InventoryMixin):
             'back': Item.from_dict(equipment_data['back']) if equipment_data.get('back') else None,
             'magic_slots': [Item.from_dict(item) if item else None for item in equipment_data.get('magic_slots', [None]*3)]
         }
+        current_area_name = data.get('current_area_name')
+        current_area = area_lookup.get(current_area_name) if current_area_name else None
         return cls(
             name=data['name'],
+            user_id=user_id,
             species=data.get('species'),
             char_class=data.get('char_class'),
             stats=data.get('stats', {}),
@@ -772,19 +902,22 @@ class Character(InventoryMixin):
             ac=data.get('ac'),
             max_hp=data.get('max_hp'),
             curr_hp=data.get('curr_hp'),
-            movement=data.get('movement'),
+            movement_speed=data.get('movement_speed'),
+            travel_end_time=data.get('travel_end_time'),
             spellslots=data.get('spellslots'),
-            current_area=data.get('current_area'),
-            current_location=data.get('current_location'),
-            current_region=data.get('current_region'),
-            current_continent=data.get('current_continent'),
-            current_world=data.get('current_world')
+            current_area=current_area,
+            current_location=data.get('current_location') if data.get('current_location') else "Unknown",
+            current_region=data.get('current_region') if data.get('current_region') else "Avaloria",
+            current_continent=data.get('current_continent') if data.get('current_continent') else "Eldoria",
+            current_world=data.get('current_world') if data.get('current_world') else "Endara"
         )
 
 
 def check_travel_completion(character):
     if character.is_traveling:
-        if datetime.utcnow() >= character.travel_end_time:
+        dt = datetime.today()  # Get timezone naive now
+        seconds = dt.timestamp()
+        if seconds >= character.travel_end_time:
             character.is_traveling = False
             character.move_to_area(character.travel_destination)
             character.travel_destination = None
@@ -792,68 +925,19 @@ def check_travel_completion(character):
             return True  # Travel completed
     return False  # Still traveling
 
-def move_to_area(self, new_area):
-    if new_area in self.current_area.connected_areas:
-        self.current_area = new_area
-        # Update current location if necessary
-        return True
-    else:
-        return False
-    
-def move_to_location(self, new_location):
-    # Check if new_location is adjacent or accessible from current location
-    # For simplicity, assume any location within the same region is accessible
-    if new_location in self.current_region.locations:
-        self.current_location = new_location
-        # Update current area to a default area in the new location
-        self.current_area = new_location.areas[0] if new_location.areas else None
-        return True
-    else:
-        return False
-    
-def move_to_region(self, new_region):
-    # Check if new_region is adjacent or accessible from current region
-    # For simplicity, assume any region within the same continent is accessible
-    if new_region in self.current_continent.regions:
-        self.current_region = new_region
-        # Update current location and area
-        self.current_location = new_region.locations[0] if new_region.locations else None
-        self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
-        return True
-    else:
-        return False
-    
-def move_to_continent(self, new_continent):
-    # Implement conditions for moving between continents (e.g., must be at a port)
-    if new_continent in self.current_world.continents:
-        # Check if the character is at a port area that allows intercontinental travel
-        if self.current_area and self.current_area.allows_intercontinental_travel:
-            self.current_continent = new_continent
-            # Update current region, location, and area
-            self.current_region = new_continent.regions[0] if new_continent.regions else None
-            self.current_location = self.current_region.locations[0] if self.current_region and self.current_region.locations else None
-            self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
-            return True
-        else:
-            print("You must be at a port to travel between continents.")
-            return False
-    else:
-        return False
 
-
-def load_characters():
+def load_characters(area_lookup, filename='characters.json'):
     """
     Loads character data from the characters.json file.
     Returns:
         dict: A dictionary mapping user IDs to Character instances.
     """
     try:
-        def load_characters(area_lookup, filename='characters.json'):
             with open(filename, 'r') as f:
                 data = json.load(f)
                 characters = {}
             for user_id, char_data in data.items():
-                character = Character.from_dict(char_data)
+                character = Character.from_dict(char_data, area_lookup=area_lookup, user_id=user_id)
                 # Set current area reference
                 area_name = character.current_area_name
                 character.current_area = area_lookup.get(area_name)
@@ -864,12 +948,19 @@ def load_characters():
         return {}
 
 def save_characters(characters, filename='characters.json'):
-    data = {user_id: character.to_dict() for user_id, character in characters.items()}
-    with open(filename, 'w') as f:
-        json.dump(data, f, indent=4)
+    if not isinstance(characters, dict):
+        logging.error("Invalid data type for 'characters'. Expected a dictionary.")
+        return
+    try:
+        data = {user_id: character.to_dict() for user_id, character in characters.items()}
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=4)
+        logging.info("Characters saved successfully.")
+    except Exception as e:
+        logging.error(f"Failed to save characters: {e}")
 
 
-characters = load_characters()
+characters = load_characters(area_lookup)
 
 # Point-Buy System Configuration
 POINT_BUY_TOTAL = 27
@@ -929,13 +1020,14 @@ def is_valid_point_allocation(allocation):
 
 
 
-class NPC(InventoryMixin):
-    def __init__(self=None, name = None, role = None, inventory=None, capacity=None, stats = None, movement = None, max_hp = None, curr_hp = None, spellslots = None, ac = None,abilities = None, spells = None, attitude = None, faction = None, reputation = None, relations = None, dialogue = None, description = None, is_hostile = None, current_area = None, **kwargs):
+class NPC(Entity):
+    def __init__(self=None, name = None, role = None, inventory=None, capacity=None, stats = None, movement_speed = None, travel_end_time = None, max_hp = None, curr_hp = None, spellslots = None, ac = None,abilities = None, spells = None, attitude = None, faction = None, reputation = None, relations = None, dialogue = None, description = None, is_hostile = None, current_area = None, **kwargs):
         super().__init__(inventory=inventory, capacity=capacity)
         self.name = name
         self.role = role # e.g., 'Shopkeeper', 'Guard', 'Quest Giver'
         self.stats = stats
-        self.movement = movement
+        self.movement_speed = movement_speed
+        self.travel_end_time = travel_end_time
         self.max_hp = max_hp
         self.curr_hp = curr_hp
         self.spellslots = spellslots
@@ -949,7 +1041,7 @@ class NPC(InventoryMixin):
         self.dialogue = dialogue if dialogue else {}
         self.description = description
         self.is_hostile = is_hostile if is_hostile is not None else False
-        self.current_area = current_area
+        self.current_area = current_area if current_area else "The Void"
 
     def move_to_area(self, new_area):
         if self.current_area:
@@ -989,7 +1081,8 @@ class NPC(InventoryMixin):
             'stats': self.stats,
             'is_hostile': self.is_hostile,
             'role': self.role,
-            'movement': self.movement,
+            'movement_speed': self.movement_speed,
+            'travel_end_time': self.travel_end_time,
             'max_hp': self.max_hp,
             'curr_hp': self.curr_hp,
             'spellslots': self.spellslots,
@@ -1616,9 +1709,21 @@ async def finalize_character(interaction: discord.Interaction, user_id):
         logging.warning(f"User {user_id} failed point allocation validation: {message}")
         return None
 
+
+    # Example area name to assign
+    starting_area_name = "Clearing"
+
+    # Retrieve the Area object
+    starting_area = area_lookup.get(starting_area_name)
+
+    if not starting_area:
+        raise ValueError(f"Starting area '{starting_area_name}' does not exist in area_lookup.")
+
+
     # Create the Character instance
     character = Character(
         name=session.get('name', "Unnamed Character"),
+        user_id=session.get('user_id', user_id),
         species=session.get('species', "Unknown Species"),
         char_class=session.get('char_class', "Unknown Class"),
         gender=session.get('gender', "Unspecified"),
@@ -1638,14 +1743,24 @@ async def finalize_character(interaction: discord.Interaction, user_id):
         currency=session.get('currency', {}),
         spells=session.get('spells', {}),
         abilities=session.get('abilities', {}),
-        hp=session.get('hp', 1),
         ac=session.get('ac', 10),
         spellslots=session.get('spellslots', {}),
-        movement=session.get('movement', 30),
+        movement_speed=session.get('movement_speed', 30),
+        travel_end_time=session.get('travel_end_time', None),
         level=session.get('level', 1),
         xp=session.get('xp', 0),
         reputation=session.get('reputation', 0),
+        faction=session.get('faction', "Neutral"),
+        relations=session.get('relations', {}),
+        max_hp=session.get('max_hp', 1),
+        curr_hp=session.get('curr_hp', 1),
+        current_area = starting_area,
+        current_location=session.get('current_location') if session.get('current_location') else "Unknown",
+        current_region=session.get('current_region') if session.get('current_region') else "Avaloria",
+        current_continent=session.get('current_continent') if session.get('current_continent') else "Eldoria",
+        current_world=session.get('current_world') if session.get('current_world') else "Endara",
     )
+    
 
     return character
 
@@ -1737,15 +1852,15 @@ async def talk(interaction: discord.Interaction, npc_name: str):
 
 @tree.command(name='inventory', description="View your character's inventory.")
 async def inventory_command(ctx):
-    user_id = str(ctx.author.id)
+    user_id = str(ctx.user.id)
     character = characters.get(user_id)
     if character:
         inventory_list = '\n'.join(f"- {item.name} ({item.item_type})" for item in character.inventory)
         if not inventory_list:
             inventory_list = "Your inventory is empty."
-        await ctx.send(f"**{character.name}'s Inventory:**\n{inventory_list}")
+        await ctx.response.send_message(f"**{character.name}'s Inventory:**\n{inventory_list}")
     else:
-        await ctx.send("You don't have a character yet. Use `/create_character` to get started.")
+        await ctx.response.send_message("You don't have a character yet. Use `/create_character` to get started.")
 
 @tree.command(name="pickup", description="Pick up an item from the area.")
 @app_commands.describe(item_name="The name of the item to pick up.")
@@ -1959,37 +2074,86 @@ async def identify(interaction: discord.Interaction, item_name: str):
 
     await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
 
-@tree.command(name="move", description="Move to a connected area.")
-@app_commands.describe(area_name="The name of the area to move to.")
-async def move(interaction: discord.Interaction, area_name: str):
+@tree.command(name="travel", description="Move to a connected area.")
+@app_commands.describe(destination="The name of the area to move to.")
+async def travel(interaction: discord.Interaction, destination: str):
     user_id = str(interaction.user.id)
     character = characters.get(user_id)
-    
+
     if not character:
         await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
         return
-    
-    if character.is_traveling:
-        await interaction.response.send_message("You are already traveling.", ephemeral=True)
-        return
-    
+
     current_area = character.current_area
+    if not current_area:
+        await interaction.response.send_message("Your current area is undefined.", ephemeral=True)
+        return
+
     # Find the area with the given name in connected areas
+    target_area = None
     for area in current_area.connected_areas:
-        if area.name.lower() == area_name.lower():
-            travel_time = get_travel_time(character, area)
-            character.start_travel(area, travel_time)
-            save_characters(characters)
-            await interaction.response.send_message(f"You begin traveling to **{area.name}**. It will take approximately {travel_time / 60:.2f} minutes.", ephemeral=False)
-            asyncio.create_task(travel_task(character, user_id))
-            return
-    
-    await interaction.response.send_message(f"You can't move to **{area_name}** from here.", ephemeral=True)
+        if area.name.lower() == destination.lower():
+            target_area = area
+            break
+
+    if not target_area:
+        await interaction.response.send_message(f"**{destination}** is not connected to your current area.", ephemeral=True)
+        return
+
+    travel_time = get_travel_time(character, target_area)  # Implement this function accordingly
+
+    # For testing, ensure travel_time is at least 5 seconds
+    travel_time = max(travel_time, 5)
+
+    character.is_traveling = True
+    character.travel_destination = target_area
+    character.travel_end_time = datetime.utcnow().timestamp() + travel_time
+
+    # Update the characters dictionary
+    characters[user_id] = character
+
+    # Save characters
+    save_characters(characters)
+
+    # Send traveling message
+    await interaction.response.send_message(
+        f"You begin traveling to **{target_area.name}**. It will take approximately {travel_time / 60:.2f} minutes.",
+        ephemeral=False
+    )
+
+    # Start the travel_task
+    asyncio.create_task(travel_task(character, user_id, characters, save_characters))
+
+# Implement the autocomplete callback
+@travel.autocomplete('destination')
+async def travel_autocomplete(interaction: discord.Interaction, current: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        return []  # No suggestions if user has no character
+
+    current_area = character.current_area
+    if not current_area:
+        return []  # No suggestions if current area is undefined
+
+    # Fetch connected areas
+    connected_areas = current_area.connected_areas
+
+    # Filter based on the current input (case-insensitive)
+    suggestions = [
+        app_commands.Choice(name=area.name, value=area.name)
+        for area in connected_areas
+        if current.lower() in area.name.lower()
+    ]
+
+    # Discord limits to 25 choices
+    return suggestions[:25]
 
 
-@tree.command(name="move_location", description="Move to a different location within your current region.")
-@app_commands.describe(location_name="The name of the location to move to.")
-async def move_location(interaction: discord.Interaction, location_name: str):
+@tree.command(name="travel_location", description="Travel to a different location within your current region.")
+@app_commands.describe(location_name="The name of the location to travel to.")
+async def travel_location(interaction: discord.Interaction, location_name: str):
     user_id = str(interaction.user.id)
     character = characters.get(user_id)
     
@@ -2039,8 +2203,20 @@ async def location(interaction: discord.Interaction):
     continent = character.current_continent
     world = character.current_world
 
+    # Ensure 'area' is an Area object
+    if area and not isinstance(area, Area):
+        logging.error(f"current_area for user '{user_id}' is not an Area object.")
+        await interaction.response.send_message("Your character's area data is corrupted.", ephemeral=True)
+        return
+
+    # Construct the response message
+    response_message = (
+        f"You are in **{area.name}**, located in **{location}**, "
+        f"**{region}**, **{continent}**, **{world}**."
+    )
+
     await interaction.response.send_message(
-        f"You are in **{area.name}**, located in **{location.name}**, **{region.name}**, **{continent.name}**, **{world.name}**.",
+        response_message,
         ephemeral=False
     )
 

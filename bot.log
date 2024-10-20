@@ -2931,3 +2931,760 @@ Traceback (most recent call last):
     if user_id not in characters:
        ^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: argument of type 'NoneType' is not iterable
+2024-10-20 07:27:18,475:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 07:27:18,477:INFO:actions.json loaded successfully.
+2024-10-20 07:30:59,264:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 07:30:59,265:INFO:actions.json loaded successfully.
+2024-10-20 07:34:31,261:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 07:34:31,262:INFO:actions.json loaded successfully.
+2024-10-20 07:35:06,577:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 07:35:06,578:INFO:actions.json loaded successfully.
+2024-10-20 07:54:44,240:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 07:57:15,786:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:00:12,267:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:00:12,267:INFO:actions.json loaded successfully.
+2024-10-20 08:09:39,856:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:09:39,857:INFO:actions.json loaded successfully.
+2024-10-20 08:18:00,298:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:18:00,300:INFO:actions.json loaded successfully.
+2024-10-20 08:19:33,802:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:19:33,803:INFO:actions.json loaded successfully.
+2024-10-20 08:20:22,633:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:20:22,635:INFO:actions.json loaded successfully.
+2024-10-20 08:22:30,500:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:22:30,501:INFO:actions.json loaded successfully.
+2024-10-20 08:22:30,505:INFO:logging in using static token
+2024-10-20 08:22:30,961:INFO:Shard ID None has connected to Gateway (Session ID: 3e727e23ae5ba1c405b38adca80d6b0a).
+2024-10-20 08:22:33,253:INFO:Bot is ready and command tree synchronized.
+2024-10-20 08:22:43,367:INFO:on_message triggered for message from 266384402450350082: '?shoot'
+2024-10-20 08:22:43,367:INFO:Parsing message from user 266384402450350082: '?shoot'
+2024-10-20 08:22:43,368:INFO:Regex matches found: ['?shoot']
+2024-10-20 08:22:43,368:INFO:Parsed action: 'shoot'
+2024-10-20 08:22:43,368:INFO:Action recognized: 'shoot'
+2024-10-20 08:22:43,369:INFO:Processing action 'shoot' for user 266384402450350082 associated with stat 'Dexterity'.
+2024-10-20 08:22:43,369:INFO:Ability check for Ralynn: Rolled 15 + modifier 2 = 17
+2024-10-20 08:22:43,866:INFO:Calling get_chatgpt_response for difficulty determination.
+2024-10-20 08:22:44,752:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-20 08:22:44,758:INFO:Completed get_chatgpt_response for difficulty determination.
+2024-10-20 08:22:44,758:INFO:Difficulty determined for user 266384402450350082: 15
+2024-10-20 08:22:44,759:INFO:Player Ralynn (user 266384402450350082) attempted to shoot. The DC was 15. It was a succeed..
+2024-10-20 08:22:44,760:INFO:Calling get_chatgpt_response for narrative response.
+2024-10-20 08:22:49,677:INFO:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-20 08:22:49,678:INFO:Completed get_chatgpt_response for narrative response.
+2024-10-20 08:22:49,678:INFO:Sending narrative response to channel: *Ralynn, your Dexterity check result is 17 (rolled 15 + modifier 2).* 
+
+*Ralynn, your Dexterity check result is 18 (rolled 18 + modifier 0).* 
+
+As Ralynn's arrow finds its mark, the bandits gasp in shock. One of them falls, an arrow embedded in his chest. The others scramble, drawing their weapons and scanning the area for the unseen attacker. The forest is suddenly filled with tension, the bandits on high alert. What do you do? The DC was: 15. This represents the challenge of landing an accurate shot amidst chaos and potential threats. It's a challenge, but not an impossible task for a skilled adventurer like Ralynn.
+2024-10-20 08:22:49,835:INFO:Narrative response sent to user 266384402450350082.
+2024-10-20 08:23:23,244:INFO:User 266384402450350082 initiated character creation.
+2024-10-20 08:23:33,339:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-20 08:23:41,541:INFO:User 266384402450350082 selected gender: Female
+2024-10-20 08:23:43,740:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-20 08:23:50,695:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-20 08:23:53,512:INFO:User 266384402450350082 selected species: Human
+2024-10-20 08:23:56,093:INFO:User 266384402450350082 selected class: Warrior
+2024-10-20 08:23:56,093:INFO:AbilitySelect initialized for Strength with current_score=None.
+2024-10-20 08:23:56,094:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 08:23:56,094:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:23:56,094:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:24:00,891:INFO:User 266384402450350082 set Strength to 15. Cost: 7. Total points spent: 7.
+2024-10-20 08:24:00,892:INFO:AbilitySelect initialized for Strength with current_score=15.
+2024-10-20 08:24:00,893:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 08:24:00,893:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:24:00,893:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:24:04,707:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 14.
+2024-10-20 08:24:04,707:INFO:AbilitySelect initialized for Strength with current_score=15.
+2024-10-20 08:24:04,708:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 08:24:04,708:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:24:04,709:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:24:06,038:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 21.
+2024-10-20 08:24:06,038:INFO:AbilitySelect initialized for Strength with current_score=15.
+2024-10-20 08:24:06,039:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 08:24:06,039:INFO:AbilitySelect initialized for Constitution with current_score=15.
+2024-10-20 08:24:06,039:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:24:07,584:INFO:AbilitySelect initialized for Intelligence with current_score=None.
+2024-10-20 08:24:07,585:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 08:24:07,585:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:24:07,586:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:24:07,713:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-20 08:24:14,934:INFO:User 266384402450350082 set Intelligence to 14. Cost: 5. Total points spent: 26.
+2024-10-20 08:24:14,934:INFO:AbilitySelect initialized for Intelligence with current_score=14.
+2024-10-20 08:24:14,935:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 08:24:14,935:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:24:14,935:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:24:19,543:INFO:User 266384402450350082 set Wisdom to 10. Cost: 0. Total points spent: 26.
+2024-10-20 08:24:19,543:INFO:AbilitySelect initialized for Intelligence with current_score=14.
+2024-10-20 08:24:19,544:INFO:AbilitySelect initialized for Wisdom with current_score=10.
+2024-10-20 08:24:19,544:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:24:19,544:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:24:22,616:INFO:User 266384402450350082 set Charisma to 11. Cost: 1. Total points spent: 27.
+2024-10-20 08:24:22,617:INFO:AbilitySelect initialized for Intelligence with current_score=14.
+2024-10-20 08:24:22,617:INFO:AbilitySelect initialized for Wisdom with current_score=10.
+2024-10-20 08:24:22,618:INFO:AbilitySelect initialized for Charisma with current_score=11.
+2024-10-20 08:24:22,618:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:24:24,608:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-20 08:24:24,745:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-20 08:24:26,400:ERROR:Error in FinalizeCharacterButton callback for user 266384402450350082: Character.__init__() missing 1 required positional argument: 'user_id'
+2024-10-20 08:39:54,680:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:39:54,681:INFO:actions.json loaded successfully.
+2024-10-20 08:39:54,686:INFO:logging in using static token
+2024-10-20 08:39:55,211:INFO:Shard ID None has connected to Gateway (Session ID: 73c3769cbbd8a8a45c8ba23520c379bf).
+2024-10-20 08:39:57,415:INFO:Bot is ready and command tree synchronized.
+2024-10-20 08:40:10,165:INFO:User 266384402450350082 initiated character creation.
+2024-10-20 08:40:14,512:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-20 08:40:17,222:INFO:User 266384402450350082 selected gender: Female
+2024-10-20 08:40:18,965:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-20 08:40:26,845:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-20 08:40:29,705:INFO:User 266384402450350082 selected species: Human
+2024-10-20 08:40:31,890:INFO:User 266384402450350082 selected class: Warrior
+2024-10-20 08:40:31,890:INFO:AbilitySelect initialized for Strength with current_score=None.
+2024-10-20 08:40:31,891:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 08:40:31,891:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:40:31,892:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:40:37,000:INFO:User 266384402450350082 set Strength to 12. Cost: 2. Total points spent: 2.
+2024-10-20 08:40:37,000:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 08:40:37,001:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 08:40:37,001:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:40:37,001:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:40:39,381:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 9.
+2024-10-20 08:40:39,381:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 08:40:39,382:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 08:40:39,382:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:40:39,382:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:40:46,064:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 16.
+2024-10-20 08:40:46,065:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 08:40:46,065:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 08:40:46,066:INFO:AbilitySelect initialized for Constitution with current_score=15.
+2024-10-20 08:40:46,066:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:40:47,275:INFO:AbilitySelect initialized for Intelligence with current_score=None.
+2024-10-20 08:40:47,275:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 08:40:47,275:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:40:47,276:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:40:47,380:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-20 08:40:55,247:INFO:User 266384402450350082 set Intelligence to 12. Cost: 2. Total points spent: 18.
+2024-10-20 08:40:55,248:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 08:40:55,248:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 08:40:55,248:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:40:55,249:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:40:57,764:INFO:User 266384402450350082 set Wisdom to 12. Cost: 2. Total points spent: 20.
+2024-10-20 08:40:57,764:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 08:40:57,765:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 08:40:57,765:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:40:57,765:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:41:00,523:INFO:User 266384402450350082 set Charisma to 15. Cost: 7. Total points spent: 27.
+2024-10-20 08:41:00,523:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 08:41:00,523:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 08:41:00,523:INFO:AbilitySelect initialized for Charisma with current_score=15.
+2024-10-20 08:41:00,523:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:41:03,585:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-20 08:41:03,678:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-20 08:41:05,985:ERROR:Error in FinalizeCharacterButton callback for user 266384402450350082: Object of type Area is not JSON serializable
+2024-10-20 08:53:13,595:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 08:53:13,596:INFO:actions.json loaded successfully.
+2024-10-20 08:53:13,606:INFO:logging in using static token
+2024-10-20 08:53:14,104:INFO:Shard ID None has connected to Gateway (Session ID: 6e4178f905912cde079a6bc31142c248).
+2024-10-20 08:53:16,358:INFO:Bot is ready and command tree synchronized.
+2024-10-20 08:53:32,478:INFO:User 266384402450350082 initiated character creation.
+2024-10-20 08:53:38,208:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-20 08:53:42,591:INFO:User 266384402450350082 selected gender: Female
+2024-10-20 08:53:45,037:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-20 08:53:49,295:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-20 08:53:51,905:INFO:User 266384402450350082 selected species: Human
+2024-10-20 08:53:54,164:INFO:User 266384402450350082 selected class: Warrior
+2024-10-20 08:53:54,164:INFO:AbilitySelect initialized for Strength with current_score=None.
+2024-10-20 08:53:54,165:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 08:53:54,165:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:53:54,165:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:53:57,485:INFO:User 266384402450350082 set Strength to 12. Cost: 2. Total points spent: 2.
+2024-10-20 08:53:57,486:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 08:53:57,486:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 08:53:57,487:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:53:57,487:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:53:59,617:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 9.
+2024-10-20 08:53:59,618:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 08:53:59,618:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 08:53:59,619:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 08:53:59,619:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:54:01,907:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 16.
+2024-10-20 08:54:01,907:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 08:54:01,908:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 08:54:01,908:INFO:AbilitySelect initialized for Constitution with current_score=15.
+2024-10-20 08:54:01,909:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 08:54:02,787:INFO:AbilitySelect initialized for Intelligence with current_score=None.
+2024-10-20 08:54:02,787:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 08:54:02,788:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:54:02,788:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:54:02,900:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-20 08:54:05,904:INFO:User 266384402450350082 set Intelligence to 12. Cost: 2. Total points spent: 18.
+2024-10-20 08:54:05,904:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 08:54:05,904:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 08:54:05,905:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:54:05,905:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:54:08,310:INFO:User 266384402450350082 set Wisdom to 12. Cost: 2. Total points spent: 20.
+2024-10-20 08:54:08,310:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 08:54:08,311:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 08:54:08,311:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 08:54:08,311:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:54:11,002:INFO:User 266384402450350082 set Charisma to 15. Cost: 7. Total points spent: 27.
+2024-10-20 08:54:11,003:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 08:54:11,003:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 08:54:11,004:INFO:AbilitySelect initialized for Charisma with current_score=15.
+2024-10-20 08:54:11,004:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 08:54:12,226:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-20 08:54:12,408:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-20 08:54:13,969:ERROR:Error in FinalizeCharacterButton callback for user 266384402450350082: 'str' object has no attribute 'name'
+2024-10-20 09:24:39,255:INFO:Shard ID None has successfully RESUMED session 6e4178f905912cde079a6bc31142c248.
+2024-10-20 09:27:31,759:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 09:27:31,760:INFO:actions.json loaded successfully.
+2024-10-20 09:31:35,707:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 09:31:35,709:INFO:actions.json loaded successfully.
+2024-10-20 09:33:09,432:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 09:33:09,434:INFO:actions.json loaded successfully.
+2024-10-20 09:39:46,408:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 09:39:46,409:INFO:actions.json loaded successfully.
+2024-10-20 09:46:10,416:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 09:46:10,417:INFO:actions.json loaded successfully.
+2024-10-20 09:57:48,433:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 10:01:14,537:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 10:01:14,537:INFO:actions.json loaded successfully.
+2024-10-20 10:32:09,498:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 10:32:09,500:INFO:actions.json loaded successfully.
+2024-10-20 10:37:43,673:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 10:37:43,675:INFO:actions.json loaded successfully.
+2024-10-20 10:39:30,862:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 10:39:30,863:INFO:actions.json loaded successfully.
+2024-10-20 11:02:15,472:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:03:50,120:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:03:50,121:INFO:actions.json loaded successfully.
+2024-10-20 11:12:08,906:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:12:08,907:INFO:actions.json loaded successfully.
+2024-10-20 11:12:08,911:INFO:logging in using static token
+2024-10-20 11:12:09,456:INFO:Shard ID None has connected to Gateway (Session ID: 2ad584205baaf870612da86050900be3).
+2024-10-20 11:12:11,697:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:12:30,782:INFO:User 266384402450350082 initiated character creation.
+2024-10-20 11:12:38,587:INFO:User 266384402450350082 entered name: Ralynn
+2024-10-20 11:12:43,389:INFO:User 266384402450350082 selected gender: Female
+2024-10-20 11:12:45,883:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-20 11:12:51,072:INFO:User 266384402450350082 provided description with 1 words.
+2024-10-20 11:12:53,731:INFO:User 266384402450350082 selected species: Human
+2024-10-20 11:12:55,641:INFO:User 266384402450350082 selected class: Warrior
+2024-10-20 11:12:55,641:INFO:AbilitySelect initialized for Strength with current_score=None.
+2024-10-20 11:12:55,641:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 11:12:55,642:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 11:12:55,642:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 11:13:00,068:INFO:User 266384402450350082 set Strength to 12. Cost: 2. Total points spent: 2.
+2024-10-20 11:13:00,068:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 11:13:00,068:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 11:13:00,069:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 11:13:00,069:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 11:13:03,707:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 9.
+2024-10-20 11:13:03,708:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 11:13:03,708:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 11:13:03,708:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 11:13:03,708:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 11:13:06,562:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 16.
+2024-10-20 11:13:06,562:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 11:13:06,562:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 11:13:06,563:INFO:AbilitySelect initialized for Constitution with current_score=15.
+2024-10-20 11:13:06,564:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 11:13:07,850:INFO:AbilitySelect initialized for Intelligence with current_score=None.
+2024-10-20 11:13:07,850:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 11:13:07,851:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 11:13:07,851:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 11:13:07,980:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-20 11:13:11,346:INFO:User 266384402450350082 set Intelligence to 12. Cost: 2. Total points spent: 18.
+2024-10-20 11:13:11,347:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 11:13:11,347:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 11:13:11,347:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 11:13:11,348:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 11:13:13,625:INFO:User 266384402450350082 set Wisdom to 12. Cost: 2. Total points spent: 20.
+2024-10-20 11:13:13,625:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 11:13:13,626:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 11:13:13,626:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 11:13:13,626:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 11:13:16,691:INFO:User 266384402450350082 set Charisma to 15. Cost: 7. Total points spent: 27.
+2024-10-20 11:13:16,691:INFO:AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-20 11:13:16,691:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 11:13:16,692:INFO:AbilitySelect initialized for Charisma with current_score=15.
+2024-10-20 11:13:16,692:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 11:13:20,218:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-20 11:13:20,476:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-20 11:13:21,545:INFO:Character 'Ralynn' created successfully for user 266384402450350082.
+2024-10-20 11:13:28,659:INFO:on_message triggered for message from 266384402450350082: '/scene'
+2024-10-20 11:13:28,659:INFO:Parsing message from user 266384402450350082: '/scene'
+2024-10-20 11:13:28,660:INFO:Regex matches found: []
+2024-10-20 11:13:28,660:INFO:No valid action recognized in the message.
+2024-10-20 11:13:28,660:INFO:No valid action found in the message.
+2024-10-20 11:13:28,661:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "scene" is not found
+2024-10-20 11:13:40,458:INFO:on_message triggered for message from 266384402450350082: '/scene'
+2024-10-20 11:13:40,459:INFO:Parsing message from user 266384402450350082: '/scene'
+2024-10-20 11:13:40,459:INFO:Regex matches found: []
+2024-10-20 11:13:40,459:INFO:No valid action recognized in the message.
+2024-10-20 11:13:40,460:INFO:No valid action found in the message.
+2024-10-20 11:13:40,460:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "scene" is not found
+2024-10-20 11:14:14,129:INFO:on_message triggered for message from 432686113576976394: 'Use `map` to check for locations you can travel to!'
+2024-10-20 11:14:14,130:ERROR:Ignoring exception in on_message
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
+    await coro(*args, **kwargs)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2218, in on_message
+    characters[user_id] = Character(name=message.author.name)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Character.__init__() missing 1 required positional argument: 'user_id'
+2024-10-20 11:14:42,922:ERROR:Ignoring exception in command 'location'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2112, in location
+    f"You are in **{area.name}**, located in **{location.name}**, **{region.name}**, **{continent.name}**, **{world.name}**.",
+                                                ^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'name'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'location' raised an exception: AttributeError: 'str' object has no attribute 'name'
+2024-10-20 11:15:33,732:ERROR:Ignoring exception in command 'location'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2112, in location
+    f"You are in **{area.name}**, located in **{location.name}**, **{region.name}**, **{continent.name}**, **{world.name}**.",
+                                                ^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'name'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'location' raised an exception: AttributeError: 'str' object has no attribute 'name'
+2024-10-20 11:21:31,498:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:21:31,499:INFO:actions.json loaded successfully.
+2024-10-20 11:21:31,503:INFO:logging in using static token
+2024-10-20 11:21:32,079:INFO:Shard ID None has connected to Gateway (Session ID: 42da40ed6554858ee0c0b53dfea2b9d8).
+2024-10-20 11:21:34,289:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:22:03,091:ERROR:Ignoring exception in command 'move'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2041, in move
+    if character.is_traveling:
+       ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Character' object has no attribute 'is_traveling'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'move' raised an exception: AttributeError: 'Character' object has no attribute 'is_traveling'
+2024-10-20 11:22:20,456:ERROR:Ignoring exception in command 'move'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2041, in move
+    if character.is_traveling:
+       ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Character' object has no attribute 'is_traveling'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'move' raised an exception: AttributeError: 'Character' object has no attribute 'is_traveling'
+2024-10-20 11:24:31,475:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:24:31,476:INFO:actions.json loaded successfully.
+2024-10-20 11:24:31,481:INFO:logging in using static token
+2024-10-20 11:24:31,992:INFO:Shard ID None has connected to Gateway (Session ID: 8ff76b9082a49d534271a40a5aa9f834).
+2024-10-20 11:24:34,257:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:24:55,120:ERROR:Ignoring exception in command 'move'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2050, in move
+    travel_time = get_travel_time(character, area)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 114, in get_travel_time
+    speed = character.get_movement_speed()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Character' object has no attribute 'get_movement_speed'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'move' raised an exception: AttributeError: 'Character' object has no attribute 'get_movement_speed'
+2024-10-20 11:28:01,703:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:28:01,705:INFO:actions.json loaded successfully.
+2024-10-20 11:28:01,709:INFO:logging in using static token
+2024-10-20 11:28:02,276:INFO:Shard ID None has connected to Gateway (Session ID: 5078321cc1be8fd47f31a1026b4273b5).
+2024-10-20 11:28:04,708:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:28:18,295:ERROR:Ignoring exception in command 'move'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2050, in move
+    travel_time = get_travel_time(character, area)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 114, in get_travel_time
+    speed = character.movement_speed
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Character' object has no attribute 'movement_speed'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'move' raised an exception: AttributeError: 'Character' object has no attribute 'movement_speed'
+2024-10-20 11:31:17,903:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:31:17,904:INFO:actions.json loaded successfully.
+2024-10-20 11:31:17,908:INFO:logging in using static token
+2024-10-20 11:31:18,828:INFO:Shard ID None has connected to Gateway (Session ID: 04b21bb1ca7009a0286c3b01be08c4e3).
+2024-10-20 11:31:21,100:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:31:37,373:ERROR:Task exception was never retrieved
+future: <Task finished name='Task-14' coro=<travel_task() done, defined at e:\Documents\GitHub\RPGenerator\rpGenerator.py:120> exception=AttributeError("'Character' object has no attribute 'travel_end_time'")>
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 121, in travel_task
+    travel_duration = (character.travel_end_time - datetime()).total_seconds()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Character' object has no attribute 'travel_end_time'
+2024-10-20 11:38:19,530:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:38:19,532:INFO:actions.json loaded successfully.
+2024-10-20 11:38:19,536:INFO:logging in using static token
+2024-10-20 11:38:20,132:INFO:Shard ID None has connected to Gateway (Session ID: 9750b9d4984a44dff10272631749715f).
+2024-10-20 11:38:22,354:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:38:33,631:ERROR:Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<travel_task() done, defined at e:\Documents\GitHub\RPGenerator\rpGenerator.py:120> exception=TypeError("function missing required argument 'year' (pos 1)")>
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 121, in travel_task
+    travel_duration = (character.travel_end_time - datetime()).total_seconds()
+                                                   ^^^^^^^^^^
+TypeError: function missing required argument 'year' (pos 1)
+2024-10-20 11:48:10,045:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:48:10,047:INFO:actions.json loaded successfully.
+2024-10-20 11:48:10,051:INFO:logging in using static token
+2024-10-20 11:48:10,548:INFO:Shard ID None has connected to Gateway (Session ID: fba2a5d0eac06ee126c59ba8971102fa).
+2024-10-20 11:48:12,997:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:48:49,763:ERROR:Task exception was never retrieved
+future: <Task finished name='Task-14' coro=<travel_task() done, defined at e:\Documents\GitHub\RPGenerator\rpGenerator.py:120> exception=TypeError("unsupported operand type(s) for -: 'NoneType' and 'float'")>
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 123, in travel_task
+    travel_duration = (character.travel_end_time - seconds)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'NoneType' and 'float'
+2024-10-20 11:50:30,011:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:50:30,013:INFO:actions.json loaded successfully.
+2024-10-20 11:50:30,017:INFO:logging in using static token
+2024-10-20 11:50:30,557:INFO:Shard ID None has connected to Gateway (Session ID: 74dd410eefaaf82447c884a6a19f75e1).
+2024-10-20 11:50:32,815:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:50:46,039:ERROR:Ignoring exception in command 'move'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2063, in move
+    await character.start_travel(area, travel_time)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 814, in start_travel
+    self.travel_end_time = seconds + timedelta(hours=travel_time)
+                           ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for +: 'float' and 'datetime.timedelta'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 872, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'move' raised an exception: TypeError: unsupported operand type(s) for +: 'float' and 'datetime.timedelta'
+2024-10-20 11:54:08,936:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:54:08,937:INFO:actions.json loaded successfully.
+2024-10-20 11:54:08,942:INFO:logging in using static token
+2024-10-20 11:54:09,742:INFO:Shard ID None has connected to Gateway (Session ID: 1b33789318df2e185a3ca5a8d7592be5).
+2024-10-20 11:54:11,988:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:54:29,090:ERROR:Ignoring exception in command 'move'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2063, in move
+    await character.start_travel(area, travel_time)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 814, in start_travel
+    self.travel_end_time = seconds + int(timedelta(hours=travel_time))
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'datetime.timedelta'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 872, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'move' raised an exception: TypeError: int() argument must be a string, a bytes-like object or a real number, not 'datetime.timedelta'
+2024-10-20 11:55:58,662:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 11:55:58,663:INFO:actions.json loaded successfully.
+2024-10-20 11:55:58,667:INFO:logging in using static token
+2024-10-20 11:55:59,316:INFO:Shard ID None has connected to Gateway (Session ID: 53a1aa8c4deed8ab59960296103dc464).
+2024-10-20 11:56:01,524:INFO:Bot is ready and command tree synchronized.
+2024-10-20 11:59:04,108:ERROR:Task exception was never retrieved
+future: <Task finished name='Task-11' coro=<travel_task() done, defined at e:\Documents\GitHub\RPGenerator\rpGenerator.py:120> exception=AttributeError("'Character' object has no attribute 'items'")>
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 129, in travel_task
+    save_characters(character)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 925, in save_characters
+    data = {user_id: character.to_dict() for user_id, character in characters.items()}
+                                                                   ^^^^^^^^^^^^^^^^
+AttributeError: 'Character' object has no attribute 'items'
+2024-10-20 11:59:04,111:ERROR:Task exception was never retrieved
+future: <Task finished name='Task-13' coro=<travel_task() done, defined at e:\Documents\GitHub\RPGenerator\rpGenerator.py:120> exception=AttributeError("'Character' object has no attribute 'items'")>
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 129, in travel_task
+    save_characters(character)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 925, in save_characters
+    data = {user_id: character.to_dict() for user_id, character in characters.items()}
+                                                                   ^^^^^^^^^^^^^^^^
+AttributeError: 'Character' object has no attribute 'items'
+2024-10-20 12:09:32,048:INFO:Shard ID None has successfully RESUMED session 53a1aa8c4deed8ab59960296103dc464.
+2024-10-20 12:36:04,161:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 12:36:04,163:INFO:actions.json loaded successfully.
+2024-10-20 12:36:04,167:INFO:logging in using static token
+2024-10-20 12:36:04,665:INFO:Shard ID None has connected to Gateway (Session ID: e64e036d9286e9f2db450bc93763d5ee).
+2024-10-20 12:36:06,954:INFO:Bot is ready and command tree synchronized.
+2024-10-20 12:36:21,818:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 12:36:21,819:INFO:actions.json loaded successfully.
+2024-10-20 12:36:21,823:INFO:logging in using static token
+2024-10-20 12:36:22,344:INFO:Shard ID None has connected to Gateway (Session ID: 539107af1cf6ce29f1f37cc414adfa88).
+2024-10-20 12:36:48,061:INFO:Characters saved successfully.
+2024-10-20 12:37:06,879:INFO:Bot is ready and command tree synchronized.
+2024-10-20 12:39:37,779:INFO:Characters saved successfully.
+2024-10-20 12:39:37,780:INFO:Characters saved successfully.
+2024-10-20 13:01:19,984:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:01:19,985:INFO:actions.json loaded successfully.
+2024-10-20 13:11:28,613:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:11:28,615:INFO:actions.json loaded successfully.
+2024-10-20 13:11:28,621:INFO:logging in using static token
+2024-10-20 13:11:29,266:INFO:Shard ID None has connected to Gateway (Session ID: c99a118f6b1d30385b551dd0e8e04379).
+2024-10-20 13:11:31,551:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:12:14,887:INFO:on_message triggered for message from 266384402450350082: '/travel forest entrance'
+2024-10-20 13:12:14,887:INFO:Parsing message from user 266384402450350082: '/travel forest entrance'
+2024-10-20 13:12:14,888:INFO:Regex matches found: []
+2024-10-20 13:12:14,888:INFO:No valid action recognized in the message.
+2024-10-20 13:12:14,888:INFO:No valid action found in the message.
+2024-10-20 13:12:14,889:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:13:25,016:INFO:on_message triggered for message from 266384402450350082: '/travel forest entrance'
+2024-10-20 13:13:25,017:INFO:Parsing message from user 266384402450350082: '/travel forest entrance'
+2024-10-20 13:13:25,017:INFO:Regex matches found: []
+2024-10-20 13:13:25,018:INFO:No valid action recognized in the message.
+2024-10-20 13:13:25,018:INFO:No valid action found in the message.
+2024-10-20 13:13:25,018:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:14:23,373:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:14:23,374:INFO:actions.json loaded successfully.
+2024-10-20 13:14:23,379:INFO:logging in using static token
+2024-10-20 13:14:23,881:INFO:Shard ID None has connected to Gateway (Session ID: 08bc91b68b68671ebfc0699677d5f6c7).
+2024-10-20 13:14:26,146:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:20:03,220:INFO:on_message triggered for message from 266384402450350082: '/travel forest entrance'
+2024-10-20 13:20:03,221:INFO:Parsing message from user 266384402450350082: '/travel forest entrance'
+2024-10-20 13:20:03,222:INFO:Regex matches found: []
+2024-10-20 13:20:03,222:INFO:No valid action recognized in the message.
+2024-10-20 13:20:03,222:INFO:No valid action found in the message.
+2024-10-20 13:20:03,223:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:21:25,466:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:21:25,469:INFO:actions.json loaded successfully.
+2024-10-20 13:21:25,474:INFO:logging in using static token
+2024-10-20 13:21:26,007:INFO:Shard ID None has connected to Gateway (Session ID: 26abf59014ce6bdfc0c31201822f07c2).
+2024-10-20 13:21:28,315:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:21:40,423:INFO:on_message triggered for message from 266384402450350082: '/travel forest entrance'
+2024-10-20 13:21:40,423:INFO:Parsing message from user 266384402450350082: '/travel forest entrance'
+2024-10-20 13:21:40,424:INFO:Regex matches found: []
+2024-10-20 13:21:40,424:INFO:No valid action recognized in the message.
+2024-10-20 13:21:40,425:INFO:No valid action found in the message.
+2024-10-20 13:21:40,426:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:24:57,369:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:24:57,370:INFO:actions.json loaded successfully.
+2024-10-20 13:24:57,375:INFO:logging in using static token
+2024-10-20 13:24:58,043:INFO:Shard ID None has connected to Gateway (Session ID: bbc5462748245c9670e2a17d33463ceb).
+2024-10-20 13:25:00,329:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:25:13,253:INFO:on_message triggered for message from 266384402450350082: '/travel forest entrance'
+2024-10-20 13:25:13,253:INFO:Parsing message from user 266384402450350082: '/travel forest entrance'
+2024-10-20 13:25:13,254:INFO:Regex matches found: []
+2024-10-20 13:25:13,254:INFO:No valid action recognized in the message.
+2024-10-20 13:25:13,254:INFO:No valid action found in the message.
+2024-10-20 13:25:13,254:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:30:00,349:INFO:on_message triggered for message from 266384402450350082: '/travel forest entrance'
+2024-10-20 13:30:00,349:INFO:Parsing message from user 266384402450350082: '/travel forest entrance'
+2024-10-20 13:30:00,349:INFO:Regex matches found: []
+2024-10-20 13:30:00,350:INFO:No valid action recognized in the message.
+2024-10-20 13:30:00,350:INFO:No valid action found in the message.
+2024-10-20 13:30:00,351:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:30:12,996:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:30:12,998:INFO:actions.json loaded successfully.
+2024-10-20 13:30:13,003:INFO:logging in using static token
+2024-10-20 13:30:13,494:INFO:Shard ID None has connected to Gateway (Session ID: f7e69efb1557bdd7a3446831f2a6e236).
+2024-10-20 13:30:15,758:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:30:32,337:INFO:on_message triggered for message from 266384402450350082: '/travel forest entrance'
+2024-10-20 13:30:32,337:INFO:Parsing message from user 266384402450350082: '/travel forest entrance'
+2024-10-20 13:30:32,338:INFO:Regex matches found: []
+2024-10-20 13:30:32,338:INFO:No valid action recognized in the message.
+2024-10-20 13:30:32,339:INFO:No valid action found in the message.
+2024-10-20 13:30:32,339:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:40:44,793:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:40:44,795:INFO:actions.json loaded successfully.
+2024-10-20 13:40:44,801:INFO:logging in using static token
+2024-10-20 13:40:45,527:INFO:Shard ID None has connected to Gateway (Session ID: c4e40bab28ed831ce3b1c00a034558c2).
+2024-10-20 13:40:47,693:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:44:57,198:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:44:57,199:INFO:actions.json loaded successfully.
+2024-10-20 13:44:57,205:INFO:logging in using static token
+2024-10-20 13:44:57,802:INFO:Shard ID None has connected to Gateway (Session ID: 173aed4e2c7bbd48bd342b6f48240c69).
+2024-10-20 13:45:00,052:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:48:29,449:INFO:on_message triggered for message from 266384402450350082: '/travel Clearing'
+2024-10-20 13:48:29,450:INFO:Parsing message from user 266384402450350082: '/travel clearing'
+2024-10-20 13:48:29,451:INFO:Regex matches found: []
+2024-10-20 13:48:29,451:INFO:No valid action recognized in the message.
+2024-10-20 13:48:29,451:INFO:No valid action found in the message.
+2024-10-20 13:48:29,452:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:54:32,469:INFO:on_message triggered for message from 266384402450350082: '/travel clearing'
+2024-10-20 13:54:32,469:INFO:Parsing message from user 266384402450350082: '/travel clearing'
+2024-10-20 13:54:32,470:INFO:Regex matches found: []
+2024-10-20 13:54:32,470:INFO:No valid action recognized in the message.
+2024-10-20 13:54:32,470:INFO:No valid action found in the message.
+2024-10-20 13:54:32,471:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:54:50,601:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 13:54:50,603:INFO:actions.json loaded successfully.
+2024-10-20 13:54:50,609:INFO:logging in using static token
+2024-10-20 13:54:51,278:INFO:Shard ID None has connected to Gateway (Session ID: de143f74ec13f4a9ae92168864b13f77).
+2024-10-20 13:54:53,571:INFO:Bot is ready and command tree synchronized.
+2024-10-20 13:55:02,351:INFO:on_message triggered for message from 266384402450350082: '/travel clearing'
+2024-10-20 13:55:02,351:INFO:Parsing message from user 266384402450350082: '/travel clearing'
+2024-10-20 13:55:02,352:INFO:Regex matches found: []
+2024-10-20 13:55:02,352:INFO:No valid action recognized in the message.
+2024-10-20 13:55:02,353:INFO:No valid action found in the message.
+2024-10-20 13:55:02,353:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:58:50,575:INFO:on_message triggered for message from 266384402450350082: '/travel clearing'
+2024-10-20 13:58:50,575:INFO:Parsing message from user 266384402450350082: '/travel clearing'
+2024-10-20 13:58:50,576:INFO:Regex matches found: []
+2024-10-20 13:58:50,576:INFO:No valid action recognized in the message.
+2024-10-20 13:58:50,576:INFO:No valid action found in the message.
+2024-10-20 13:58:50,577:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
+2024-10-20 13:59:07,696:ERROR:Ignoring exception in command 'inventory'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1855, in inventory_command
+    user_id = str(ctx.author.id)
+                  ^^^^^^^^^^
+AttributeError: 'Interaction' object has no attribute 'author'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'inventory' raised an exception: AttributeError: 'Interaction' object has no attribute 'author'
+2024-10-20 14:05:17,276:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 14:05:17,278:INFO:actions.json loaded successfully.
+2024-10-20 14:05:17,287:INFO:logging in using static token
+2024-10-20 14:05:17,876:INFO:Shard ID None has connected to Gateway (Session ID: 820f90b9d3cae0f76f85c3a15350d1ae).
+2024-10-20 14:05:20,042:INFO:Bot is ready and command tree synchronized.
+2024-10-20 14:05:39,628:ERROR:Ignoring exception in command 'inventory'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1861, in inventory_command
+    await ctx.send(f"**{character.name}'s Inventory:**\n{inventory_list}")
+          ^^^^^^^^
+AttributeError: 'Interaction' object has no attribute 'send'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'inventory' raised an exception: AttributeError: 'Interaction' object has no attribute 'send'
+2024-10-20 14:09:14,678:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 14:09:14,680:INFO:actions.json loaded successfully.
+2024-10-20 14:09:14,686:INFO:logging in using static token
+2024-10-20 14:09:15,341:INFO:Shard ID None has connected to Gateway (Session ID: b5208487fb1dd8774358a23bf4be2761).
+2024-10-20 14:09:17,537:INFO:Bot is ready and command tree synchronized.
+2024-10-20 14:09:59,768:INFO:on_message triggered for message from 266384402450350082: '/travel clearing'
+2024-10-20 14:09:59,769:INFO:Parsing message from user 266384402450350082: '/travel clearing'
+2024-10-20 14:09:59,769:INFO:Regex matches found: []
+2024-10-20 14:09:59,769:INFO:No valid action recognized in the message.
+2024-10-20 14:09:59,770:INFO:No valid action found in the message.
+2024-10-20 14:09:59,770:ERROR:Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "travel" is not found
