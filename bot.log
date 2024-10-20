@@ -2848,3 +2848,86 @@ discord.errors.InteractionResponded: This interaction has already been responded
 2024-10-20 01:22:10,120:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
 2024-10-20 01:22:11,425:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
 2024-10-20 01:22:11,532:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-20 01:26:38,209:INFO:on_message triggered for message from 266384402450350082: 'Final improvements on character creation done until i have created the code for inventories, abilities, and spells'
+2024-10-20 01:26:38,209:INFO:Parsing message from user 266384402450350082: 'final improvements on character creation done until i have created the code for inventories, abilities, and spells'
+2024-10-20 01:26:38,210:INFO:Regex matches found: []
+2024-10-20 01:26:38,210:INFO:No valid action recognized in the message.
+2024-10-20 01:26:38,211:INFO:No valid action found in the message.
+2024-10-20 01:42:33,694:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 01:42:33,695:INFO:actions.json loaded successfully.
+2024-10-20 01:42:33,696:INFO:Characters loaded successfully.
+2024-10-20 01:42:33,698:INFO:logging in using static token
+2024-10-20 01:42:34,322:INFO:Shard ID None has connected to Gateway (Session ID: 121ab18dfd406a3b32dfbdad2420140e).
+2024-10-20 01:42:36,479:INFO:Bot is ready and command tree synchronized.
+2024-10-20 06:38:53,907:WARNING:PyNaCl is not installed, voice will NOT be supported
+2024-10-20 06:38:53,908:INFO:actions.json loaded successfully.
+2024-10-20 06:38:53,912:INFO:logging in using static token
+2024-10-20 06:38:54,439:INFO:Shard ID None has connected to Gateway (Session ID: b8f017208733153feba920236951b9e8).
+2024-10-20 06:38:56,976:INFO:Bot is ready and command tree synchronized.
+2024-10-20 06:39:14,729:INFO:User 266384402450350082 initiated character creation.
+2024-10-20 06:39:26,700:INFO:User 266384402450350082 entered name: Ralynn Fargoer
+2024-10-20 06:39:31,482:INFO:User 266384402450350082 selected gender: Female
+2024-10-20 06:39:33,696:INFO:User 266384402450350082 selected pronouns: She/Her
+2024-10-20 06:41:51,262:INFO:User 266384402450350082 provided description with 53 words.
+2024-10-20 06:41:54,292:INFO:User 266384402450350082 selected species: Human
+2024-10-20 06:41:56,618:INFO:User 266384402450350082 selected class: Warrior
+2024-10-20 06:41:56,619:INFO:AbilitySelect initialized for Strength with current_score=None.
+2024-10-20 06:41:56,619:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 06:41:56,619:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 06:41:56,620:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 06:42:01,199:INFO:User 266384402450350082 set Strength to 12. Cost: 2. Total points spent: 2.
+2024-10-20 06:42:01,199:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 06:42:01,200:INFO:AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-20 06:42:01,200:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 06:42:01,200:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 06:42:03,870:INFO:User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 9.
+2024-10-20 06:42:03,870:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 06:42:03,871:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 06:42:03,871:INFO:AbilitySelect initialized for Constitution with current_score=None.
+2024-10-20 06:42:03,871:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 06:42:07,257:INFO:User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 16.
+2024-10-20 06:42:07,257:INFO:AbilitySelect initialized for Strength with current_score=12.
+2024-10-20 06:42:07,257:INFO:AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-20 06:42:07,258:INFO:AbilitySelect initialized for Constitution with current_score=15.
+2024-10-20 06:42:07,258:INFO:PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-20 06:42:10,244:INFO:AbilitySelect initialized for Intelligence with current_score=None.
+2024-10-20 06:42:10,244:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 06:42:10,245:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 06:42:10,245:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 06:42:10,406:INFO:User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-20 06:42:13,793:INFO:User 266384402450350082 set Intelligence to 15. Cost: 7. Total points spent: 23.
+2024-10-20 06:42:13,793:INFO:AbilitySelect initialized for Intelligence with current_score=15.
+2024-10-20 06:42:13,794:INFO:AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-20 06:42:13,794:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 06:42:13,794:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 06:42:18,485:INFO:User 266384402450350082 set Wisdom to 12. Cost: 2. Total points spent: 25.
+2024-10-20 06:42:18,486:INFO:AbilitySelect initialized for Intelligence with current_score=15.
+2024-10-20 06:42:18,486:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 06:42:18,486:INFO:AbilitySelect initialized for Charisma with current_score=None.
+2024-10-20 06:42:18,486:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 06:42:20,918:INFO:User 266384402450350082 set Charisma to 12. Cost: 2. Total points spent: 27.
+2024-10-20 06:42:20,918:INFO:AbilitySelect initialized for Intelligence with current_score=15.
+2024-10-20 06:42:20,919:INFO:AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-20 06:42:20,919:INFO:AbilitySelect initialized for Charisma with current_score=12.
+2024-10-20 06:42:20,919:INFO:MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-20 06:42:22,632:INFO:FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-20 06:42:22,788:INFO:User 266384402450350082 prepared to finalize character creation.
+2024-10-20 06:42:24,285:ERROR:Error in FinalizeCharacterButton callback for user 266384402450350082: 'NoneType' object does not support item assignment
+2024-10-20 06:42:46,024:INFO:on_message triggered for message from 266384402450350082: '/scene'
+2024-10-20 06:42:46,024:ERROR:Ignoring exception in on_message
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
+    await coro(*args, **kwargs)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2148, in on_message
+    if user_id not in characters:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not iterable
+2024-10-20 06:43:02,732:INFO:on_message triggered for message from 266384402450350082: '?shoot'
+2024-10-20 06:43:02,732:ERROR:Ignoring exception in on_message
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
+    await coro(*args, **kwargs)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2148, in on_message
+    if user_id not in characters:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not iterable

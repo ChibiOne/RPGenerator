@@ -1,0 +1,18 @@
+{
+    "Guard": {
+        "name": "Guard",
+        "description": "A stern-looking town guard.",
+        "dialogue": ["Halt! Who goes there?"],
+        "inventory": [],
+        "stats": {
+            "Strength": 12,
+            "Dexterity": 10,
+            "Constitution": 14,
+            "Intelligence": 11,
+            "Wisdom": 13,
+            "Charisma": 9
+        },
+        "is_hostile": false,
+        "current_area_name": "Clearing"
+    }
+}

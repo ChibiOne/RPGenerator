@@ -1,0 +1,22 @@
+{
+    "Clearing": {
+        "name": "Clearing",
+        "description": "An open clearing surrounded by trees.",
+        "coordinates": [0, 0],
+        "connected_areas": ["Pond"],
+        "inventory": [],
+        "npcs": [],
+        "channel_id": null,
+        "allows_intercontinental_travel": false
+    },
+    "Pond": {
+        "name": "Pond",
+        "description": "A small pond with crystal clear water.",
+        "coordinates": [1, 0],
+        "connected_areas": ["Clearing"],
+        "inventory": [],
+        "npcs": [],
+        "channel_id": null,
+        "allows_intercontinental_travel": false
+    }
+}

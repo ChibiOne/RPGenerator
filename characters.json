@@ -19,7 +19,8 @@
         "equipment": {},
         "currency": {},
         "spells": {},
-        "abilities": {}
+        "abilities": {},
+        "current_area_name": "Clearing"
     },
     "266736292505583621": {
         "name": "mrspectralfire",

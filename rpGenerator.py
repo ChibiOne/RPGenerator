@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ui import View, Button, Select
 from discord import SelectOption, Embed
+from discord import app_commands
 import json
 import os
 from dotenv import load_dotenv
@@ -10,6 +11,8 @@ import asyncio
 import re
 import logging
 import random
+import math
+from datetime import datetime, timedelta
 
 # ---------------------------- #
 #        Configuration         #
@@ -57,8 +60,83 @@ character_creation_sessions = {}
 last_error_time = {}  # For global cooldowns per user
 
 # ---------------------------- #
-#          Utilities            #
+#          Utilities           #
 # ---------------------------- #
+
+def save_world(world, filename='world.json'):
+    data = world.to_dict()
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
+
+def save_areas(areas, filename='areas.json'):
+    data = {area.name: area.to_dict() for area in areas}
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
+
+def save_npcs(npcs, filename='npcs.json'):
+    data = {npc.name: npc.to_dict() for npc in npcs}
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
+
+def load_world(filename='world.json'):
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    world = World.from_dict(data)
+    return world
+
+def load_areas(filename='areas.json'):
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    area_lookup = {}
+    for area_name, area_data in data.items():
+        area = Area.from_dict(area_data)
+        area_lookup[area_name] = area
+    # After all areas are loaded, set connected areas and NPCs
+    for area in area_lookup.values():
+        area.connected_areas = [area_lookup[name] for name in area.connected_area_names if name in area_lookup]
+    return area_lookup
+
+def load_npcs(filename='npcs.json'):
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    npc_lookup = {}
+    for npc_name, npc_data in data.items():
+        npc = NPC.from_dict(npc_data)
+        npc_lookup[npc_name] = npc
+    return npc_lookup
+
+def assign_npcs_to_areas(area_lookup, npc_lookup):
+    for area in area_lookup.values():
+        area.npcs = [npc_lookup[npc_name] for npc_name in area.npc_names if npc_name in npc_lookup]
+
+
+def calculate_distance(coord1, coord2):
+    """Calculate distance between two coordinates."""
+    return math.hypot(coord2[0] - coord1[0], coord2[1] - coord1[1])
+    ## Assume area_1 and area_2 have coordinates
+    #  distance = calculate_distance(area_1.coordinates, area_2.coordinates)
+    #  print(f"The distance between {area_1.name} and {area_2.name} is {distance} units.")
+    #  Output: The distance between Area 1 and Area 2 is 5.0 units.
+
+def get_travel_time(character, destination_area):
+    current_area = character.current_area
+    distance = calculate_distance(current_area.coordinates, destination_area.coordinates)
+    speed = character.get_movement_speed()
+    travel_time = get_travel_time(distance, speed)
+    return travel_time
+
+async def travel_task(character, user_id):
+    travel_duration = (character.travel_end_time - datetime()).total_seconds()
+    await asyncio.sleep(travel_duration)
+    character.is_traveling = False
+    character.move_to_area(character.travel_destination)
+    character.travel_destination = None
+    character.travel_end_time = None
+    save_characters(characters)
+    
+    user = bot.get_user(int(user_id))
+    if user:
+        await user.send(f"You have arrived at **{character.current_area.name}**.")
 
 def load_actions():
     """
@@ -77,20 +155,408 @@ def load_actions():
     except json.JSONDecodeError as e:
         logging.error(f"Error decoding actions.json: {e}")
         return {}
+    
+def saveall():
+    # Collect all areas and NPCs
+    areas = []  # List of all Area instances
+    npcs = []     # List of all NPC instances
+    # Save world structure
+    save_world(my_world)
+    # Save areas
+    save_areas(areas)
+    # Save NPCs
+    save_npcs(npcs)
+    # Save characters
+    save_characters(characters)
+
+def loadall():
+    # Load world structure
+    my_world = load_world()
+    # Load areas
+    area_lookup = load_areas()
+    # Load NPCs
+    npc_lookup = load_npcs()
+    # Assign NPCs to areas
+    assign_npcs_to_areas(area_lookup, npc_lookup)
+    # Load characters
+    characters = load_characters(area_lookup)
 
 actions = load_actions()
 
-class Character:
+######################
+#    Game Objects    #
+######################
+
+# Dictionary mapping channel IDs to Area instances
+channel_areas = {}
+
+def get_area_by_channel(channel_id):
+    return channel_areas.get(channel_id)
+
+def get_area_inventory(channel_id):
+    """Get or create the inventory for the area associated with a channel."""
+    if channel_id not in channel_areas:
+        channel_areas[channel_id] = []
+    return channel_areas[channel_id]
+
+class Item:
+    def __init__(self, name, weight, item_type, description='', effect=None,
+                 proficiency_needed=None, average_cost=0, is_magical=False, rarity='Common'):
+        self.name = name
+        self.weight = weight
+        self.item_type = item_type  # e.g., 'Weapon', 'Armor', 'Consumable'
+        self.description = description
+        self.effect = effect  # Can be a string or a dictionary describing the effect
+        self.proficiency_needed = proficiency_needed
+        self.average_cost = average_cost
+        self.is_magical = is_magical
+        self.rarity = rarity  # e.g., 'Common', 'Uncommon', 'Rare', etc.
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'weight': self.weight,
+            'item_type': self.item_type,
+            'description': self.description,
+            'effect': self.effect,
+            'proficiency_needed': self.proficiency_needed,
+            'average_cost': self.average_cost,
+            'is_magical': self.is_magical,
+            'rarity': self.rarity
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            weight=data['weight'],
+            item_type=data['item_type'],
+            description=data.get('description', ''),
+            effect=data.get('effect'),
+            proficiency_needed=data.get('proficiency_needed'),
+            average_cost=data.get('average_cost', 0),
+            is_magical=data.get('is_magical', False),
+            rarity=data.get('rarity', 'Common')
+        )
+
+class InventoryMixin:
+    def __init__(self, inventory=None, capacity=None):
+        self.inventory = inventory if inventory is not None else []
+        self.capacity = capacity
+
+    def add_item_to_inventory(self, item: Item) -> None:
+        if not isinstance(item, Item):
+            raise TypeError("Only items of type 'Item' can be added to the inventory.")
+        if self.can_add_item(item):
+            self.inventory.append(item)
+            print(f"Added {item.name} to {self.__class__.__name__}'s inventory.")
+        else:
+            print(f"Cannot add {item.name}; inventory is full.")
+
+    def remove_item_from_inventory(self, item_name):
+        for item in self.inventory:
+            if item.name == item_name:
+                self.inventory.remove(item)
+                print(f"Removed {item.name} from {self.__class__.__name__}'s inventory.")
+                return item
+        print(f"Item {item_name} not found in inventory.")
+        return None
+
+    def can_add_item(self, item):
+        if self.capacity is None:
+            return True  # Unlimited capacity
+
+        current_weight = self.calculate_total_weight()
+        if current_weight + item.weight <= self.capacity:
+            return True
+        else:
+            return False
+
+    def calculate_total_weight(self):
+        return sum(item.weight for item in self.inventory)
+    
+    def transfer_item(from_entity, to_entity, item_name):
+        item = from_entity.remove_item_from_inventory(item_name)
+        if item:
+            if to_entity.can_add_item(item):
+                to_entity.add_item_to_inventory(item)
+                print(f"Transferred {item.name} from {from_entity.name} to {to_entity.name}.")
+            else:
+                # Return item to original entity if transfer fails
+                from_entity.add_item_to_inventory(item)
+                print(f"Cannot transfer {item.name}; {to_entity.name}'s inventory is full.")
+
+class Weapon(Item):
+    def __init__(self, damage_amount, damage_type, **kwargs):
+        super().__init__(item_type='Weapon', **kwargs)
+        self.damage_amount = damage_amount
+        self.damage_type = damage_type
+        self.effect = {'damage': self.damage_amount, 'type': self.damage_type}
+    
+    def to_dict(self):
+        data = super().to_dict()
+        data.update({
+            'damage_amount': self.damage_amount,
+            'damage_type': self.damage_type
+        })
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            weight=data['weight'],
+            description=data.get('description', ''),
+            effect=data.get('effect'),
+            proficiency_needed=data.get('proficiency_needed'),
+            average_cost=data.get('average_cost', 0),
+            is_magical=data.get('is_magical', False),
+            rarity=data.get('rarity', 'Common'),
+            damage_amount=data['damage_amount'],
+            damage_type=data['damage_type']
+        )
+
+class Armor(Item):
+    def __init__(self, ac_value, max_dex_bonus, **kwargs):
+        super().__init__(item_type='Armor', **kwargs)
+        self.ac_value = ac_value
+        self.max_dex_bonus = max_dex_bonus
+        self.effect = {'AC': self.ac_value, 'dexBonus': self.max_dex_bonus}
+    def to_dict(self):
+        data = super().to_dict()
+        data.update({
+            'ac_value': self.ac_value,
+            'max_dex_bonus': self.max_dex_bonus
+        })
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            weight=data['weight'],
+            description=data.get('description', ''),
+            effect=data.get('effect'),
+            proficiency_needed=data.get('proficiency_needed'),
+            average_cost=data.get('average_cost', 0),
+            is_magical=data.get('is_magical', False),
+            rarity=data.get('rarity', 'Common'),
+            ac_value=data['ac_value'],
+            max_dex_bonus=data['max_dex_bonus']
+        )
+
+class Shield(Item):
+    def __init__(self, ac_value, max_dex_bonus, **kwargs):
+        super().__init__(item_type='Shield', **kwargs)
+        self.ac_value = ac_value
+        self.effect = {'AC': self.ac_value}
+    
+    def to_dict(self):
+        data = super().to_dict()
+        data.update({
+            'ac_value': self.ac_value,
+        })
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            weight=data['weight'],
+            description=data.get('description', ''),
+            effect=data.get('effect'),
+            proficiency_needed=data.get('proficiency_needed'),
+            average_cost=data.get('average_cost', 0),
+            is_magical=data.get('is_magical', False),
+            rarity=data.get('rarity', 'Common'),
+            ac_value=data['ac_value'],
+            max_dex_bonus=data['max_dex_bonus']
+        )
+
+
+class Container(InventoryMixin):
+    def __init__(self, name, inventory=None, capacity=None, description='',locked=False, **kwargs):
+        super().__init__(inventory=inventory, capacity=capacity)
+        self.name = name
+        self.description = description
+        self.capacity = capacity
+        self.locked = False
+        # Additional attributes if needed
+
+class World:
+    def __init__(self, name, description='', continents=None, coordinates=(0, 0)):
+        self.coordinates = coordinates  # (x, y)
+        self.name = name
+        self.description = description
+        self.continents = continents if continents is not None else []
+
+    def add_continent(self, continent, coordinates):
+        self.continents.append(continent,coordinates)
+    
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'continents': self.continent_names
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            description=data.get('description', ''),
+            continents=None  # Will be set after loading Continents
+        )
+
+class Continent:
+    def __init__(self, name, description='', regions=None, coordinates=(0, 0)):
+        self.coordinates = coordinates  # (x, y)
+        self.name = name
+        self.description = description
+        self.regions = regions if regions is not None else []
+
+    def add_region(self, region, coordinates):
+        self.regions.append(region, coordinates)
+    
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'coordinates': self.coordinates,
+            'regions': self.region_names
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            description=data.get('description', ''),
+            coordinates=tuple(data.get('coordinates', (0, 0))),
+            regions=None  # Will be set after loading Regions
+        )
+
+class Region:
+    def __init__(self, name, description='', locations=None, coordinates=(0, 0)):
+        self.coordinates = coordinates  # (x, y)
+        self.name = name
+        self.description = description
+        self.locations = locations if locations is not None else []
+
+    def add_location(self, location, coordinates):
+        self.locations.append(location, coordinates)
+    
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'coordinates': self.coordinates,
+            'locations': self.location_names
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            description=data.get('description', ''),
+            coordinates=tuple(data.get('coordinates', (0, 0))),
+            locations=None  # Will be set after loading Locations
+        )
+
+class Location:
+    def __init__(self, name, description='', areas=None, coordinates=(0, 0)):
+        self.coordinates = coordinates  # (x, y)
+        self.name = name
+        self.description = description
+        self.areas = areas if areas is not None else []
+
+    def add_area(self, area, coordinates):
+        self.areas.append(area,coordinates)
+    
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'coordinates': self.coordinates,
+            'areas': self.area_names
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data['name'],
+            description=data.get('description', ''),
+            coordinates=tuple(data.get('coordinates', (0, 0))),
+            areas=None  # Will be set after loading Areas
+        )
+
+class Area(InventoryMixin):
+    def __init__(self, name, description='', inventory=None, npcs=None, connected_areas=None, coordinates=(0, 0), channel_id=None):
+        self.coordinates = coordinates  # (x, y)
+        self.name = name
+        self.description = description
+        self.inventory = inventory if inventory is not None else []
+        self.npcs = npcs if npcs is not None else []
+        self.connected_areas = connected_areas if connected_areas is not None else []  # List of connected Area instances
+        self.channel_id = channel_id
+    
+    def add_npc(self, npc):
+        if npc not in self.npcs:
+            self.npcs.append(npc)
+    
+    def remove_npc(self, npc_name):
+        for npc in self.npcs:
+            if npc.name == npc_name:
+                self.npcs.remove(npc)
+                return npc
+        return None  # NPC not found
+
+    def add_connected_area(self, area, bidirectional=True, coordinates=(0, 0)):
+        if area not in self.connected_areas:
+            self.connected_areas.append(area,coordinates)
+            area.connected_areas.append(self)  # Assuming bidirectional connection
+    
+    def get_npc(self, npc_name):
+        for npc in self.npcs:
+            if npc.name.lower() == npc_name.lower():
+                return npc
+        return None
+    
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'inventory': [item.to_dict() for item in self.inventory],
+            'npcs': [npc.to_dict() for npc in self.npcs],
+            'coordinates': self.coordinates,
+            'connected_areas': [area.name for area in self.connected_areas],
+            'channel_id': self.channel_id,
+        }
+    
+    @classmethod
+    def from_dict(cls, data, area_lookup, npc_lookup):
+        area = cls(
+            name=data['name'],
+            description=data.get('description', ''),
+            inventory=[Item.from_dict(item_data) for item_data in data.get('inventory', [])],
+            coordinates=tuple(data.get('coordinates', (0, 0))),
+            channel_id=data.get('channel_id'),
+        )
+        # Load NPCs
+        area.npcs = [NPC.from_dict(npc_data) for npc_data in data.get('npcs', [])]
+        area_lookup[area.name] = area
+        return area
+
+class Character(InventoryMixin):
     """
     Represents a player's character with various attributes.
     """
-    def __init__(self, name, species=None, char_class=None, gender=None, pronouns=None, description=None, stats=None, skills=None, inventory=None, equipment=None, currency=None, spells=None, abilities=None):
+    def __init__(self, name, species=None, char_class=None, gender=None, pronouns=None, description=None, stats=None, skills=None, inventory=None, equipment=None, currency=None, spells=None, abilities=None, ac = None, max_hp = 1, curr_hp = 1, movement = None, spellslots = None, level=None, xp=None, reputation=None, **kwargs):
         self.name = name
         self.species = species
         self.char_class = char_class
-        self.gender = gender  # New Attribute
-        self.pronouns = pronouns  # New Attribute
-        self.description = description  # New Attribute
+        self.gender = gender  
+        self.pronouns = pronouns 
+        self.description = description 
         self.stats = stats if stats else {
             'Strength': 10,
             'Dexterity': 10,
@@ -100,11 +566,33 @@ class Character:
             'Charisma': 10
         }
         self.skills = skills if skills else {}
-        self.inventory = inventory if inventory else {}
-        self.equipment = equipment if equipment else {}
+        self.inventory = kwargs.get('inventory', [])
+        self.equipment = kwargs.get('equipment', {
+            'armor': None,
+            'left_hand': None,
+            'right_hand': None,
+            'belt_slots': [None]*4,
+            'back': None,
+            'magic_slots': [None]*3
+        })
         self.currency = currency if currency else {}
         self.spells = spells if spells else {}
         self.abilities = abilities if abilities else {}
+        self.capacity = self.calculate_max_carry_weight()
+        self.ac = ac if ac else 5
+        self.max_hp = max_hp if max_hp else 1
+        self.curr_hp = curr_hp if curr_hp else 1
+        self.movement = movement
+        self.spellslots = spellslots
+        self.level = level if level else 1
+        self.xp = xp if xp else 0
+        self.reputation = reputation if reputation else {}
+        # Location attributes
+        self.current_area = kwargs.get('current_area')
+        self.current_location = kwargs.get('current_location')
+        self.current_region = kwargs.get('current_region')
+        self.current_continent = kwargs.get('current_continent')
+        self.current_world = kwargs.get('current_world')
 
     def get_stat_modifier(self, stat):
         """
@@ -115,6 +603,243 @@ class Character:
             int: The modifier.
         """
         return (self.stats.get(stat, 10) - 10) // 2
+    
+    def attack(self, target, weapon):
+        """
+        Perform an attack on a target using a weapon.
+        Args:
+            target (Character): The target character.
+            weapon (Weapon): The weapon being used.
+        Returns:
+            str: The result of the attack.
+        """
+        # Calculate the attack roll
+        attack_roll = random.randint(1, 20) + self.get_stat_modifier('Strength')
+        # Calculate the damage roll
+        damage_roll = random.randint(1, weapon.damage_amount) + self.get_stat_modifier('Strength')
+        # Apply the damage to the target
+        target.hp -= damage_roll
+        return f"{self.name} attacks {target.name} with {weapon.name} for {damage_roll} damage."
+    
+    def use_consumable(self, item):
+        # Apply the effect of the consumable
+        # For example, if it's a healing potion
+        effect = item.effect  # Assuming effect is a dict like {'heal': 10}
+        result = ""
+        if 'heal' in effect:
+            # Implement healing logic
+            heal_amount = effect['heal']
+            # Assume character has 'current_hp' and 'max_hp' attributes
+            self.current_hp = min(self.max_hp, self.current_hp + heal_amount)
+            result = f"You have been healed for {heal_amount} HP."
+        # Remove the item from inventory after use
+        self.remove_item_from_inventory(item.name)
+        return result
+
+    def calculate_max_carry_weight(self):
+        """
+        Calculates the maximum weight the character can carry based on their strength score.
+        Returns:
+        int: The maximum weight in pounds.
+        """
+        strength = self.stats.get('Strength', 10)
+        return 15 * strength
+    
+    def equip_item(self, item, slot):
+        if slot.startswith('belt_slot_'):
+            index = int(slot.split('_')[-1]) - 1
+            if 0 <= index < len(self.equipment['belt_slots']):
+                if self.equipment['belt_slots'][index] is None:
+                    self.equipment['belt_slots'][index] = item
+                    self.remove_item_from_inventory(item.name)
+                else:
+                    raise ValueError(f"Belt slot {index+1} is already occupied.")
+            else:
+                raise ValueError("Invalid belt slot number.")
+        elif slot.startswith('magic_slot_'):
+            index = int(slot.split('_')[-1]) - 1
+            if 0 <= index < len(self.equipment['magic_slots']):
+                if self.equipment['magic_slots'][index] is None:
+                    self.equipment['magic_slots'][index] = item
+                    self.remove_item_from_inventory(item.name)
+                else:
+                    raise ValueError(f"Magic slot {index+1} is already occupied.")
+            else:
+                raise ValueError("Invalid magic slot number.")
+        elif slot in self.equipment:
+            if self.equipment[slot] is None:
+                self.equipment[slot] = item
+                self.remove_item_from_inventory(item.name)
+            else:
+                raise ValueError(f"Slot {slot} is already occupied.")
+        else:
+            raise ValueError(f"Invalid equipment slot: {slot}.")
+
+    def unequip_item(self, slot):
+        if slot.startswith('belt_slot_'):
+            index = int(slot.split('_')[-1]) - 1
+            if 0 <= index < len(self.equipment['belt_slots']):
+                item = self.equipment['belt_slots'][index]
+                if item:
+                    self.equipment['belt_slots'][index] = None
+                    self.add_item_to_inventory(item)
+                else:
+                    raise ValueError(f"No item equipped in belt slot {index+1}.")
+            else:
+                raise ValueError("Invalid belt slot number.")
+        elif slot.startswith('magic_slot_'):
+            index = int(slot.split('_')[-1]) - 1
+            if 0 <= index < len(self.equipment['magic_slots']):
+                item = self.equipment['magic_slots'][index]
+                if item:
+                    self.equipment['magic_slots'][index] = None
+                    self.add_item_to_inventory(item)
+                else:
+                    raise ValueError(f"No item equipped in magic slot {index+1}.")
+            else:
+                raise ValueError("Invalid magic slot number.")
+        elif slot in self.equipment:
+            if self.equipment[slot]:
+                item = self.equipment[slot]
+                self.equipment[slot] = None
+                self.add_item_to_inventory(item)
+            else:
+                raise ValueError(f"No item equipped in slot {slot}.")
+        else:
+            raise ValueError(f"Invalid equipment slot: {slot}.")
+
+    async def start_travel(self, destination_area, travel_time):
+        self.is_traveling = True
+        self.travel_destination = destination_area
+        self.travel_end_time = datetime.utcnow() + timedelta(hours=travel_time)
+        # Start the travel task
+        asyncio.create_task(travel_task(self, self.user_id))
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'species': self.species,
+            'char_class': self.char_class,
+            'stats': self.stats,
+            'inventory': [item.to_dict() for item in self.inventory],
+            'equipment': {
+                'armor': self.equipment['armor'].to_dict() if self.equipment['armor'] else None,
+                'left_hand': self.equipment['left_hand'].to_dict() if self.equipment['left_hand'] else None,
+                'right_hand': self.equipment['right_hand'].to_dict() if self.equipment['right_hand'] else None,
+                'belt_slots': [item.to_dict() if item else None for item in self.equipment['belt_slots']],
+                'back': self.equipment['back'].to_dict() if self.equipment['back'] else None,
+                'magic_slots': [item.to_dict() if item else None for item in self.equipment['magic_slots']]
+            },
+            'capacity': self.capacity,
+            'ac': self.ac,
+            'max_hp': self.max_hp,
+            'curr_hp': self.curr_hp,
+            'movement': self.movement,
+            'spellslots': self.spellslots,
+            'level': self.level,
+            'xp': self.xp,
+            'reputation': self.reputation,
+            'current_area': self.current_area,
+            'current_location': self.current_location,
+            'current_region': self.current_region,
+            'current_continent': self.current_continent,
+            'current_world': self.current_world
+        }
+        
+
+    @classmethod
+    def from_dict(cls, data):
+        inventory = [Item.from_dict(item_data) for item_data in data.get('inventory', [])]
+        equipment_data = data.get('equipment', {})
+        equipment = {
+            'armor': Item.from_dict(equipment_data['armor']) if equipment_data.get('armor') else None,
+            'left_hand': Item.from_dict(equipment_data['left_hand']) if equipment_data.get('left_hand') else None,
+            'right_hand': Item.from_dict(equipment_data['right_hand']) if equipment_data.get('right_hand') else None,
+            'belt_slots': [Item.from_dict(item) if item else None for item in equipment_data.get('belt_slots', [None]*4)],
+            'back': Item.from_dict(equipment_data['back']) if equipment_data.get('back') else None,
+            'magic_slots': [Item.from_dict(item) if item else None for item in equipment_data.get('magic_slots', [None]*3)]
+        }
+        return cls(
+            name=data['name'],
+            species=data.get('species'),
+            char_class=data.get('char_class'),
+            stats=data.get('stats', {}),
+            inventory=inventory,
+            equipment=equipment,
+            level=data.get('level'),
+            xp=data.get('xp'),
+            reputation=data.get('reputation'),
+            ac=data.get('ac'),
+            max_hp=data.get('max_hp'),
+            curr_hp=data.get('curr_hp'),
+            movement=data.get('movement'),
+            spellslots=data.get('spellslots'),
+            current_area=data.get('current_area'),
+            current_location=data.get('current_location'),
+            current_region=data.get('current_region'),
+            current_continent=data.get('current_continent'),
+            current_world=data.get('current_world')
+        )
+
+
+def check_travel_completion(character):
+    if character.is_traveling:
+        if datetime.utcnow() >= character.travel_end_time:
+            character.is_traveling = False
+            character.move_to_area(character.travel_destination)
+            character.travel_destination = None
+            character.travel_end_time = None
+            return True  # Travel completed
+    return False  # Still traveling
+
+def move_to_area(self, new_area):
+    if new_area in self.current_area.connected_areas:
+        self.current_area = new_area
+        # Update current location if necessary
+        return True
+    else:
+        return False
+    
+def move_to_location(self, new_location):
+    # Check if new_location is adjacent or accessible from current location
+    # For simplicity, assume any location within the same region is accessible
+    if new_location in self.current_region.locations:
+        self.current_location = new_location
+        # Update current area to a default area in the new location
+        self.current_area = new_location.areas[0] if new_location.areas else None
+        return True
+    else:
+        return False
+    
+def move_to_region(self, new_region):
+    # Check if new_region is adjacent or accessible from current region
+    # For simplicity, assume any region within the same continent is accessible
+    if new_region in self.current_continent.regions:
+        self.current_region = new_region
+        # Update current location and area
+        self.current_location = new_region.locations[0] if new_region.locations else None
+        self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
+        return True
+    else:
+        return False
+    
+def move_to_continent(self, new_continent):
+    # Implement conditions for moving between continents (e.g., must be at a port)
+    if new_continent in self.current_world.continents:
+        # Check if the character is at a port area that allows intercontinental travel
+        if self.current_area and self.current_area.allows_intercontinental_travel:
+            self.current_continent = new_continent
+            # Update current region, location, and area
+            self.current_region = new_continent.regions[0] if new_continent.regions else None
+            self.current_location = self.current_region.locations[0] if self.current_region and self.current_region.locations else None
+            self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
+            return True
+        else:
+            print("You must be at a port to travel between continents.")
+            return False
+    else:
+        return False
+
 
 def load_characters():
     """
@@ -123,52 +848,26 @@ def load_characters():
         dict: A dictionary mapping user IDs to Character instances.
     """
     try:
-        with open(CHARACTER_DATA_FILE, 'r') as f:
-            data = json.load(f)
-            characters = {}
+        def load_characters(area_lookup, filename='characters.json'):
+            with open(filename, 'r') as f:
+                data = json.load(f)
+                characters = {}
             for user_id, char_data in data.items():
-                try:
-                    characters[user_id] = Character(**char_data)
-                except TypeError as e:
-                    logging.error(f"Error initializing character for user {user_id}: {e}")
-            logging.info("Characters loaded successfully.")
+                character = Character.from_dict(char_data)
+                # Set current area reference
+                area_name = character.current_area_name
+                character.current_area = area_lookup.get(area_name)
+                characters[user_id] = character
             return characters
     except FileNotFoundError:
-        logging.warning("characters.json not found. Starting with an empty character list.")
-        return {}
-    except json.JSONDecodeError as e:
-        logging.error(f"Error decoding characters.json: {e}")
+        logging.error("characters.json file not found.")
         return {}
 
-def save_characters(characters):
-    """
-    Saves character data to the characters.json file.
-    Args:
-        characters (dict): A dictionary mapping user IDs to Character instances.
-    """
-    data = {
-        user_id: {
-            'name': char.name,
-            'species': char.species,
-            'char_class': char.char_class,
-            'gender': char.gender,  # New Attribute
-            'pronouns': char.pronouns,  # New Attribute
-            'description': char.description,  # New Attribute
-            'stats': char.stats,
-            'skills': char.skills,
-            'inventory': char.inventory,
-            'equipment': char.equipment,
-            'currency': char.currency,
-            'spells': char.spells,
-            'abilities': char.abilities
-        } for user_id, char in characters.items() if char is not None  # Exclude None characters
-    }
-    try:
-        with open(CHARACTER_DATA_FILE, 'w') as f:
-            json.dump(data, f, indent=4)
-        logging.info("Characters saved successfully.")
-    except Exception as e:
-        logging.error(f"Error saving characters: {e}")
+def save_characters(characters, filename='characters.json'):
+    data = {user_id: character.to_dict() for user_id, character in characters.items()}
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
+
 
 characters = load_characters()
 
@@ -227,6 +926,96 @@ def is_valid_point_allocation(allocation):
             if score < 8 or score > 15:
                 return False, f"Ability scores must be between 8 and 15. Found {score}."
     return True, "Valid allocation."
+
+
+
+class NPC(InventoryMixin):
+    def __init__(self=None, name = None, role = None, inventory=None, capacity=None, stats = None, movement = None, max_hp = None, curr_hp = None, spellslots = None, ac = None,abilities = None, spells = None, attitude = None, faction = None, reputation = None, relations = None, dialogue = None, description = None, is_hostile = None, current_area = None, **kwargs):
+        super().__init__(inventory=inventory, capacity=capacity)
+        self.name = name
+        self.role = role # e.g., 'Shopkeeper', 'Guard', 'Quest Giver'
+        self.stats = stats
+        self.movement = movement
+        self.max_hp = max_hp
+        self.curr_hp = curr_hp
+        self.spellslots = spellslots
+        self.ac = ac
+        self.abilities = abilities
+        self.spells = spells
+        self.attitude = attitude
+        self.faction = faction
+        self.reputation = reputation
+        self.relations = relations
+        self.dialogue = dialogue if dialogue else {}
+        self.description = description
+        self.is_hostile = is_hostile if is_hostile is not None else False
+        self.current_area = current_area
+
+    def move_to_area(self, new_area):
+        if self.current_area:
+            self.current_area.remove_npc(self.name)
+        self.current_area = new_area
+        new_area.add_npc(self)
+    
+    def attack(self, target, weapon):
+        """
+        Perform an attack on a target using a weapon.
+        Args:
+            target (Character): The target character.
+            weapon (Weapon): The weapon being used.
+        Returns:    
+            str: The result of the attack.
+        """
+        # Calculate the attack roll
+        attack_roll = random.randint(1, 20) + self.get_stat_modifier('Strength')
+        # Calculate the damage roll
+        damage_roll = random.randint(1, weapon.damage_amount) + self.get_stat_modifier('Strength')
+        # Apply the damage to the target
+        target.curr_hp -= damage_roll
+        return f"{self.name} attacks {target.name} with {weapon.name} for {damage_roll} damage."
+    
+    def get_dialogue(self):
+        if self.dialogue:
+            return self.dialogue.pop(0)  # Return the next dialogue line
+        else:
+            return f"{self.name} has nothing more to say."
+    
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'dialogue': self.dialogue,
+            'inventory': [item.to_dict() for item in self.inventory],
+            'stats': self.stats,
+            'is_hostile': self.is_hostile,
+            'role': self.role,
+            'movement': self.movement,
+            'max_hp': self.max_hp,
+            'curr_hp': self.curr_hp,
+            'spellslots': self.spellslots,
+            'ac': self.ac,
+            'abilities': self.abilities,
+            'spells': self.spells,
+            'attitude': self.attitude,
+            'faction': self.faction,
+            'reputation': self.reputation,
+            'relations': self.relations
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        npc = cls(
+            name=data['name'],
+            description=data.get('description', ''),
+            dialogue=data.get('dialogue', []),
+            inventory=[Item.from_dict(item_data) for item_data in data.get('inventory', [])],
+            stats=data.get('stats', {}),
+            is_hostile=data.get('is_hostile', False),
+        )
+        return npc
+       # Additional NPC-specific attributes
+
+
 
 # ---------------------------- #
 #      UI Component Classes    #
@@ -371,8 +1160,6 @@ class StartCharacterButton(discord.ui.Button):
             user_id = str(interaction.user.id)
 
             # Initialize session
-            if not hasattr(self.bot, 'character_creation_sessions'):
-                self.bot.character_creation_sessions = {}
             character_creation_sessions[user_id] = {'stats': {}, 'points_spent': 0}
 
             # Create initial embed
@@ -850,7 +1637,14 @@ async def finalize_character(interaction: discord.Interaction, user_id):
         equipment=session.get('equipment', {}),
         currency=session.get('currency', {}),
         spells=session.get('spells', {}),
-        abilities=session.get('abilities', {})
+        abilities=session.get('abilities', {}),
+        hp=session.get('hp', 1),
+        ac=session.get('ac', 10),
+        spellslots=session.get('spellslots', {}),
+        movement=session.get('movement', 30),
+        level=session.get('level', 1),
+        xp=session.get('xp', 0),
+        reputation=session.get('reputation', 0),
     )
 
     return character
@@ -880,6 +1674,435 @@ async def create_character(interaction: discord.Interaction):
             ephemeral=True
         )
         logging.error(f"Error in create_character command for user {interaction.user.id}: {e}")
+
+@tree.command(name="attack", description="Attack an NPC in your current area.")
+@app_commands.describe(npc_name="The name of the NPC to attack.")
+async def attack(interaction: discord.Interaction, npc_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    area = character.current_area
+    for npc in area.npcs:
+        if npc.name.lower() == npc_name.lower():
+            # Implement combat logic here
+            # For simplicity, we'll assume the NPC is defeated
+            area.remove_npc(npc.name)
+            # Optionally, transfer NPC's inventory to the area or player
+            area.inventory.extend(npc.inventory)
+            await interaction.response.send_message(f"You have defeated **{npc.name}**!", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
+
+@tree.command(name="npc_list", description="List all NPCs in your current area.")
+async def npc_list(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    area = character.current_area
+    if area.npcs:
+        npc_names = ', '.join(npc.name for npc in area.npcs)
+        await interaction.response.send_message(f"NPCs in **{area.name}**: {npc_names}", ephemeral=False)
+    else:
+        await interaction.response.send_message(f"There are no NPCs in **{area.name}**.", ephemeral=False)
+
+@tree.command(name="talk", description="Talk to an NPC in your current area.")
+@app_commands.describe(npc_name="The name of the NPC to talk to.")
+async def talk(interaction: discord.Interaction, npc_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    area = character.current_area
+    for npc in area.npcs:
+        if npc.name.lower() == npc_name.lower():
+            # For simplicity, send the first dialogue line
+            dialogue = npc.get_dialogue if npc.dialogue else f"{npc.name} has nothing to say."
+            await interaction.response.send_message(f"**{npc.name}** says: \"{dialogue}\"", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
+
+
+@tree.command(name='inventory', description="View your character's inventory.")
+async def inventory_command(ctx):
+    user_id = str(ctx.author.id)
+    character = characters.get(user_id)
+    if character:
+        inventory_list = '\n'.join(f"- {item.name} ({item.item_type})" for item in character.inventory)
+        if not inventory_list:
+            inventory_list = "Your inventory is empty."
+        await ctx.send(f"**{character.name}'s Inventory:**\n{inventory_list}")
+    else:
+        await ctx.send("You don't have a character yet. Use `/create_character` to get started.")
+
+@tree.command(name="pickup", description="Pick up an item from the area.")
+@app_commands.describe(item_name="The name of the item to pick up.")
+async def pickup(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    channel_id = str(interaction.channel_id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet. Use `/create_character` to get started.", ephemeral=True)
+        return
+
+    area_inventory = get_area_inventory(channel_id)
+    # Find the item in the area inventory
+    for item in area_inventory:
+        if item.name.lower() == item_name.lower():
+            # Check if character can carry the item
+            if character.can_carry_more(item.weight):
+                character.add_item_to_inventory(item)
+                area_inventory.remove(item)
+                save_characters(characters)
+                await interaction.response.send_message(f"You picked up **{item.name}**.", ephemeral=False)
+                return
+            else:
+                await interaction.response.send_message("You can't carry any more weight.", ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"The item **{item_name}** is not available in this area.", ephemeral=True)
+
+@tree.command(name="drop", description="Drop an item from your inventory into the area.")
+@app_commands.describe(item_name="The name of the item to drop.")
+async def drop(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    channel_id = str(interaction.channel_id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            character.remove_item_from_inventory(item.name)
+            area_inventory = get_area_inventory(channel_id)
+            area_inventory.append(item)
+            save_characters(characters)
+            await interaction.response.send_message(f"You dropped **{item.name}** into the area.", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
+
+@tree.command(name="destroy", description="Destroy an item in your inventory.")
+@app_commands.describe(item_name="The name of the item to destroy.")
+async def destroy(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            character.remove_item_from_inventory(item.name)
+            save_characters(characters)
+            await interaction.response.send_message(f"You have destroyed **{item.name}**.", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+@tree.command(name="equip", description="Equip an item from your inventory.")
+@app_commands.describe(item_name="The name of the item to equip.", slot="The equipment slot.")
+async def equip(interaction: discord.Interaction, item_name: str, slot: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    slot = slot.lower()
+    valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
+
+    if slot not in valid_slots:
+        await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            try:
+                character.equip_item(item, slot)
+                save_characters(characters)
+                await interaction.response.send_message(f"You have equipped **{item.name}** to **{slot}**.", ephemeral=False)
+                return
+            except ValueError as e:
+                await interaction.response.send_message(str(e), ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
+
+@tree.command(name="unequip", description="Unequip an item from a slot back to your inventory.")
+@app_commands.describe(slot="The equipment slot to unequip.")
+async def unequip(interaction: discord.Interaction, slot: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    slot = slot.lower()
+    valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
+
+    if slot not in valid_slots:
+        await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
+        return
+
+    try:
+        character.unequip_item(slot)
+        save_characters(characters)
+        await interaction.response.send_message(f"You have unequipped the item from **{slot}**.", ephemeral=False)
+    except ValueError as e:
+        await interaction.response.send_message(str(e), ephemeral=True)
+
+@tree.command(name="use", description="Use a consumable item from your inventory.")
+@app_commands.describe(item_name="The name of the item to use.")
+async def use_item(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            if item.item_type.lower() == 'consumable':
+                # Apply the item's effect
+                result = character.use_consumable(item)
+                save_characters(characters)
+                await interaction.response.send_message(f"You used **{item.name}**. {result}", ephemeral=False)
+                return
+            else:
+                await interaction.response.send_message(f"**{item.name}** is not a consumable item.", ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+@tree.command(name="examine", description="Examine an item in your inventory or equipment.")
+@app_commands.describe(item_name="The name of the item to examine.")
+async def examine(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Search in inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            await interaction.response.send_message(f"**{item.name}**: {item.description}", ephemeral=True)
+            return
+
+    # Search in equipment
+    for slot, equipped_item in character.equipment.items():
+        if isinstance(equipped_item, list):  # For slots like 'belt_slots' or 'magic_slots'
+            for sub_item in equipped_item:
+                if sub_item and sub_item.name.lower() == item_name.lower():
+                    await interaction.response.send_message(f"**{sub_item.name}**: {sub_item.description}", ephemeral=True)
+                    return
+        elif equipped_item and equipped_item.name.lower() == item_name.lower():
+            await interaction.response.send_message(f"**{equipped_item.name}**: {equipped_item.description}", ephemeral=True)
+            return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory or equipment.", ephemeral=True)
+
+@tree.command(name="identify", description="Identify a magical item in your inventory.")
+@app_commands.describe(item_name="The name of the item to identify.")
+async def identify(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            if item.is_magical:
+                # Assume an Arcana check is needed
+                stat = 'Intelligence'
+                roll, total = perform_ability_check(character, stat)
+                # Set a DC for identifying magical items
+                dc = 15  # You can adjust this value
+                if total >= dc:
+                    # Reveal magical properties
+                    item_description = item.description + "\nMagical Properties: " + str(item.effect)
+                    await interaction.response.send_message(f"**{item.name}** identified!\n{item_description}", ephemeral=False)
+                else:
+                    await interaction.response.send_message(f"You failed to identify **{item.name}**.", ephemeral=True)
+                return
+            else:
+                await interaction.response.send_message(f"**{item.name}** is not a magical item.", ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+@tree.command(name="move", description="Move to a connected area.")
+@app_commands.describe(area_name="The name of the area to move to.")
+async def move(interaction: discord.Interaction, area_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+    
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+    
+    if character.is_traveling:
+        await interaction.response.send_message("You are already traveling.", ephemeral=True)
+        return
+    
+    current_area = character.current_area
+    # Find the area with the given name in connected areas
+    for area in current_area.connected_areas:
+        if area.name.lower() == area_name.lower():
+            travel_time = get_travel_time(character, area)
+            character.start_travel(area, travel_time)
+            save_characters(characters)
+            await interaction.response.send_message(f"You begin traveling to **{area.name}**. It will take approximately {travel_time / 60:.2f} minutes.", ephemeral=False)
+            asyncio.create_task(travel_task(character, user_id))
+            return
+    
+    await interaction.response.send_message(f"You can't move to **{area_name}** from here.", ephemeral=True)
+
+
+@tree.command(name="move_location", description="Move to a different location within your current region.")
+@app_commands.describe(location_name="The name of the location to move to.")
+async def move_location(interaction: discord.Interaction, location_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+    
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+    
+    # Find the location in the current region
+    for location in character.current_region.locations:
+        if location.name.lower() == location_name.lower():
+            if character.move_to_location(location):
+                save_characters(characters)
+                await interaction.response.send_message(f"You have moved to **{location.name}**.", ephemeral=False)
+                return
+            else:
+                await interaction.response.send_message(f"You cannot move to **{location.name}**.", ephemeral=True)
+                return
+    
+    await interaction.response.send_message(f"Location **{location_name}** not found in your current region.", ephemeral=True)
+
+
+@tree.command(name="rest", description="Rest to regain health and spell slots.")
+async def rest(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    character.rest()
+    save_characters(characters)
+    await interaction.response.send_message("You have rested and regained health and spell slots.", ephemeral=False)
+
+@tree.command(name="location", description="View your current location.")
+async def location(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    area = character.current_area
+    location = character.current_location
+    region = character.current_region
+    continent = character.current_continent
+    world = character.current_world
+
+    await interaction.response.send_message(
+        f"You are in **{area.name}**, located in **{location.name}**, **{region.name}**, **{continent.name}**, **{world.name}**.",
+        ephemeral=False
+    )
+
+@tree.command(name="scene", description="View the description of your current area.")
+async def scene(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
+        return
+
+    area = character.current_area
+    if not area:
+        await interaction.response.send_message(
+            "Your current area could not be found. Please contact the administrator.",
+            ephemeral=True
+        )
+        return
+
+    # Create an embed
+    embed = discord.Embed(title=area.name, description=area.description, color=0x00ff00)
+
+    # Connected Areas
+    if area.connected_areas:
+        connected_area_names = ', '.join(connected_area.name for connected_area in area.connected_areas)
+        embed.add_field(name="Connected Areas", value=connected_area_names, inline=False)
+    else:
+        embed.add_field(name="Connected Areas", value="None", inline=False)
+
+    # NPCs
+    if area.npcs:
+        npc_names = ', '.join(npc.name for npc in area.npcs)
+        embed.add_field(name="NPCs Present", value=npc_names, inline=False)
+    else:
+        embed.add_field(name="NPCs Present", value="None", inline=False)
+
+    # Items
+    if area.inventory:
+        item_names = ', '.join(item.name for item in area.inventory)
+        embed.add_field(name="Items Available", value=item_names, inline=False)
+    else:
+        embed.add_field(name="Items Available", value="None", inline=False)
+
+    # Send the embed
+    await interaction.response.send_message(embed=embed, ephemeral=False)
+
+@tree.command(name="stats", description="View your character's stats.")
+async def stats(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    stats_str = '\n'.join(f"{stat}: {value}" for stat, value in character.stats.items())
+    await interaction.response.send_message(f"**{character.name}'s Stats:**\n{stats_str}", ephemeral=False)
+
 
 # ---------------------------- #
 #           Events              #
