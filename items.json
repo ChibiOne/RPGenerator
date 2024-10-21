@@ -1,0 +1,332 @@
+{
+    "__Metadata__": {
+        "Version": "1.0",
+        "Last_updated": "2023-05-15"
+    },
+    "Shortsword": {
+        "Name": "Shortsword",
+        "Description": "A light, easily handled sword favored by rogues and swashbucklers.",
+        "Type": "Weapon",
+        "Equip": "True",
+        "Damage": "1d6",
+        "Damage_type": "Piercing",
+        "Weight": 2,
+        "Value": 10,
+        "Properties": ["Light", "Finesse"]
+    },
+    "Longsword": {
+        "Name": "Longsword",
+        "Description": "A versatile sword suitable for both slashing and thrusting.",
+        "Type": "Weapon",
+        "Equip": "True",
+        "Damage": "1d8",
+        "Damage_type": "Slashing",
+        "Weight": 3,
+        "Value": 15,
+        "Properties": ["Versatile (1d10)"]
+    },
+    "Dagger": {
+        "Name": "Dagger",
+        "Description": "A small, easily concealed knife useful for both combat and utility.",
+        "Type": "Weapon",
+        "Equip": "True",
+        "Damage": "1d4",
+        "Damage_type": "Piercing",
+        "Weight": 1,
+        "Value": 2,
+        "Properties": ["Finesse", "Light", "Thrown (range 20/60)"]
+    },
+    "Quarterstaff": {
+        "Name": "Quarterstaff",
+        "Description": "A sturdy wooden staff used as both a weapon and a walking aid.",
+        "Type": "Weapon",
+        "Equip": "True",
+        "Damage": "1d6",
+        "Damage_type": "Bludgeoning",
+        "Weight": 4,
+        "Value": 2,
+        "Properties": ["Versatile (1d8)"]
+    },
+    "Light Crossbow": {
+        "Name": "Light Crossbow",
+        "Description": "A ranged weapon that fires bolts with precision.",
+        "Type": "Weapon",
+        "Equip": "True",
+        "Damage": "1d8",
+        "Damage_type": "Piercing",
+        "Weight": 5,
+        "Value": 25,
+        "Properties": ["Ammunition (range 80/320)", "Loading", "Two-handed"]
+    },
+    "Leather Armor": {
+        "Name": "Leather Armor",
+        "Description": "Provides basic protection without sacrificing mobility.",
+        "Type": "Armor",
+        "Equip": "True",
+        "Armor_class": 11,
+        "Weight": 10,
+        "Value": 10,
+        "Properties": ["Light"]
+    },
+    "Chain Mail": {
+        "Name": "Chain Mail",
+        "Description": "Heavy armor offering substantial protection at the cost of mobility.",
+        "Type": "Armor",
+        "Equip": "True",
+        "Armor_class": 16,
+        "Weight": 55,
+        "Value": 75,
+        "Properties": ["Heavy", "Strength 13"]
+    },
+    "Shield": {
+        "Name": "Shield",
+        "Description": "A protective barrier that can be wielded to block attacks.",
+        "Type": "Armor",
+        "Equip": "True",
+        "Armor_class": 2,
+        "Weight": 6,
+        "Value": 10,
+        "Properties": []
+    },
+    "Belt Pouch": {
+        "Name": "Belt Pouch",
+        "Description": "A small pouch for carrying coins and small items.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 5,
+        "Capacity": "1/5 cubic foot/6 pounds of gear"
+    },
+    "Thieves' Tools": {
+        "Name": "Thieves' Tools",
+        "Description": "A set of specialized tools used for lockpicking and disabling traps.",
+        "Type": "Tool",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 25,
+        "Skill_bonus": {
+            "Lockpicking": 2,
+            "Disarm_trap": 2
+        }
+    },
+    "Healing Potion": {
+        "Name": "Healing Potion",
+        "Description": "A potion that restores a small amount of health when consumed.",
+        "Type": "Consumable",
+        "Equip": "False",
+        "Effect": {
+            "Type": "Heal",
+            "Amount": "2d4+2"
+        },
+        "Weight": 0.5,
+        "Value": 50
+    },
+    "Torch": {
+        "Name": "Torch",
+        "Description": "A wooden stick with a flammable material at one end, used for illumination.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 0.1,
+        "Properties": ["1 hour burn time", "Bright light 20 ft", "Dim light 20 ft"]
+    },
+    "Rope (50 feet)": {
+        "Name": "Rope (50 feet)",
+        "Description": "A sturdy rope useful for climbing, tying objects, or setting traps.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 10,
+        "Value": 1
+    },
+    "Backpack": {
+        "Name": "Backpack",
+        "Description": "A bag carried on the back, used for storing and transporting items.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 5,
+        "Value": 2,
+        "Capacity": "1 cubic foot/30 pounds of gear"
+    },
+    "Bedroll": {
+        "Name": "Bedroll",
+        "Description": "A portable sleeping mat used for resting outdoors.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 7,
+        "Value": 1
+    },
+    "Waterskin": {
+        "Name": "Waterskin",
+        "Description": "A container for carrying water.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 5,
+        "Value": 0.2,
+        "Capacity": "4 pints of liquid"
+    },
+    "Explorer's Pack": {
+        "Name": "Explorer's Pack",
+        "Description": "A pre-packed set of gear suitable for adventuring.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 59,
+        "Value": 10,
+        "Contents": ["Backpack", "Bedroll", "Mess kit", "Tinderbox", "10 torches", "10 days of rations", "Waterskin", "50 feet of hempen rope"]
+    },
+    "Flask of Oil": {
+        "Name": "Flask of Oil",
+        "Description": "A container filled with oil, useful for lighting or as a component in alchemy.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 0.1
+    },
+    "Caltrops": {
+        "Name": "Caltrops",
+        "Description": "Spiked objects scattered to slow down pursuers.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 2,
+        "Value": 1,
+        "Properties": ["Cover 5-foot square", "DC 15 save or speed reduced by 10 feet"]
+    },
+    "Handaxe": {
+        "Name": "Handaxe",
+        "Description": "A small axe useful for both combat and utility tasks.",
+        "Type": "Weapon",
+        "Equip": "True",
+        "Damage": "1d6",
+        "Damage_type": "Slashing",
+        "Weight": 2,
+        "Value": 5,
+        "Properties": ["Light", "Thrown (range 20/60)"]
+    },
+    "Sling": {
+        "Name": "Sling",
+        "Description": "A simple ranged weapon that uses small stones as ammunition.",
+        "Type": "Weapon",
+        "Equip": "True",
+        "Damage": "1d4",
+        "Damage_type": "Bludgeoning",
+        "Weight": 0,
+        "Value": 0.1,
+        "Properties": ["Ammunition (range 30/120)"]
+    },
+    "Holy Symbol": {
+        "Name": "Holy Symbol",
+        "Description": "A symbol representing a deity, used by clerics and paladins.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 5
+    },
+    "Spellbook": {
+        "Name": "Spellbook",
+        "Description": "A book containing a wizard's collected spells.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 3,
+        "Value": 50
+    },
+    "Ink and Quill": {
+        "Name": "Ink and Quill",
+        "Description": "Tools used for writing and recording information.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 0,
+        "Value": 8.1
+    },
+    "Grappling Hook": {
+        "Name": "Grappling Hook",
+        "Description": "A hook attached to a rope, used for climbing or securing items.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 4,
+        "Value": 2
+    },
+    "Lantern": {
+        "Name": "Lantern",
+        "Description": "A portable light source that can illuminate dark areas.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 2,
+        "Value": 5,
+        "Properties": ["Bright light 30 ft", "Dim light 30 ft"]
+    },
+    "Holy Water": {
+        "Name": "Holy Water",
+        "Description": "Water blessed by a cleric, used against undead and fiends.",
+        "Type": "Consumable",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 25,
+        "Effect": {
+            "Type": "Damage",
+            "Amount": "2d6",
+            "Target": "Undead or Fiend"
+        }
+    },
+    "Spyglass": {
+        "Name": "Spyglass",
+        "Description": "A handheld device used to magnify distant objects.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 1000
+    },
+    "Tinderbox": {
+        "Name": "Tinderbox",
+        "Description": "A container with flint, steel, and tinder for starting fires.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 0.5
+    },
+    "Climbing Kit": {
+        "Name": "Climbing Kit",
+        "Description": "Tools and equipment used for climbing surfaces.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 12,
+        "Value": 25,
+        "Skill_bonus": {
+            "Climbing": 2
+        }
+    },
+    "Fishing Tackle": {
+        "Name": "Fishing Tackle",
+        "Description": "Equipment used for catching fish.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 4,
+        "Value": 1
+    },
+    "Herbalism Kit": {
+        "Name": "Herbalism Kit",
+        "Description": "Tools for gathering and preparing medicinal herbs.",
+        "Type": "Tool",
+        "Equip": "False",
+        "Weight": 3,
+        "Value": 5,
+        "Skill_bonus": {
+            "Herbalism": 2
+        }
+    },
+    "Musical Instrument (Flute)": {
+        "Name": "Musical Instrument (Flute)",
+        "Description": "A simple musical instrument used for entertainment or spellcasting.",
+        "Type": "Gear",
+        "Equip": "False",
+        "Weight": 1,
+        "Value": 2
+    },
+    "Goggles of Night": {
+        "Name": "Goggles of Night",
+        "Description": "Protective eyewear that grants the ability to see in darkness.",
+        "Type": "Armor",
+        "Equip": "True",
+        "Weight": 0.5,
+        "Value": 1500,
+        "Properties": ["Darkvision 60 ft"]
+    }
+}

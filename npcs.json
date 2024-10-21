@@ -1,18 +1,99 @@
 {
-    "Guard": {
-        "name": "Guard",
-        "description": "A stern-looking town guard.",
-        "dialogue": ["Halt! Who goes there?"],
-        "inventory": [],
-        "stats": {
-            "Strength": 12,
-            "Dexterity": 10,
-            "Constitution": 14,
-            "Intelligence": 11,
-            "Wisdom": 13,
-            "Charisma": 9
+    "__Metadata__": {
+        "Version": "1.1",
+        "Last_updated": "2023-05-15"
+    },
+    "Martha the Innkeeper": {
+        "Id": "martha_innkeeper",
+        "Name": "Martha the Innkeeper",
+        "Description": "A middle-aged woman with a warm smile and a knack for gossip. She runs The Rusty Flagon Inn with grace and efficiency.",
+        "Role": "Innkeeper",
+        "Type": "Quest_giver",
+        "Location": "The Rusty Flagon Inn",
+        "Stats": {
+            "Charisma": 14,
+            "Intelligence": 12,
+            "Wisdom": 10
         },
-        "is_hostile": false,
-        "current_area_name": "Clearing"
+        "Inventory": ["Room_key", "Ale_mug", "Guest_ledger"],
+        "Dialogue": {
+            "Greeting": [
+                "Welcome to The Rusty Flagon Inn! Make yourself at home.",
+                "If you're looking for a good night's rest, you've come to the right place."
+            ],
+            "Rumors": [
+                "I've heard rumors of strange happenings in the old forest to the north..."
+            ],
+            "Quest_start": {
+                "Find_lost_shipment": "We're expecting a shipment of rare wines. It's late. Could you investigate?"
+            }
+        },
+        "Quests": ["Find_lost_shipment"],
+        "Relationships": {
+            "Borin Ironfist": "Friend",
+            "Elara Moonshadow": "Acquaintance"
+        }
+    },
+    "Borin Ironfist": {
+        "Id": "borin_ironfist",
+        "Name": "Borin Ironfist",
+        "Description": "A sturdy dwarf with a braided beard and a fiery temper. Borin is known for crafting some of the finest weapons and armor in the land.",
+        "Role": "Blacksmith",
+        "Type": "Merchant",
+        "Location": "Ironfist's Forge",
+        "Stats": {
+            "Strength": 16,
+            "Constitution": 15,
+            "Craftsmanship": 18
+        },
+        "Inventory": ["Iron_ingot", "Steel_hammer", "Apprentice_anvil"],
+        "Dialogue": {
+            "Greeting": [
+                "If it's not forged by me, it's not worth your time!",
+                "Need a weapon that's both sharp and sturdy? I can help with that."
+            ],
+            "Shop": [
+                "Take a look at my wares. Finest craftsmanship in all the land!"
+            ],
+            "Lore": [
+                "The ore from the northern mines is the best I've worked with in years."
+            ]
+        },
+        "Quests": ["Forge_legendary_weapon"],
+        "Relationships": {
+            "Martha the Innkeeper": "Friend",
+            "Thorin Stonehelm": "Rival"
+        }
+    },
+    "Elara Moonshadow": {
+        "Id": "elara_moonshadow",
+        "Name": "Elara Moonshadow",
+        "Description": "An enigmatic elf druid who spends her days tending to the ancient grove. Elara has deep knowledge of nature and healing.",
+        "Role": "Druid",
+        "Type": "Healer",
+        "Location": "Whispering Grove",
+        "Stats": {
+            "Wisdom": 18,
+            "Intelligence": 15,
+            "Charisma": 14
+        },
+        "Inventory": ["Healing_herbs", "Druidic_focus", "Nature_grimoire"],
+        "Dialogue": {
+            "Greeting": [
+                "The forest speaks to those who listen.",
+                "Nature's balance must be maintained. How may I assist you?"
+            ],
+            "Warning": [
+                "Beware the shadows that linger after dusk."
+            ],
+            "Services": [
+                "I can offer you herbs to aid in your journey."
+            ]
+        },
+        "Quests": ["Restore_forest_balance"],
+        "Relationships": {
+            "Martha the Innkeeper": "Acquaintance",
+            "Darius Shadowblade": "Mentor"
+        }
     }
 }

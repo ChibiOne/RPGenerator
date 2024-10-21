@@ -1,5 +1,11 @@
-{
-    "name": "Endara",
-    "description": "A vast and mysterious land.",
-    "continents": ["Eldoria"]
+{ "World": {
+    "Eldoria": {
+      "Name": "Eldoria",
+      "Description": "A shining gem amidst the darkness.",
+      "Coordinates": [0, 0],
+      "Continents": [
+        "Aerilon"
+      ]
+    }
+  }
 }

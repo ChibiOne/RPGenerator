@@ -1,29 +1,166 @@
 {
-    "Clearing": {
-        "name": "Clearing",
-        "description": "A peaceful clearing surrounded by tall trees.",
-        "inventory": [],
-        "connected_areas": ["Forest Entrance"],
-        "coordinates": [0, 0],
-        "channel_id": "123456789012345678",
-        "npcs": []
+    "Town Square": {
+      "Name": "Town Square",
+      "Description": "The heart of Stonehaven, where a grand fountain depicts heroes of old. Villagers gather here to share news, and children play under the watchful eye of the town statue.",
+      "Coordinates": [121, 221],
+      "Connected_Areas": [
+        "Blacksmith",
+        "The Rusty Flagon Inn"
+      ],
+      "Inventory": [],
+      "NPCs": [
+        "Mayor Grant",
+        "Street Vendor"
+      ],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
     },
-    "Forest Entrance": {
-        "name": "Forest Entrance",
-        "description": "The entrance to a dense forest.",
-        "inventory": [],
-        "connected_areas": ["Clearing", "Deep Forest"],
-        "coordinates": [1, 1],
-        "channel_id": "234567890123456789",
-        "npcs": []
+    "Blacksmith": {
+      "Name": "Blacksmith",
+      "Description": "The forge of Thoran Ironhammer emits a constant glow. The rhythmic sound of hammer on anvil rings out as sparks fly, crafting weapons that have defended the town for generations.",
+      "Coordinates": [122, 222],
+      "Connected_Areas": [
+        "Town Square"
+      ],
+      "Inventory": [],
+      "NPCs": [
+        "Thoran Ironhammer"
+      ],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
     },
-    "Deep Forest": {
-        "name": "Deep Forest",
-        "description": "A dark and mysterious part of the forest.",
-        "inventory": [],
-        "connected_areas": ["Forest Entrance"],
-        "coordinates": [2, 2],
-        "channel_id": "345678901234567890",
-        "npcs": []
+    "The Rusty Flagon Inn": {
+      "Name": "The Rusty Flagon Inn",
+      "Description": "A warm and inviting inn where the scent of hearty stew mingles with the laughter of patrons. A roaring fire in the hearth and tales of adventure make it a favorite among travelers.",
+      "Coordinates": [123, 223],
+      "Connected_Areas": [
+        "Town Square"
+      ],
+      "Inventory": [],
+      "NPCs": [
+        "Bartholomew the Bartender"
+      ],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Forest Clearing": {
+      "Name": "Forest Clearing",
+      "Description": "An open meadow within the Whispering Woods where wildflowers bloom, and the songs of birds fill the air. It's a place of tranquility and natural beauty.",
+      "Coordinates": [151, 251],
+      "Connected_Areas": [
+        "Hidden Grove"
+      ],
+      "Inventory": [
+        "Healing Herb",
+        "Mysterious Stone"
+      ],
+      "NPCs": [
+        "Elder Oak"
+      ],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Hidden Grove": {
+      "Name": "Hidden Grove",
+      "Description": "A secret grove encircled by ancient trees whose roots form natural arches. The air is thick with magic, and time seems to slow down here.",
+      "Coordinates": [152, 252],
+      "Connected_Areas": [
+        "Forest Clearing"
+      ],
+      "Inventory": [
+        "Ancient Relic"
+      ],
+      "NPCs": [],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Cave Entrance": {
+      "Name": "Cave Entrance",
+      "Description": "A gaping maw in the side of a mountain, the entrance to the Crystal Cave exudes a faint glow. Stalactites hang ominously, and a cool breeze beckons you inward.",
+      "Coordinates": [181, 231],
+      "Connected_Areas": [
+        "Crystal Hall"
+      ],
+      "Inventory": [],
+      "NPCs": [
+        "Cave Guardian"
+      ],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Crystal Hall": {
+      "Name": "Crystal Hall",
+      "Description": "A magnificent chamber where massive crystals jut from the walls and ceiling, casting prismatic lights. The atmosphere is serene yet charged with energy.",
+      "Coordinates": [182, 232],
+      "Connected_Areas": [
+        "Cave Entrance",
+        "Deep Cavern"
+      ],
+      "Inventory": [
+        "Crystal Shard"
+      ],
+      "NPCs": [
+        "Crystal Golem"
+      ],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Deep Cavern": {
+      "Name": "Deep Cavern",
+      "Description": "An abyssal cavern where the light from above barely reaches. The walls are adorned with ancient carvings, and the silence is broken only by the drip of water.",
+      "Coordinates": [183, 233],
+      "Connected_Areas": [
+        "Crystal Hall"
+      ],
+      "Inventory": [
+        "Rare Gemstone"
+      ],
+      "NPCs": [],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Ruined Courtyard": {
+      "Name": "Ruined Courtyard",
+      "Description": "An overgrown courtyard where nature has reclaimed the stone pathways. Vines creep over fallen columns, and the air is thick with the scent of moss and history.",
+      "Coordinates": [111, 241],
+      "Connected_Areas": [
+        "Forgotten Library"
+      ],
+      "Inventory": [],
+      "NPCs": [
+        "Shade"
+      ],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Forgotten Library": {
+      "Name": "Forgotten Library",
+      "Description": "Shelves of ancient books stretch into the shadows, their pages brittle with age. Dust motes dance in the slivers of light that penetrate the gloom.",
+      "Coordinates": [112, 242],
+      "Connected_Areas": [
+        "Ruined Courtyard",
+        "Hidden Vault"
+      ],
+      "Inventory": [
+        "Ancient Book"
+      ],
+      "NPCs": [],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
+    },
+    "Hidden Vault": {
+      "Name": "Hidden Vault",
+      "Description": "A secret chamber sealed behind a heavy stone door. Inside, treasures of untold value lie untouched, protected by mechanisms lost to time.",
+      "Coordinates": [113, 243],
+      "Connected_Areas": [
+        "Forgotten Library"
+      ],
+      "Inventory": [
+        "Enchanted Armor"
+      ],
+      "NPCs": [],
+      "Channel_ID": null,
+      "Allows_Intercontinental_Travel": false
     }
-}
+  }
+  

@@ -4,12 +4,12 @@
         "species": "Human",
         "char_class": "Warrior",
         "stats": {
-            "Strength": 12,
+            "Strength": 15,
             "Dexterity": 15,
             "Constitution": 15,
             "Intelligence": 12,
             "Wisdom": 12,
-            "Charisma": 15
+            "Charisma": 12
         },
         "inventory": [],
         "equipment": {
@@ -29,7 +29,7 @@
                 null
             ]
         },
-        "capacity": 180,
+        "capacity": 225,
         "ac": 10,
         "max_hp": 1,
         "curr_hp": 1,
@@ -39,10 +39,10 @@
         "level": 1,
         "xp": 0,
         "reputation": {},
-        "current_area_name": "Forest Entrance",
-        "current_location": "Unknown",
-        "current_region": "Avaloria",
-        "current_continent": "Eldoria",
-        "current_world": "Endara"
+        "current_area_name": "Town Square",
+        "current_location": "Stonehaven",
+        "current_region": "Northern Reach",
+        "current_continent": "Aerilon",
+        "current_world": "Eldoria"
     }
 }
