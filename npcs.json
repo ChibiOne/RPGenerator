@@ -1,99 +1,1340 @@
 {
-    "__Metadata__": {
-        "Version": "1.1",
-        "Last_updated": "2023-05-15"
-    },
-    "Martha the Innkeeper": {
-        "Id": "martha_innkeeper",
-        "Name": "Martha the Innkeeper",
-        "Description": "A middle-aged woman with a warm smile and a knack for gossip. She runs The Rusty Flagon Inn with grace and efficiency.",
-        "Role": "Innkeeper",
-        "Type": "Quest_giver",
-        "Location": "The Rusty Flagon Inn",
-        "Stats": {
-            "Charisma": 14,
-            "Intelligence": 12,
-            "Wisdom": 10
-        },
-        "Inventory": ["Room_key", "Ale_mug", "Guest_ledger"],
-        "Dialogue": {
-            "Greeting": [
-                "Welcome to The Rusty Flagon Inn! Make yourself at home.",
-                "If you're looking for a good night's rest, you've come to the right place."
-            ],
-            "Rumors": [
-                "I've heard rumors of strange happenings in the old forest to the north..."
-            ],
-            "Quest_start": {
-                "Find_lost_shipment": "We're expecting a shipment of rare wines. It's late. Could you investigate?"
-            }
-        },
-        "Quests": ["Find_lost_shipment"],
-        "Relationships": {
-            "Borin Ironfist": "Friend",
-            "Elara Moonshadow": "Acquaintance"
-        }
-    },
-    "Borin Ironfist": {
-        "Id": "borin_ironfist",
-        "Name": "Borin Ironfist",
-        "Description": "A sturdy dwarf with a braided beard and a fiery temper. Borin is known for crafting some of the finest weapons and armor in the land.",
-        "Role": "Blacksmith",
-        "Type": "Merchant",
-        "Location": "Ironfist's Forge",
+    "Master Smith Grimaldi": {
+        "Name": "Master Smith Grimaldi",
+        "Description": "A muscular dwarf with burn-scarred arms and a meticulously braided beard. His eyes show decades of expertise in metalworking.",
+        "Role": "Master Blacksmith",
         "Stats": {
             "Strength": 16,
-            "Constitution": 15,
-            "Craftsmanship": 18
+            "Dexterity": 14,
+            "Constitution": 16,
+            "Intelligence": 14,
+            "Wisdom": 13,
+            "Charisma": 12
         },
-        "Inventory": ["Iron_ingot", "Steel_hammer", "Apprentice_anvil"],
-        "Dialogue": {
-            "Greeting": [
-                "If it's not forged by me, it's not worth your time!",
-                "Need a weapon that's both sharp and sturdy? I can help with that."
-            ],
-            "Shop": [
-                "Take a look at my wares. Finest craftsmanship in all the land!"
-            ],
-            "Lore": [
-                "The ore from the northern mines is the best I've worked with in years."
-            ]
+        "Max_HP": 42,
+        "Curr_HP": 42,
+        "AC": 13,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "Each piece must be perfect - no exceptions!",
+            "Looking for quality work? You've come to the right place.",
+            "Those crystal fragments make for interesting alloys..."
+        ],
+        "Inventory": ["Master's Hammer", "Smith's Apron", "Exotic Metal Samples"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Master Craftsman": "Expert in metalworking",
+            "Eye for Quality": "Can assess material value"
         },
-        "Quests": ["Forge_legendary_weapon"],
-        "Relationships": {
-            "Martha the Innkeeper": "Friend",
-            "Thorin Stonehelm": "Rival"
+        "Faction": "Craftsmen's Guild",
+        "Attitude": "Perfectionist",
+        "Relations": {
+            "Apprentice Craftsman": "Mentor",
+            "Guard Captain Thom": "Supplier",
+            "Crystal Researcher": "Interested"
         }
     },
-    "Elara Moonshadow": {
-        "Id": "elara_moonshadow",
-        "Name": "Elara Moonshadow",
-        "Description": "An enigmatic elf druid who spends her days tending to the ancient grove. Elara has deep knowledge of nature and healing.",
-        "Role": "Druid",
-        "Type": "Healer",
-        "Location": "Whispering Grove",
+    "Apprentice Craftsman": {
+        "Name": "Apprentice Craftsman",
+        "Description": "A young human with eager eyes and soot-stained clothes, learning the arts of metalworking.",
+        "Role": "Apprentice Smith",
         "Stats": {
-            "Wisdom": 18,
+            "Strength": 14,
+            "Dexterity": 15,
+            "Constitution": 13,
+            "Intelligence": 12,
+            "Wisdom": 11,
+            "Charisma": 10
+        },
+        "Max_HP": 24,
+        "Curr_HP": 24,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Master Grimaldi is teaching me about metal tempering today!",
+            "I'm still learning, but I can handle basic repairs.",
+            "Someday I'll craft weapons as fine as the master's."
+        ],
+        "Inventory": ["Apprentice Hammer", "Basic Tools", "Practice Materials"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Quick Learner": "Fast improvement rate",
+            "Hard Worker": "Extra effort on tasks"
+        },
+        "Faction": "Craftsmen's Guild",
+        "Attitude": "Eager",
+        "Relations": {
+            "Master Smith Grimaldi": "Student",
+            "Sarah the Merchant": "Friendly",
+            "Guard Captain Thom": "Respectful"
+        }
+    },
+    "Harbor Master": {
+        "Name": "Harbor Master",
+        "Description": "A weathered woman with sharp eyes and a no-nonsense attitude, keeping the docks running smoothly.",
+        "Role": "Port Authority",
+        "Stats": {
+            "Strength": 12,
+            "Dexterity": 13,
+            "Constitution": 14,
             "Intelligence": 15,
+            "Wisdom": 16,
             "Charisma": 14
         },
-        "Inventory": ["Healing_herbs", "Druidic_focus", "Nature_grimoire"],
-        "Dialogue": {
-            "Greeting": [
-                "The forest speaks to those who listen.",
-                "Nature's balance must be maintained. How may I assist you?"
-            ],
-            "Warning": [
-                "Beware the shadows that linger after dusk."
-            ],
-            "Services": [
-                "I can offer you herbs to aid in your journey."
-            ]
+        "Max_HP": 35,
+        "Curr_HP": 35,
+        "AC": 13,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "All ships must be properly registered and inspected.",
+            "The tide waits for no one - keep those goods moving!",
+            "Strange reports from the northern waters lately..."
+        ],
+        "Inventory": ["Harbor Ledger", "Official Seal", "Spyglass"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Port Authority": "Control over harbor",
+            "Weather Sense": "Predict conditions"
         },
-        "Quests": ["Restore_forest_balance"],
-        "Relationships": {
-            "Martha the Innkeeper": "Acquaintance",
-            "Darius Shadowblade": "Mentor"
+        "Faction": "Harbor Authority",
+        "Attitude": "Efficient",
+        "Relations": {
+            "Seasoned Sailor": "Supervisor",
+            "Guard Captain Thom": "Collaborator",
+            "Sarah the Merchant": "Business"
+        }
+    },
+    "Seasoned Sailor": {
+        "Name": "Seasoned Sailor",
+        "Description": "A sun-tanned mariner with salt-bleached hair and countless stories of the sea.",
+        "Role": "Sailor",
+        "Stats": {
+            "Strength": 14,
+            "Dexterity": 15,
+            "Constitution": 15,
+            "Intelligence": 11,
+            "Wisdom": 14,
+            "Charisma": 13
+        },
+        "Max_HP": 32,
+        "Curr_HP": 32,
+        "AC": 13,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Aye, I've sailed all the seas you can name.",
+            "There's strange lights in the northern waters these days.",
+            "Need help loading cargo? I know all the tricks."
+        ],
+        "Inventory": ["Sailor's Rope", "Lucky Compass", "Ship's Whistle"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Sea Legs": "Perfect balance",
+            "Navigator": "Expert pathfinding"
+        },
+        "Faction": "Sailors' Guild",
+        "Attitude": "Experienced",
+        "Relations": {
+            "Harbor Master": "Respected",
+            "Wandering Merchant": "Friendly",
+            "Guard Captain Thom": "Cooperative"
+        }
+    },
+    "Temple Guardian": {
+        "Name": "Temple Guardian",
+        "Description": "A stoic figure in ceremonial armor, standing watch over the temple with unwavering vigilance.",
+        "Role": "Temple Protector",
+        "Stats": {
+            "Strength": 16,
+            "Dexterity": 14,
+            "Constitution": 15,
+            "Intelligence": 10,
+            "Wisdom": 14,
+            "Charisma": 12
+        },
+        "Max_HP": 45,
+        "Curr_HP": 45,
+        "AC": 18,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "None may enter the sacred chambers without permission.",
+            "The temple's peace shall be maintained.",
+            "High Priestess Elena will see those she deems worthy."
+        ],
+        "Inventory": ["Temple Blade", "Holy Symbol", "Ceremonial Shield"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Sacred Duty": "Advantage on temple defense",
+            "Divine Protection": "Blessed by the temple"
+        },
+        "Faction": "Temple of Light",
+        "Attitude": "Vigilant",
+        "Relations": {
+            "High Priestess Elena": "Devoted",
+            "Guard Captain Thom": "Allied",
+            "Noble Guard": "Respectful"
+        }
+    },
+    "Lady Silverweave": {
+        "Name": "Lady Silverweave",
+        "Description": "An elegant noblewoman with silver-streaked hair and expensive silk robes, known for her political influence.",
+        "Role": "Noble",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 12,
+            "Constitution": 10,
+            "Intelligence": 16,
+            "Wisdom": 14,
+            "Charisma": 18
+        },
+        "Max_HP": 24,
+        "Curr_HP": 24,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "The noble quarter has standards to maintain, you understand.",
+            "There are... concerning reports from the crystal caves.",
+            "Perhaps we could arrange something mutually beneficial?"
+        ],
+        "Inventory": ["Noble's Signet Ring", "Perfumed Handkerchief", "Secret Letters"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Noble Influence": "Political connections",
+            "Sharp Mind": "Expert in intrigue"
+        },
+        "Faction": "Noble Houses",
+        "Attitude": "Shrewd",
+        "Relations": {
+            "Guard Captain Thom": "Influential",
+            "High Priestess Elena": "Patron",
+            "Noble Guard": "Employer"
+        }
+    },
+    "Noble Guard": {
+        "Name": "Noble Guard",
+        "Description": "A well-trained guard in polished armor, serving the noble families with professional dedication.",
+        "Role": "Guard",
+        "Stats": {
+            "Strength": 15,
+            "Dexterity": 14,
+            "Constitution": 14,
+            "Intelligence": 11,
+            "Wisdom": 12,
+            "Charisma": 10
+        },
+        "Max_HP": 35,
+        "Curr_HP": 35,
+        "AC": 16,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "This is a restricted area. State your business.",
+            "The noble quarter is under our protection.",
+            "Move along, unless you have official business here."
+        ],
+        "Inventory": ["Fine Sword", "Noble House Shield", "Guard Whistle"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Alert": "Cannot be surprised",
+            "Noble Protocol": "Trained in etiquette"
+        },
+        "Faction": "Noble Guard",
+        "Attitude": "Professional",
+        "Relations": {
+            "Lady Silverweave": "Loyal",
+            "Guard Captain Thom": "Respectful",
+            "Temple Guardian": "Allied"
+        }
+    },
+    "Herb Gatherer": {
+        "Name": "Herb Gatherer",
+        "Description": "A quiet individual in well-worn green clothing, carrying baskets of aromatic herbs and plants.",
+        "Role": "Herbalist",
+        "Stats": {
+            "Strength": 10,
+            "Dexterity": 14,
+            "Constitution": 12,
+            "Intelligence": 15,
+            "Wisdom": 16,
+            "Charisma": 11
+        },
+        "Max_HP": 24,
+        "Curr_HP": 24,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "These crystal growths are affecting the local flora...",
+            "Be careful of the red mushrooms - they're not for eating.",
+            "The forest holds many secrets, if you know where to look."
+        ],
+        "Inventory": ["Herb Satchel", "Herbalist's Tools", "Medicine Book"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Plant Wisdom": "Expert herb knowledge",
+            "Wilderness Stealth": "Moves quietly"
+        },
+        "Faction": "Forest Dwellers",
+        "Attitude": "Observant",
+        "Relations": {
+            "Forest Witch": "Student",
+            "Forest Ranger": "Collaborator",
+            "Master Hunter": "Supplier"
+        }
+    },
+    "Wandering Merchant": {
+        "Name": "Wandering Merchant",
+        "Description": "A cheerful traveler with a heavily-laden pack and stories from every corner of the realm.",
+        "Role": "Traveling Trader",
+        "Stats": {
+            "Strength": 12,
+            "Dexterity": 13,
+            "Constitution": 14,
+            "Intelligence": 14,
+            "Wisdom": 13,
+            "Charisma": 16
+        },
+        "Max_HP": 28,
+        "Curr_HP": 28,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Rare goods from distant lands! Come see!",
+            "The road holds many dangers, but the profits are worth it.",
+            "Need supplies for your journey? I've got everything!"
+        ],
+        "Inventory": ["Merchant's Pack", "Trade Goods", "Hidden Coin Purse"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Haggler": "Skilled at bargaining",
+            "Path Lore": "Knows safe routes"
+        },
+        "Faction": "Merchant's Guild",
+        "Attitude": "Friendly",
+        "Relations": {
+            "Road Patrol": "Grateful",
+            "Sarah the Merchant": "Colleague",
+            "Guard Captain Thom": "Informant"
+        }
+    },
+    "Road Patrol": {
+        "Name": "Road Patrol",
+        "Description": "A vigilant guard in practical armor, keeping the trade routes safe for travelers.",
+        "Role": "Road Guard",
+        "Stats": {
+            "Strength": 15,
+            "Dexterity": 14,
+            "Constitution": 15,
+            "Intelligence": 12,
+            "Wisdom": 14,
+            "Charisma": 12
+        },
+        "Max_HP": 38,
+        "Curr_HP": 38,
+        "AC": 15,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Stay alert - bandits have been active lately.",
+            "Keep to the main roads after dark.",
+            "Report any suspicious activity immediately."
+        ],
+        "Inventory": ["Patrol Sword", "Signal Horn", "First Aid Kit"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Road Warden": "Knowledge of routes",
+            "Quick Response": "Fast to threats"
+        },
+        "Faction": "City Guard",
+        "Attitude": "Vigilant",
+        "Relations": {
+            "Guard Captain Thom": "Subordinate",
+            "Wandering Merchant": "Protector",
+            "Forest Ranger": "Ally"
+        }
+    },
+    "Lost Apprentice": {
+        "Name": "Lost Apprentice",
+        "Description": "A young magic student with singed robes and a confused expression, clutching a spellbook.",
+        "Role": "Magic Student",
+        "Stats": {
+            "Strength": 9,
+            "Dexterity": 12,
+            "Constitution": 11,
+            "Intelligence": 15,
+            "Wisdom": 13,
+            "Charisma": 12
+        },
+        "Max_HP": 18,
+        "Curr_HP": 18,
+        "AC": 11,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "I was just trying a new spell when everything went wrong...",
+            "Have you seen my master anywhere?",
+            "The forest seems different than I remember..."
+        ],
+        "Inventory": ["Student's Spellbook", "Magical Components", "Master's Note"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Magic Talent": "Basic spellcasting",
+            "Book Learning": "Academic knowledge"
+        },
+        "Faction": "Mage's Academy",
+        "Attitude": "Confused",
+        "Relations": {
+            "Forest Witch": "Seeks Help",
+            "Crystal Sage": "Curious",
+            "Road Patrol": "Grateful"
+        }
+    },
+    "Shrine Keeper": {
+        "Name": "Shrine Keeper",
+        "Description": "An elderly figure in faded ceremonial robes, tending to ancient stones with reverent care.",
+        "Role": "Sacred Guardian",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 10,
+            "Constitution": 12,
+            "Intelligence": 15,
+            "Wisdom": 18,
+            "Charisma": 14
+        },
+        "Max_HP": 28,
+        "Curr_HP": 28,
+        "AC": 12,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "The old ways must not be forgotten.",
+            "These stones remember the ancient times...",
+            "The crystals sing in harmony with the shrine's energy."
+        ],
+        "Inventory": ["Sacred Texts", "Ritual Items", "Ancient Keys"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Ancient Knowledge": "Expertise in old rituals",
+            "Sacred Sight": "Can sense disturbances"
+        },
+        "Faction": "Ancient Order",
+        "Attitude": "Contemplative",
+        "Relations": {
+            "Archaeology Student": "Teacher",
+            "Forest Witch": "Colleague",
+            "Crystal Sage": "Kindred Spirit"
+        }
+    },
+    "Archaeology Student": {
+        "Name": "Archaeology Student",
+        "Description": "A young scholar with ink-stained fingers and excited eyes, carefully documenting ancient ruins.",
+        "Role": "Researcher",
+        "Stats": {
+            "Strength": 10,
+            "Dexterity": 13,
+            "Constitution": 11,
+            "Intelligence": 16,
+            "Wisdom": 14,
+            "Charisma": 12
+        },
+        "Max_HP": 20,
+        "Curr_HP": 20,
+        "AC": 11,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "These markings suggest a civilization far older than we thought!",
+            "Could you help me reach that higher inscription?",
+            "I'm documenting the interaction between crystal growth and ancient structures."
+        ],
+        "Inventory": ["Research Journal", "Sketching Tools", "Magnifying Glass"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Academic Knowledge": "History expertise",
+            "Careful Study": "Detailed observation"
+        },
+        "Faction": "University",
+        "Attitude": "Enthusiastic",
+        "Relations": {
+            "Shrine Keeper": "Student",
+            "Crystal Researcher": "Colleague",
+            "Temple Scholar": "Assistant"
+        }
+    },
+    "Water Spirit": {
+        "Name": "Water Spirit",
+        "Description": "A shimmering, translucent figure that seems to flow like water, with eyes deep as mountain pools.",
+        "Role": "Nature Spirit",
+        "Stats": {
+            "Strength": 12,
+            "Dexterity": 18,
+            "Constitution": 14,
+            "Intelligence": 16,
+            "Wisdom": 18,
+            "Charisma": 18
+        },
+        "Max_HP": 45,
+        "Curr_HP": 45,
+        "AC": 16,
+        "Movement_Speed": 40,
+        "Dialogue": [
+            "The waters remember all who pass...",
+            "The crystal's song disturbs the ancient currents.",
+            "Seek truth in the depths, if you dare."
+        ],
+        "Inventory": ["Water Essence", "Ancient Memories", "Crystal Tears"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Water Form": "Can move through water",
+            "Water Sight": "Can see through water",
+            "Nature's Voice": "Communicate with water beings"
+        },
+        "Faction": "Nature Spirits",
+        "Attitude": "Mysterious",
+        "Relations": {
+            "Crystal Researcher": "Curious",
+            "Forest Witch": "Allied",
+            "Lake Guardian": "Kindred"
+        }
+    },
+    "Crystal Researcher": {
+        "Name": "Crystal Researcher",
+        "Description": "A focused scientist wearing protective goggles and crystal-enhanced instruments.",
+        "Role": "Scholar",
+        "Stats": {
+            "Strength": 9,
+            "Dexterity": 12,
+            "Constitution": 11,
+            "Intelligence": 17,
+            "Wisdom": 15,
+            "Charisma": 12
+        },
+        "Max_HP": 22,
+        "Curr_HP": 22,
+        "AC": 11,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "These energy readings are unprecedented!",
+            "The crystals seem to respond to emotional states...",
+            "Could you gather some samples from different locations?"
+        ],
+        "Inventory": ["Research Tools", "Crystal Samples", "Energy Meter"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Analysis": "Understand crystal properties",
+            "Scientific Method": "Systematic research"
+        },
+        "Faction": "Research Institute",
+        "Attitude": "Analytical",
+        "Relations": {
+            "Crystal Sage": "Student",
+            "Master Smith Grimaldi": "Collaborator",
+            "Water Spirit": "Research Subject"
+        }
+    },
+    "Cave Guide": {
+        "Name": "Cave Guide",
+        "Description": "A gruff, experienced explorer with crystal-enhanced goggles and well-worn cave gear.",
+        "Role": "Guide",
+        "Stats": {
+            "Strength": 14,
+            "Dexterity": 15,
+            "Constitution": 16,
+            "Intelligence": 13,
+            "Wisdom": 15,
+            "Charisma": 12
+        },
+        "Max_HP": 45,
+        "Curr_HP": 45,
+        "AC": 14,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Stay close and follow my lights - the caves can be treacherous.",
+            "Mind the crystal formations - some are more unstable than others.",
+            "Been guiding folks through these caves for twenty years now."
+        ],
+        "Inventory": ["Mining Lamp", "Safety Rope", "Cave Maps"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Cave Knowledge": "Expert cave navigation",
+            "Crystal Sense": "Can detect unstable formations"
+        },
+        "Faction": "Cave Explorers",
+        "Attitude": "Professional",
+        "Relations": {
+            "Crystal Sage": "Respectful",
+            "Nervous Explorer": "Protective",
+            "Rock Collector": "Guide"
+        }
+    },
+    "Nervous Explorer": {
+        "Name": "Nervous Explorer",
+        "Description": "A well-equipped but clearly anxious adventurer, jumping at every cave sound.",
+        "Role": "Tourist",
+        "Stats": {
+            "Strength": 10,
+            "Dexterity": 12,
+            "Constitution": 11,
+            "Intelligence": 14,
+            "Wisdom": 10,
+            "Charisma": 12
+        },
+        "Max_HP": 18,
+        "Curr_HP": 18,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Did... did you hear that sound?",
+            "The crystals are beautiful, but are you sure it's safe?",
+            "I'm starting to think this wasn't such a good idea..."
+        ],
+        "Inventory": ["New Lantern", "Travel Journal", "First Aid Kit"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Cautious": "Spot hazards early",
+            "Well-Equipped": "Has useful gear"
+        },
+        "Faction": "None",
+        "Attitude": "Anxious",
+        "Relations": {
+            "Cave Guide": "Dependent",
+            "Crystal Mage": "Awed",
+            "Rock Collector": "Curious"
+        }
+    },
+    "Crystal Mage": {
+        "Name": "Crystal Mage",
+        "Description": "A mysterious figure whose robes are embedded with living crystals, speaking in resonant tones.",
+        "Role": "Crystal Magic User",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 13,
+            "Constitution": 12,
+            "Intelligence": 17,
+            "Wisdom": 16,
+            "Charisma": 15
+        },
+        "Max_HP": 32,
+        "Curr_HP": 32,
+        "AC": 13,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "The crystals speak to those who know how to listen.",
+            "These formations are more than mere minerals...",
+            "The resonance patterns have been shifting lately."
+        ],
+        "Inventory": ["Crystal Staff", "Resonance Stones", "Spell Crystals"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Magic": "Manipulate crystal energy",
+            "Crystal Attunement": "Communicate with crystals"
+        },
+        "Faction": "Crystal Sages",
+        "Attitude": "Mystical",
+        "Relations": {
+            "Crystal Sage": "Student",
+            "Rock Collector": "Advisor",
+            "Cave Guide": "Respected"
+        }
+    },
+    "Rock Collector": {
+        "Name": "Rock Collector",
+        "Description": "An enthusiastic geologist with pockets full of specimens and a magnifying glass always ready.",
+        "Role": "Geologist",
+        "Stats": {
+            "Strength": 12,
+            "Dexterity": 13,
+            "Constitution": 12,
+            "Intelligence": 16,
+            "Wisdom": 14,
+            "Charisma": 11
+        },
+        "Max_HP": 24,
+        "Curr_HP": 24,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Look at these crystal formations! Absolutely fascinating!",
+            "I'd love to get a sample of that cluster...",
+            "The mineral composition here is unlike anything I've ever seen!"
+        ],
+        "Inventory": ["Specimen Bags", "Rock Hammer", "Mineral Guide"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Mineral Expert": "Identify valuable stones",
+            "Careful Extraction": "Safely collect samples"
+        },
+        "Faction": "Geological Society",
+        "Attitude": "Enthusiastic",
+        "Relations": {
+            "Crystal Mage": "Fascinated",
+            "Cave Guide": "Grateful",
+            "Crystal Researcher": "Colleague"
+        }
+    },
+    "Cave Fisher": {
+        "Name": "Cave Fisher",
+        "Description": "A quiet individual who has learned to fish the dark underground waters with remarkable skill.",
+        "Role": "Subterranean Fisher",
+        "Stats": {
+            "Strength": 13,
+            "Dexterity": 16,
+            "Constitution": 14,
+            "Intelligence": 12,
+            "Wisdom": 15,
+            "Charisma": 10
+        },
+        "Max_HP": 28,
+        "Curr_HP": 28,
+        "AC": 13,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "The cave fish are different here... changed by the crystals.",
+            "Best fishing is near the glowing crystals.",
+            "Shh... you'll scare the fish with all that talking."
+        ],
+        "Inventory": ["Crystal Fishing Rod", "Glowing Lures", "Fish Basket"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Cave Fishing": "Expert underground angler",
+            "Dark Vision": "Adapted to cave darkness"
+        },
+        "Faction": "Cave Dwellers",
+        "Attitude": "Patient",
+        "Relations": {
+            "Lake Guardian": "Respectful",
+            "Water Spirit": "Cautious",
+            "Cave Guide": "Friendly"
+        }
+    },
+    "Lake Guardian": {
+        "Name": "Lake Guardian",
+        "Description": "A mysterious figure in flowing robes who watches over the underground lake with ancient wisdom.",
+        "Role": "Lake Protector",
+        "Stats": {
+            "Strength": 12,
+            "Dexterity": 14,
+            "Constitution": 15,
+            "Intelligence": 16,
+            "Wisdom": 18,
+            "Charisma": 16
+        },
+        "Max_HP": 48,
+        "Curr_HP": 48,
+        "AC": 15,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "The lake holds secrets older than the crystals themselves.",
+            "Not all who enter these waters return.",
+            "The crystal heart's pulse echoes in the depths."
+        ],
+        "Inventory": ["Lake Talisman", "Water Crystal", "Ancient Scrolls"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Water Magic": "Control underground waters",
+            "Ancient Knowledge": "Knows lake secrets"
+        },
+        "Faction": "Ancient Guardians",
+        "Attitude": "Mysterious",
+        "Relations": {
+            "Water Spirit": "Aligned",
+            "Cave Fisher": "Tolerant",
+            "Crystal Sage": "Allied"
+        }
+    },
+    "Apprentice Hunter": {
+        "Name": "Apprentice Hunter",
+        "Description": "A young, eager hunter in leather training gear, carefully studying animal tracks and practicing bow shots.",
+        "Role": "Hunter Trainee",
+        "Stats": {
+            "Strength": 13,
+            "Dexterity": 15,
+            "Constitution": 12,
+            "Intelligence": 11,
+            "Wisdom": 13,
+            "Charisma": 10
+        },
+        "Max_HP": 24,
+        "Curr_HP": 24,
+        "AC": 13,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Master Hunter says I'm getting better at tracking!",
+            "The crystal growths seem to be affecting the animals' behavior...",
+            "I've been practicing my bow work every day - want to see?"
+        ],
+        "Inventory": ["Training Bow", "Practice Arrows", "Hunting Knife"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Basic Tracking": "Can follow obvious trails",
+            "Bow Training": "Proficient with bow",
+            "Animal Lore": "Basic knowledge of local fauna"
+        },
+        "Faction": "Hunters' Guild",
+        "Attitude": "Enthusiastic",
+        "Relations": {
+            "Master Hunter": "Student",
+            "Forest Ranger": "Learning From",
+            "Herb Gatherer": "Friendly"
+        }
+    },
+    "Guard Captain Thom": {
+        "Name": "Guard Captain Thom",
+        "Description": "A stern but fair captain of the city guard, wearing polished silver armor bearing Northhold's crest.",
+        "Role": "Guard Captain",
+        "Stats": {
+            "Strength": 16,
+            "Dexterity": 14,
+            "Constitution": 15,
+            "Intelligence": 12,
+            "Wisdom": 14,
+            "Charisma": 13
+        },
+        "Max_HP": 47,
+        "Curr_HP": 47,
+        "AC": 17,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Welcome to Northhold. Keep your weapons sheathed and your magic controlled.",
+            "Been hearing strange reports from the Crystal Caverns lately...",
+            "If you're heading into the Whispering Woods, be careful. Not all who wander there return."
+        ],
+        "Inventory": ["Captain's Sword", "City Seal", "Guard Reports"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Leadership": "Advantage on command checks",
+            "Combat Training": "Proficient in all weapons"
+        },
+        "Faction": "City Guard",
+        "Attitude": "Professional",
+        "Relations": {
+            "Sarah the Merchant": "Protective",
+            "Old Tom the Beggar": "Suspicious",
+            "Harbor Master": "Respectful"
+        }
+    },
+    "Sarah the Merchant": {
+        "Name": "Sarah the Merchant",
+        "Description": "A shrewd trader with a keen eye for valuable goods. Her colorful robes are adorned with trinkets from distant lands.",
+        "Role": "Merchant",
+        "Stats": {
+            "Strength": 10,
+            "Dexterity": 12,
+            "Constitution": 11,
+            "Intelligence": 14,
+            "Wisdom": 13,
+            "Charisma": 16
+        },
+        "Max_HP": 18,
+        "Curr_HP": 18,
+        "AC": 11,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Welcome to my humble stall! Looking for anything special?",
+            "Those crystals from the caves fetch a good price these days...",
+            "Have you heard about the strange lights in the Mystic Grove?"
+        ],
+        "Inventory": ["Fine Silk Scarf", "Merchant's Scale", "Exotic Goods"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Haggling": "Advantage on trade checks",
+            "Market Knowledge": "Knows current prices"
+        },
+        "Faction": "Merchant's Guild",
+        "Attitude": "Friendly",
+        "Relations": {
+            "Master Wei": "Competitor",
+            "Guard Captain Thom": "Respectful",
+            "Old Tom the Beggar": "Sympathetic"
+        }
+    },
+    "Old Tom the Beggar": {
+        "Name": "Old Tom the Beggar",
+        "Description": "A weathered old man who sees and hears everything that happens in the marketplace. Despite his ragged appearance, his eyes are sharp and knowing.",
+        "Role": "Information Broker",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 12,
+            "Constitution": 10,
+            "Intelligence": 14,
+            "Wisdom": 16,
+            "Charisma": 13
+        },
+        "Max_HP": 14,
+        "Curr_HP": 14,
+        "AC": 11,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "Spare a coin for an old man?",
+            "I know more than most think I do...",
+            "Interesting things happen in the marketplace after dark..."
+        ],
+        "Inventory": ["Mysterious Key", "Torn Note"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Streetwise": "Knows city secrets",
+            "Perception": "Nothing escapes notice"
+        },
+        "Faction": "Street Folk",
+        "Attitude": "Cunning",
+        "Relations": {
+            "Sarah the Merchant": "Grateful",
+            "Guard Captain Thom": "Wary",
+            "Master Wei": "Informant"
+        }
+    },
+    "Master Wei": {
+        "Name": "Master Wei",
+        "Description": "An elegant merchant specializing in exotic goods and antiquities. His silk robes bear subtle but expensive embroidery.",
+        "Role": "Antiquities Dealer",
+        "Stats": {
+            "Strength": 9,
+            "Dexterity": 13,
+            "Constitution": 11,
+            "Intelligence": 16,
+            "Wisdom": 15,
+            "Charisma": 15
+        },
+        "Max_HP": 22,
+        "Curr_HP": 22,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Ah, a discerning customer! Please, browse my unique collection.",
+            "Every item has a story, and the right buyer.",
+            "The Crystal Caves? Yes, I might be interested in artifacts from there..."
+        ],
+        "Inventory": ["Antique Scroll", "Evaluation Glass", "Rare Books"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Appraisal": "Expert at valuing items",
+            "History": "Knowledge of artifacts"
+        },
+        "Faction": "Merchant's Guild",
+        "Attitude": "Refined",
+        "Relations": {
+            "Sarah the Merchant": "Rival",
+            "Crystal Sage": "Client",
+            "Temple Scholar": "Associate"
+        }
+    },
+    "Forest Witch": {
+        "Name": "Forest Witch",
+        "Description": "An enigmatic woman who seems to be one with the forest. Her cloak appears to be made of living leaves.",
+        "Role": "Mystic",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 13,
+            "Constitution": 12,
+            "Intelligence": 16,
+            "Wisdom": 17,
+            "Charisma": 15
+        },
+        "Max_HP": 32,
+        "Curr_HP": 32,
+        "AC": 13,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "The forest speaks to those who listen...",
+            "The crystals in the cave grow restless. Can you feel it?",
+            "Seek the heart of the crystal, if you dare..."
+        ],
+        "Inventory": ["Magic Staff", "Healing Herbs", "Crystal Pendant"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Nature Magic": "Can cast nature spells",
+            "Forest Sense": "Can detect disturbances in the forest"
+        },
+        "Spells": ["Heal", "Speak with Plants", "Nature's Shield"],
+        "Faction": "Forest Dwellers",
+        "Attitude": "Mysterious",
+        "Relations": {
+            "Crystal Sage": "Ally",
+            "Temple Scholar": "Respectful",
+            "Master Hunter": "Cautious"
+        }
+    },
+    "Master Hunter": {
+        "Name": "Master Hunter",
+        "Description": "A seasoned hunter with keen eyes and a quiet demeanor. Their leather armor bears marks of many encounters with forest beasts.",
+        "Role": "Hunter",
+        "Stats": {
+            "Strength": 14,
+            "Dexterity": 16,
+            "Constitution": 14,
+            "Intelligence": 12,
+            "Wisdom": 15,
+            "Charisma": 11
+        },
+        "Max_HP": 44,
+        "Curr_HP": 44,
+        "AC": 15,
+        "Movement_Speed": 35,
+        "Dialogue": [
+            "The woods have been restless lately...",
+            "Follow the marked trails if you value your life.",
+            "Strange crystals have been appearing in animal dens."
+        ],
+        "Inventory": ["Hunter's Bow", "Tracking Tools", "Animal Snares"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Track": "Expert tracking ability",
+            "Survival": "Can find food and water"
+        },
+        "Faction": "Hunters' Guild",
+        "Attitude": "Reserved",
+        "Relations": {
+            "Forest Witch": "Respectful",
+            "Apprentice Hunter": "Mentor",
+            "Forest Ranger": "Ally"
+        }
+    },
+    "Forest Ranger": {
+        "Name": "Forest Ranger",
+        "Description": "A vigilant guardian of the woods, wearing sturdy leather armor adorned with forest symbols.",
+        "Role": "Ranger",
+        "Stats": {
+            "Strength": 13,
+            "Dexterity": 15,
+            "Constitution": 14,
+            "Intelligence": 12,
+            "Wisdom": 16,
+            "Charisma": 11
+        },
+        "Max_HP": 38,
+        "Curr_HP": 38,
+        "AC": 14,
+        "Movement_Speed": 35,
+        "Dialogue": [
+            "Stay on the marked paths, stranger.",
+            "Watch for crystal growths - they've been spreading.",
+            "The old shrine still holds power... and danger."
+        ],
+        "Inventory": ["Ranger's Bow", "Forest Map", "Trail Rations"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Woodcraft": "Expert forest navigation",
+            "Animal Handling": "Can calm wild beasts"
+        },
+        "Faction": "Forest Wardens",
+        "Attitude": "Vigilant",
+        "Relations": {
+            "Master Hunter": "Ally",
+            "Forest Witch": "Respectful",
+            "Lost Adventurer": "Protective"
+        }
+    },
+    "Lost Adventurer": {
+        "Name": "Lost Adventurer",
+        "Description": "A weary traveler whose once-fine clothes are now travel-worn and patched.",
+        "Role": "Wanderer",
+        "Stats": {
+            "Strength": 12,
+            "Dexterity": 13,
+            "Constitution": 11,
+            "Intelligence": 14,
+            "Wisdom": 10,
+            "Charisma": 12
+        },
+        "Max_HP": 18,
+        "Curr_HP": 12,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "Thank the gods, another person! Can you help me find my way?",
+            "I found something strange near the crystal caves...",
+            "Be careful of the shifting paths - they're not what they seem."
+        ],
+        "Inventory": ["Tattered Map", "Strange Crystal", "Empty Waterskin"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Survival": "Basic outdoor skills",
+            "Lore": "Knowledge of distant lands"
+        },
+        "Faction": "None",
+        "Attitude": "Desperate",
+        "Relations": {
+            "Forest Ranger": "Grateful",
+            "Master Hunter": "Hopeful",
+            "Forest Witch": "Curious"
+        }
+    },
+    "Crystal Sage": {
+        "Name": "Crystal Sage",
+        "Description": "An ancient scholar whose robes seem to shimmer with crystalline dust. Their eyes glow with an inner light.",
+        "Role": "Sage",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 12,
+            "Constitution": 14,
+            "Intelligence": 18,
+            "Wisdom": 17,
+            "Charisma": 15
+        },
+        "Max_HP": 45,
+        "Curr_HP": 45,
+        "AC": 15,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "The crystals sing to those who know how to listen...",
+            "The heart chamber grows more active by the day.",
+            "Beware the portal room... not all doors should be opened."
+        ],
+        "Inventory": ["Crystal Staff", "Ancient Texts", "Resonance Stone"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Magic": "Can manipulate crystal energy",
+            "Ancient Knowledge": "Extensive knowledge of the caves",
+            "Energy Sense": "Can detect crystal power"
+        },
+        "Spells": ["Crystal Light", "Stone Speak", "Energy Shield"],
+        "Faction": "Crystal Sages",
+        "Attitude": "Wise",
+        "Relations": {
+            "Forest Witch": "Ally",
+            "Portal Guardian": "Guardian",
+            "Energy Researcher": "Teacher"
+        }
+    },
+    "Portal Guardian": {
+        "Name": "Portal Guardian",
+        "Description": "A mysterious figure in crystalline armor who never seems to leave the portal room. Their true form is unknown.",
+        "Role": "Guardian",
+        "Stats": {
+            "Strength": 16,
+            "Dexterity": 14,
+            "Constitution": 16,
+            "Intelligence": 14,
+            "Wisdom": 16,
+            "Charisma": 13
+        },
+        "Max_HP": 65,
+        "Curr_HP": 65,
+        "AC": 18,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "The portal remains sealed for good reason.",
+            "Only those who understand the crystal heart may pass.",
+            "Some secrets are better left undiscovered..."
+        ],
+        "Inventory": ["Crystal Sword", "Portal Key", "Ancient Ward"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Portal Sense": "Can detect portal activity",
+            "Crystal Shield": "Can create barriers",
+            "Ancient Warding": "Can seal passages"
+        },
+        "Faction": "Ancient Guardians",
+        "Attitude": "Stern",
+        "Relations": {
+            "Crystal Sage": "Respectful",
+            "Temple Scholar": "Cautious",
+            "Energy Researcher": "Suspicious"
+        }
+    },
+    "Energy Researcher": {
+        "Name": "Energy Researcher",
+        "Description": "A young scholar with crystal-enhanced goggles and robes covered in mysterious formulae.",
+        "Role": "Researcher",
+        "Stats": {
+            "Strength": 9,
+            "Dexterity": 13,
+            "Constitution": 12,
+            "Intelligence": 16,
+            "Wisdom": 14,
+            "Charisma": 11
+        },
+        "Max_HP": 24,
+        "Curr_HP": 24,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "These energy readings are off the charts!",
+            "Don't touch that crystal! We don't know its properties yet.",
+            "I wonder if the Forest Witch's theories about natural resonance are correct..."
+        ],
+        "Inventory": ["Research Notes", "Energy Meter", "Crystal Samples"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Analysis": "Can identify crystal properties",
+            "Energy Detection": "Can measure crystal power",
+            "Scientific Method": "Bonus to research checks"
+        },
+        "Faction": "Crystal Sages",
+        "Attitude": "Enthusiastic",
+        "Relations": {
+            "Crystal Sage": "Student",
+            "Temple Scholar": "Colleague",
+            "Portal Guardian": "Fascinated"
+        }
+    },
+    "Temple Scholar": {
+        "Name": "Temple Scholar",
+        "Description": "An elderly scholar in ancient-style robes, carefully documenting the temple ruins with trembling but precise hands.",
+        "Role": "Archaeologist",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 10,
+            "Constitution": 11,
+            "Intelligence": 17,
+            "Wisdom": 15,
+            "Charisma": 13
+        },
+        "Max_HP": 18,
+        "Curr_HP": 18,
+        "AC": 11,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "These runes suggest the temple is far older than we thought...",
+            "The crystal formations seem to follow the ancient ley lines.",
+            "Have you seen any other artifacts like this one?"
+        ],
+        "Inventory": ["Ancient Scrolls", "Translation Guide", "Artifact Collection"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Ancient Languages": "Can read old scripts",
+            "Historical Knowledge": "Expert in ancient lore",
+            "Artifact Knowledge": "Can identify old items"
+        },
+        "Faction": "Historical Society",
+        "Attitude": "Academic",
+        "Relations": {
+            "Crystal Sage": "Colleague",
+            "Energy Researcher": "Mentor",
+            "Guardian Construct": "Cautious"
+        }
+    },
+    "Guardian Construct": {
+        "Name": "Guardian Construct",
+        "Description": "An ancient mechanical construct powered by crystal energy, still faithfully guarding the temple ruins.",
+        "Role": "Ancient Guardian",
+        "Stats": {
+            "Strength": 18,
+            "Dexterity": 12,
+            "Constitution": 18,
+            "Intelligence": 10,
+            "Wisdom": 12,
+            "Charisma": 7
+        },
+        "Max_HP": 75,
+        "Curr_HP": 75,
+        "AC": 19,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "*Mechanical whirring* State your purpose.",
+            "Temple access restricted to authorized personnel.",
+            "*Crystal humming* Threat assessment in progress..."
+        ],
+        "Inventory": ["Crystal Core", "Ancient Weapon"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Power": "Powered by crystal energy",
+            "Ancient Protocols": "Follows old temple rules",
+            "Unwavering": "Immune to persuasion"
+        },
+        "Faction": "Ancient Temple",
+        "Attitude": "Dutiful",
+        "Relations": {
+            "Temple Scholar": "Tolerates",
+            "Portal Guardian": "Aligned",
+            "Crystal Sage": "Recognizes Authority"
+        }
+    },
+        "Weary Traveler": {
+            "Name": "Weary Traveler",
+            "Description": "A dust-covered traveler with worn boots and a weathered pack, clearly exhausted from the road.",
+            "Role": "Traveler",
+            "Stats": {
+                "Strength": 10,
+                "Dexterity": 12,
+                "Constitution": 11,
+                "Intelligence": 10,
+                "Wisdom": 12,
+                "Charisma": 10
+            },
+            "Max_HP": 8,
+            "Curr_HP": 6,
+            "AC": 11,
+            "Movement_Speed": 30,
+            "Dialogue": [
+                "Finally, civilization! The roads are getting more dangerous by the day...",
+                "Would you know where I might find a decent inn?",
+                "Strange lights in the crystal caves... I rushed past them as quick as I could."
+            ],
+            "Inventory": ["Worn Backpack", "Travel Rations", "Empty Waterskin"],
+            "Is_Hostile": false,
+            "Abilities": {
+                "Traveler's Knowledge": "Knows about road conditions",
+                "Endurance": "Used to long journeys"
+            },
+            "Faction": "None",
+            "Attitude": "Tired",
+            "Relations": {
+                "Guard Captain Thom": "Respectful",
+                "Sarah the Merchant": "Customer"
+            }
+        },
+        "Mysterious Collector": {
+            "Name": "Mysterious Collector",
+            "Description": "An elegant figure in expensive robes, always examining rare items with a jeweler's loupe.",
+            "Role": "Antiquities Collector",
+            "Stats": {
+                "Strength": 9,
+                "Dexterity": 14,
+                "Constitution": 10,
+                "Intelligence": 16,
+                "Wisdom": 15,
+                "Charisma": 14
+            },
+            "Max_HP": 12,
+            "Curr_HP": 12,
+            "AC": 12,
+            "Movement_Speed": 30,
+            "Dialogue": [
+                "Ah, what treasures have you found in your travels?",
+                "I'm particularly interested in artifacts from the crystal caves...",
+                "Not everything that glitters is gold, but sometimes it's worth far more."
+            ],
+            "Inventory": ["Jeweler's Loupe", "Collection Case", "Rare Coins"],
+            "Is_Hostile": false,
+            "Abilities": {
+                "Expert Appraiser": "Can identify valuable items",
+                "Connection": "Knows rare item markets"
+            },
+            "Faction": "Collector's Guild",
+            "Attitude": "Discerning",
+            "Relations": {
+                "Master Wei": "Competitor",
+                "Sarah the Merchant": "Business Partner"
+            }
+        },
+        "High Priestess Elena": {
+            "Name": "High Priestess Elena",
+            "Description": "A serene woman in silver robes, with an aura of divine grace around her.",
+            "Role": "Temple Leader",
+            "Stats": {
+                "Strength": 10,
+                "Dexterity": 12,
+                "Constitution": 13,
+                "Intelligence": 14,
+                "Wisdom": 18,
+                "Charisma": 16
+            },
+            "Max_HP": 28,
+            "Curr_HP": 28,
+            "AC": 14,
+            "Movement_Speed": 30,
+            "Dialogue": [
+                "The divine light guides all who seek it.",
+                "The temple's doors are open to those in need.",
+                "There are... disturbances in the spiritual realm lately."
+            ],
+            "Inventory": ["Holy Symbol", "Prayer Book", "Healing Potions"],
+            "Is_Hostile": false,
+            "Abilities": {
+                "Divine Magic": "Can cast healing spells",
+                "Blessing": "Can bestow divine protection"
+            },
+            "Spells": ["Heal", "Bless", "Protection"],
+            "Faction": "Temple of Light",
+            "Attitude": "Wise",
+            "Relations": {
+                "Temple Guardian": "Commander",
+                "Guard Captain Thom": "Advisor",
+                "Crystal Sage": "Colleague"
+            }
         }
     }
-}

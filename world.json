@@ -1,11 +1,5 @@
-{ "World": {
-    "Eldoria": {
-      "Name": "Eldoria",
-      "Description": "A shining gem amidst the darkness.",
-      "Coordinates": [0, 0],
-      "Continents": [
-        "Aerilon"
-      ]
-    }
-  }
+{
+    "Name": "Eldoria",
+    "Description": "A realm of magic and mystery, where ancient powers lie dormant and new adventures await.",
+    "Continent_Names": ["Aerilon"]
 }

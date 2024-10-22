@@ -1,12 +1,8 @@
-{ 
-  "Continents": {
-      "Aerilon": {
+{
+    "Aerilon": {
         "Name": "Aerilon",
-        "Description": "A continent renowned for its diverse landscapes, from snow-capped mountains to lush forests, and ancient secrets waiting to be uncovered.",
+        "Description": "The central continent, home to diverse civilizations and mysterious ruins.",
         "Coordinates": [0, 0],
-        "Regions": [
-          "Northern Reach"
-        ]
+        "Region_Names": ["Northern Reachlands"]
     }
-  }
-}  
+}

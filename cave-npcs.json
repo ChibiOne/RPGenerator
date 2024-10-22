@@ -1,0 +1,183 @@
+{
+    "Crystal Sage": {
+        "Name": "Crystal Sage",
+        "Description": "An ancient scholar whose robes seem to shimmer with crystalline dust. Their eyes glow with an inner light.",
+        "Role": "Sage",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 12,
+            "Constitution": 14,
+            "Intelligence": 18,
+            "Wisdom": 17,
+            "Charisma": 15
+        },
+        "Max_HP": 45,
+        "Curr_HP": 45,
+        "AC": 15,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "The crystals sing to those who know how to listen...",
+            "The heart chamber grows more active by the day.",
+            "Beware the portal room... not all doors should be opened."
+        ],
+        "Inventory": ["Crystal Staff", "Ancient Texts", "Resonance Stone"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Magic": "Can manipulate crystal energy",
+            "Ancient Knowledge": "Extensive knowledge of the caves",
+            "Energy Sense": "Can detect crystal power"
+        },
+        "Spells": ["Crystal Light", "Stone Speak", "Energy Shield"],
+        "Faction": "Crystal Sages",
+        "Attitude": "Wise",
+        "Relations": {
+            "Forest Witch": "Ally",
+            "Portal Guardian": "Guardian",
+            "Energy Researcher": "Teacher"
+        }
+    },
+    "Portal Guardian": {
+        "Name": "Portal Guardian",
+        "Description": "A mysterious figure in crystalline armor who never seems to leave the portal room. Their true form is unknown.",
+        "Role": "Guardian",
+        "Stats": {
+            "Strength": 16,
+            "Dexterity": 14,
+            "Constitution": 16,
+            "Intelligence": 14,
+            "Wisdom": 16,
+            "Charisma": 13
+        },
+        "Max_HP": 65,
+        "Curr_HP": 65,
+        "AC": 18,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "The portal remains sealed for good reason.",
+            "Only those who understand the crystal heart may pass.",
+            "Some secrets are better left undiscovered..."
+        ],
+        "Inventory": ["Crystal Sword", "Portal Key", "Ancient Ward"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Portal Sense": "Can detect portal activity",
+            "Crystal Shield": "Can create barriers",
+            "Ancient Warding": "Can seal passages"
+        },
+        "Faction": "Ancient Guardians",
+        "Attitude": "Stern",
+        "Relations": {
+            "Crystal Sage": "Respectful",
+            "Temple Scholar": "Cautious",
+            "Energy Researcher": "Suspicious"
+        }
+    },
+    "Energy Researcher": {
+        "Name": "Energy Researcher",
+        "Description": "A young scholar with crystal-enhanced goggles and robes covered in mysterious formulae.",
+        "Role": "Researcher",
+        "Stats": {
+            "Strength": 9,
+            "Dexterity": 13,
+            "Constitution": 12,
+            "Intelligence": 16,
+            "Wisdom": 14,
+            "Charisma": 11
+        },
+        "Max_HP": 24,
+        "Curr_HP": 24,
+        "AC": 12,
+        "Movement_Speed": 30,
+        "Dialogue": [
+            "These energy readings are off the charts!",
+            "Don't touch that crystal! We don't know its properties yet.",
+            "I wonder if the Forest Witch's theories about natural resonance are correct..."
+        ],
+        "Inventory": ["Research Notes", "Energy Meter", "Crystal Samples"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Analysis": "Can identify crystal properties",
+            "Energy Detection": "Can measure crystal power",
+            "Scientific Method": "Bonus to research checks"
+        },
+        "Faction": "Crystal Sages",
+        "Attitude": "Enthusiastic",
+        "Relations": {
+            "Crystal Sage": "Student",
+            "Temple Scholar": "Colleague",
+            "Portal Guardian": "Fascinated"
+        }
+    },
+    "Temple Scholar": {
+        "Name": "Temple Scholar",
+        "Description": "An elderly scholar in ancient-style robes, carefully documenting the temple ruins with trembling but precise hands.",
+        "Role": "Archaeologist",
+        "Stats": {
+            "Strength": 8,
+            "Dexterity": 10,
+            "Constitution": 11,
+            "Intelligence": 17,
+            "Wisdom": 15,
+            "Charisma": 13
+        },
+        "Max_HP": 18,
+        "Curr_HP": 18,
+        "AC": 11,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "These runes suggest the temple is far older than we thought...",
+            "The crystal formations seem to follow the ancient ley lines.",
+            "Have you seen any other artifacts like this one?"
+        ],
+        "Inventory": ["Ancient Scrolls", "Translation Guide", "Artifact Collection"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Ancient Languages": "Can read old scripts",
+            "Historical Knowledge": "Expert in ancient lore",
+            "Artifact Knowledge": "Can identify old items"
+        },
+        "Faction": "Historical Society",
+        "Attitude": "Academic",
+        "Relations": {
+            "Crystal Sage": "Colleague",
+            "Energy Researcher": "Mentor",
+            "Guardian Construct": "Cautious"
+        }
+    },
+    "Guardian Construct": {
+        "Name": "Guardian Construct",
+        "Description": "An ancient mechanical construct powered by crystal energy, still faithfully guarding the temple ruins.",
+        "Role": "Ancient Guardian",
+        "Stats": {
+            "Strength": 18,
+            "Dexterity": 12,
+            "Constitution": 18,
+            "Intelligence": 10,
+            "Wisdom": 12,
+            "Charisma": 7
+        },
+        "Max_HP": 75,
+        "Curr_HP": 75,
+        "AC": 19,
+        "Movement_Speed": 25,
+        "Dialogue": [
+            "*Mechanical whirring* State your purpose.",
+            "Temple access restricted to authorized personnel.",
+            "*Crystal humming* Threat assessment in progress..."
+        ],
+        "Inventory": ["Crystal Core", "Ancient Weapon"],
+        "Is_Hostile": false,
+        "Abilities": {
+            "Crystal Power": "Powered by crystal energy",
+            "Ancient Protocols": "Follows old temple rules",
+            "Unwavering": "Immune to persuasion"
+        },
+        "Faction": "Ancient Temple",
+        "Attitude": "Dutiful",
+        "Relations": {
+            "Temple Scholar": "Tolerates",
+            "Portal Guardian": "Aligned",
+            "Crystal Sage": "Recognizes Authority"
+        }
+    }
+}

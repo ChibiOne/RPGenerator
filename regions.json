@@ -1,15 +1,8 @@
-{ 
-  "Regions": {
-    "Northern Reach": {
-      "Name": "Northern Reach",
-      "Description": "An untamed region where towering mountains touch the sky, and deep forests whisper tales of old. Adventurers come here seeking glory and hidden treasures.",
-      "Coordinates": [100, 200],
-      "Locations": [
-        "Stonehaven",
-        "Whispering Woods",
-        "Crystal Cave",
-        "Ancient Ruins"
-      ]
+{
+    "Northern Mountains": {
+        "Name": "Northern Mountains",
+        "Description": "A rugged frontier region where civilization meets wilderness.",
+        "Coordinates": [0, 100],
+        "Location_Names": ["Northhold", "Whispering Woods", "Crystal Caverns"]
     }
-  }
 }

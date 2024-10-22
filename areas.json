@@ -1,166 +1,192 @@
 {
-    "Town Square": {
-      "Name": "Town Square",
-      "Description": "The heart of Stonehaven, where a grand fountain depicts heroes of old. Villagers gather here to share news, and children play under the watchful eye of the town statue.",
-      "Coordinates": [121, 221],
-      "Connected_Areas": [
-        "Blacksmith",
-        "The Rusty Flagon Inn"
-      ],
-      "Inventory": [],
-      "NPCs": [
-        "Mayor Grant",
-        "Street Vendor"
-      ],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "City Gates": {
+        "Name": "City Gates",
+        "Description": "The impressive gates of Northhold rise before you, their silver-plated surfaces gleaming in the sunlight. Guards patrol the walls while merchants and travelers pass through the busy entrance.",
+        "Coordinates": [10, 110],
+        "Connected_Areas": ["Marketplace Square", "Forest Edge", "Old Trading Road"],
+        "Inventory": ["Dropped Travel Permit"],
+        "NPCs": ["Guard Captain Thom", "Weary Traveler"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Blacksmith": {
-      "Name": "Blacksmith",
-      "Description": "The forge of Thoran Ironhammer emits a constant glow. The rhythmic sound of hammer on anvil rings out as sparks fly, crafting weapons that have defended the town for generations.",
-      "Coordinates": [122, 222],
-      "Connected_Areas": [
-        "Town Square"
-      ],
-      "Inventory": [],
-      "NPCs": [
-        "Thoran Ironhammer"
-      ],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Marketplace Square": {
+        "Name": "Marketplace Square",
+        "Description": "A bustling open plaza filled with colorful stalls and the sounds of haggling merchants. The cobblestones are worn smooth from centuries of foot traffic.",
+        "Coordinates": [10, 111],
+        "Connected_Areas": ["City Gates", "Merchant's Row", "Temple District", "Craftsmen's Quarter"],
+        "Inventory": ["Lost Coin Purse", "Merchant's Notice"],
+        "NPCs": ["Sarah the Merchant", "Old Tom the Beggar"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "The Rusty Flagon Inn": {
-      "Name": "The Rusty Flagon Inn",
-      "Description": "A warm and inviting inn where the scent of hearty stew mingles with the laughter of patrons. A roaring fire in the hearth and tales of adventure make it a favorite among travelers.",
-      "Coordinates": [123, 223],
-      "Connected_Areas": [
-        "Town Square"
-      ],
-      "Inventory": [],
-      "NPCs": [
-        "Bartholomew the Bartender"
-      ],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Merchant's Row": {
+        "Name": "Merchant's Row",
+        "Description": "A covered walkway lined with permanent shops selling everything from basic supplies to exotic goods. The air is filled with the scent of spices and incense.",
+        "Coordinates": [10, 112],
+        "Connected_Areas": ["Marketplace Square", "Harbor District"],
+        "Inventory": ["Merchant's Ledger", "Exotic Spices"],
+        "NPCs": ["Master Wei", "Mysterious Collector"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Forest Clearing": {
-      "Name": "Forest Clearing",
-      "Description": "An open meadow within the Whispering Woods where wildflowers bloom, and the songs of birds fill the air. It's a place of tranquility and natural beauty.",
-      "Coordinates": [151, 251],
-      "Connected_Areas": [
-        "Hidden Grove"
-      ],
-      "Inventory": [
-        "Healing Herb",
-        "Mysterious Stone"
-      ],
-      "NPCs": [
-        "Elder Oak"
-      ],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Temple District": {
+        "Name": "Temple District",
+        "Description": "A peaceful area dominated by the grand Temple of the Silver Moon. The air feels charged with divine energy, and the sound of chanting can often be heard.",
+        "Coordinates": [11, 111],
+        "Connected_Areas": ["Marketplace Square", "Noble Quarter"],
+        "Inventory": ["Prayer Beads", "Temple Offering"],
+        "NPCs": ["High Priestess Elena", "Temple Guardian"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Hidden Grove": {
-      "Name": "Hidden Grove",
-      "Description": "A secret grove encircled by ancient trees whose roots form natural arches. The air is thick with magic, and time seems to slow down here.",
-      "Coordinates": [152, 252],
-      "Connected_Areas": [
-        "Forest Clearing"
-      ],
-      "Inventory": [
-        "Ancient Relic"
-      ],
-      "NPCs": [],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Noble Quarter": {
+        "Name": "Noble Quarter",
+        "Description": "Elegant mansions and manicured gardens line these clean, quiet streets. Guards patrol regularly, ensuring the peace of the wealthy residents.",
+        "Coordinates": [11, 112],
+        "Connected_Areas": ["Temple District", "Harbor District"],
+        "Inventory": ["Noble's Invitation", "Lost Jewelry"],
+        "NPCs": ["Lady Silverweave", "Noble Guard"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Craftsmen's Quarter": {
+        "Name": "Craftsmen's Quarter",
+        "Description": "The air rings with the sound of hammers and the heat of forges. Skilled artisans work their trades in workshops lining the streets.",
+        "Coordinates": [9, 111],
+        "Connected_Areas": ["Marketplace Square", "Harbor District"],
+        "Inventory": ["Unfinished Sword", "Artisan's Tools"],
+        "NPCs": ["Master Smith Grimaldi", "Apprentice Craftsman"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Harbor District": {
+        "Name": "Harbor District",
+        "Description": "Salt air and sea breeze fill this busy port area. Ships from distant lands dock here, while fishermen bring in their daily catch.",
+        "Coordinates": [10, 113],
+        "Connected_Areas": ["Merchant's Row", "Noble Quarter", "Craftsmen's Quarter"],
+        "Inventory": ["Sailor's Map", "Fresh Fish"],
+        "NPCs": ["Harbor Master", "Seasoned Sailor"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Forest Edge": {
+        "Name": "Forest Edge",
+        "Description": "The transition between civilized lands and the mysterious Whispering Woods. A well-worn path leads into the deepening forest.",
+        "Coordinates": [20, 115],
+        "Connected_Areas": ["City Gates", "Old Trading Road", "Mystic Grove"],
+        "Inventory": ["Wild Herbs", "Hunter's Trap"],
+        "NPCs": ["Forest Ranger", "Herb Gatherer"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Old Trading Road": {
+        "Name": "Old Trading Road",
+        "Description": "An ancient cobblestone road that winds through the forest, connecting Northhold to distant lands. Parts of it are overgrown with vegetation.",
+        "Coordinates": [21, 115],
+        "Connected_Areas": ["Forest Edge", "Hunter's Camp", "Cave Entrance"],
+        "Inventory": ["Abandoned Cart", "Traveler's Pack"],
+        "NPCs": ["Wandering Merchant", "Road Patrol"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Mystic Grove": {
+        "Name": "Mystic Grove",
+        "Description": "A clearing where ancient trees form a natural circle. Strange lights sometimes dance among the branches, and the air thrums with magical energy.",
+        "Coordinates": [20, 116],
+        "Connected_Areas": ["Forest Edge", "Forgotten Shrine", "Crystal Spring"],
+        "Inventory": ["Glowing Mushrooms", "Ancient Runes"],
+        "NPCs": ["Forest Witch", "Lost Apprentice"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Forgotten Shrine": {
+        "Name": "Forgotten Shrine",
+        "Description": "The remains of an ancient shrine to forgotten gods, now overgrown with vines. Stone statues peek through the foliage, their features worn by time.",
+        "Coordinates": [20, 117],
+        "Connected_Areas": ["Mystic Grove", "Crystal Spring"],
+        "Inventory": ["Old Offering", "Stone Tablet"],
+        "NPCs": ["Shrine Keeper", "Archaeology Student"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Hunter's Camp": {
+        "Name": "Hunter's Camp",
+        "Description": "A well-maintained campsite used by local hunters. Multiple trails lead deeper into the forest, marked with hunter's signs.",
+        "Coordinates": [21, 116],
+        "Connected_Areas": ["Old Trading Road", "Crystal Spring"],
+        "Inventory": ["Hunting Bow", "Animal Tracks"],
+        "NPCs": ["Master Hunter", "Apprentice Hunter"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
+    },
+    "Crystal Spring": {
+        "Name": "Crystal Spring",
+        "Description": "A beautiful spring where crystal-clear water bubbles up from underground. Small crystals line the pool's edge, giving off a soft, peaceful glow.",
+        "Coordinates": [21, 117],
+        "Connected_Areas": ["Mystic Grove", "Forgotten Shrine", "Hunter's Camp", "Cave Entrance"],
+        "Inventory": ["Crystal Shard", "Pure Water"],
+        "NPCs": ["Water Spirit", "Crystal Researcher"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
     "Cave Entrance": {
-      "Name": "Cave Entrance",
-      "Description": "A gaping maw in the side of a mountain, the entrance to the Crystal Cave exudes a faint glow. Stalactites hang ominously, and a cool breeze beckons you inward.",
-      "Coordinates": [181, 231],
-      "Connected_Areas": [
-        "Crystal Hall"
-      ],
-      "Inventory": [],
-      "NPCs": [
-        "Cave Guardian"
-      ],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+        "Name": "Cave Entrance",
+        "Description": "A large cave mouth set into a hillside, decorated with naturally occurring crystal formations. Cool air flows from the darkness within.",
+        "Coordinates": [30, 120],
+        "Connected_Areas": ["Old Trading Road", "Crystal Spring", "Crystalline Chamber"],
+        "Inventory": ["Mining Pick", "Discarded Torch"],
+        "NPCs": ["Cave Guide", "Nervous Explorer"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Crystal Hall": {
-      "Name": "Crystal Hall",
-      "Description": "A magnificent chamber where massive crystals jut from the walls and ceiling, casting prismatic lights. The atmosphere is serene yet charged with energy.",
-      "Coordinates": [182, 232],
-      "Connected_Areas": [
-        "Cave Entrance",
-        "Deep Cavern"
-      ],
-      "Inventory": [
-        "Crystal Shard"
-      ],
-      "NPCs": [
-        "Crystal Golem"
-      ],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Crystalline Chamber": {
+        "Name": "Crystalline Chamber",
+        "Description": "A vast cavern where crystals of all colors protrude from walls and ceiling, creating a natural light show when illuminated.",
+        "Coordinates": [30, 121],
+        "Connected_Areas": ["Cave Entrance", "Underground Lake", "Ancient Temple Ruins"],
+        "Inventory": ["Large Crystal", "Magic Resonance Stone"],
+        "NPCs": ["Crystal Mage", "Rock Collector"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Deep Cavern": {
-      "Name": "Deep Cavern",
-      "Description": "An abyssal cavern where the light from above barely reaches. The walls are adorned with ancient carvings, and the silence is broken only by the drip of water.",
-      "Coordinates": [183, 233],
-      "Connected_Areas": [
-        "Crystal Hall"
-      ],
-      "Inventory": [
-        "Rare Gemstone"
-      ],
-      "NPCs": [],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Underground Lake": {
+        "Name": "Underground Lake",
+        "Description": "A vast subterranean lake with crystal-clear water. Luminescent crystals reflect in the still surface, creating breathtaking light patterns.",
+        "Coordinates": [30, 122],
+        "Connected_Areas": ["Crystalline Chamber", "Crystal Heart Chamber"],
+        "Inventory": ["Glowing Pearl", "Ancient Fishing Rod"],
+        "NPCs": ["Cave Fisher", "Lake Guardian"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Ruined Courtyard": {
-      "Name": "Ruined Courtyard",
-      "Description": "An overgrown courtyard where nature has reclaimed the stone pathways. Vines creep over fallen columns, and the air is thick with the scent of moss and history.",
-      "Coordinates": [111, 241],
-      "Connected_Areas": [
-        "Forgotten Library"
-      ],
-      "Inventory": [],
-      "NPCs": [
-        "Shade"
-      ],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Ancient Temple Ruins": {
+        "Name": "Ancient Temple Ruins",
+        "Description": "The remains of an ancient temple complex, built directly into the cave walls. Crystal formations have grown through and around the stone architecture.",
+        "Coordinates": [31, 121],
+        "Connected_Areas": ["Crystalline Chamber", "Mysterious Portal Room"],
+        "Inventory": ["Temple Key", "Ancient Scroll"],
+        "NPCs": ["Temple Scholar", "Guardian Construct"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Forgotten Library": {
-      "Name": "Forgotten Library",
-      "Description": "Shelves of ancient books stretch into the shadows, their pages brittle with age. Dust motes dance in the slivers of light that penetrate the gloom.",
-      "Coordinates": [112, 242],
-      "Connected_Areas": [
-        "Ruined Courtyard",
-        "Hidden Vault"
-      ],
-      "Inventory": [
-        "Ancient Book"
-      ],
-      "NPCs": [],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Crystal Heart Chamber": {
+        "Name": "Crystal Heart Chamber",
+        "Description": "The spiritual center of the caves, where a massive heart-shaped crystal pulses with mysterious energy.",
+        "Coordinates": [31, 122],
+        "Connected_Areas": ["Underground Lake", "Mysterious Portal Room"],
+        "Inventory": ["Heart Crystal Shard", "Energy Focus"],
+        "NPCs": ["Crystal Sage", "Energy Researcher"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     },
-    "Hidden Vault": {
-      "Name": "Hidden Vault",
-      "Description": "A secret chamber sealed behind a heavy stone door. Inside, treasures of untold value lie untouched, protected by mechanisms lost to time.",
-      "Coordinates": [113, 243],
-      "Connected_Areas": [
-        "Forgotten Library"
-      ],
-      "Inventory": [
-        "Enchanted Armor"
-      ],
-      "NPCs": [],
-      "Channel_ID": null,
-      "Allows_Intercontinental_Travel": false
+    "Mysterious Portal Room": {
+        "Name": "Mysterious Portal Room",
+        "Description": "A perfectly circular chamber containing an ancient portal frame made of crystal and stone. Strange runes cover the walls.",
+        "Coordinates": [32, 122],
+        "Connected_Areas": ["Ancient Temple Ruins", "Crystal Heart Chamber"],
+        "Inventory": ["Portal Activation Stone", "Runic Notes"],
+        "NPCs": ["Portal Guardian", "Lost Adventurer"],
+        "Channel_ID": "",
+        "Allows_Intercontinental_Travel": ""
     }
-  }
-  
+}

@@ -1,43 +1,45 @@
-{ 
-  "Locations": {  
-    "Stonehaven": {
-      "Name": "Stonehaven",
-      "Description": "A bustling town built from the very stones of the mountains. Its cobblestone streets are lined with merchants, and the air is filled with the scent of fresh bread and the sound of blacksmiths at work.",
-      "Coordinates": [120, 220],
-      "Areas": [
-        "Town Square",
-        "Blacksmith",
-        "The Rusty Flagon Inn"
-      ]
+{
+    "Silverkeep": {
+        "Name": "Silverkeep",
+        "Description": "A prosperous trading city known for its impressive silver-spired architecture and bustling marketplace.",
+        "Type": "City",
+        "Coordinates": [10, 110],
+        "Area_Names": [
+            "City Gates",
+            "Marketplace Square",
+            "Merchant's Row",
+            "Temple District",
+            "Noble Quarter",
+            "Craftsmen's Quarter",
+            "Harbor District"
+        ]
     },
     "Whispering Woods": {
-      "Name": "Whispering Woods",
-      "Description": "An ancient forest where the trees themselves seem to whisper secrets. Sunlight filters through the dense canopy, casting dappled shadows on the forest floor.",
-      "Coordinates": [150, 250],
-      "Areas": [
-        "Forest Clearing",
-        "Hidden Grove"
-      ]
+        "Name": "Whispering Woods",
+        "Description": "An ancient forest where the boundary between the natural and magical world grows thin.",
+        "Type": "Wilderness",
+        "Coordinates": [20, 115],
+        "Area_Names": [
+            "Forest Edge",
+            "Old Trading Road",
+            "Mystic Grove",
+            "Forgotten Shrine",
+            "Hunter's Camp",
+            "Crystal Spring"
+        ]
     },
-    "Crystal Cave": {
-      "Name": "Crystal Cave",
-      "Description": "A subterranean wonder where walls are adorned with crystals that glow with an inner light. The air here is cool, and every step echoes in the silence.",
-      "Coordinates": [180, 230],
-      "Areas": [
-        "Cave Entrance",
-        "Crystal Hall",
-        "Deep Cavern"
-      ]
-    },
-    "Ancient Ruins": {
-      "Name": "Ancient Ruins",
-      "Description": "Remnants of a lost civilization, these ruins are steeped in mystery. Crumbling pillars and faded murals hint at the grandeur that once was.",
-      "Coordinates": [110, 240],
-      "Areas": [
-        "Ruined Courtyard",
-        "Forgotten Library",
-        "Hidden Vault"
-      ]
+    "Crystal Caverns": {
+        "Name": "Crystal Caverns",
+        "Description": "A vast network of caves known for their luminescent crystals and ancient secrets.",
+        "Type": "Dungeon",
+        "Coordinates": [30, 120],
+        "Area_Names": [
+            "Cave Entrance",
+            "Crystalline Chamber",
+            "Underground Lake",
+            "Ancient Temple Ruins",
+            "Crystal Heart Chamber",
+            "Mysterious Portal Room"
+        ]
     }
-  }
-}  
+}
