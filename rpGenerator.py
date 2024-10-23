@@ -44,6 +44,7 @@ validate_json('characters.json')
 # Load environment variables from .env file
 load_dotenv()
 DEFAULT_STARTING_AREA = "Marketplace Square"
+DISCORD_APP_ID = os.getenv('DISCORD_APP_ID')
 
 # Discord and OpenAI API keys
 DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
@@ -56,7 +57,7 @@ ACTIONS_FILE = 'actions.json'
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s:%(levelname)s:%(message)s',
+    format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d:%(funcName)s - %(message)s',
     handlers=[
         logging.FileHandler("bot.log"),
         logging.StreamHandler()
@@ -68,26 +69,534 @@ openai_client = AsyncOpenAI(
     api_key=OPENAI_API_KEY,  # Optional if set via environment variable
 )
 
-scheduler = AsyncIOScheduler()
-
 # Define Discord intents
 intents = discord.Intents.default()
 intents.presences = True
 intents.message_content = True
 intents.guilds = True
+intents.guild_messages = True
 intents.messages = True
 intents.dm_messages = True
 
-# Initialize the bot
+scheduler = AsyncIOScheduler()
+
+
 bot = commands.Bot(command_prefix='/', intents=intents)
-tree = bot.tree  # Shortcut for command tree
+tree = bot.tree  
+
+@tree.command(name="create_character", description="Attack an NPC in your current area.")
+async def create_character(interaction: discord.Interaction):
+    try:
+        await interaction.user.send("Let's create your character!", view=CharacterCreationView(self))
+        await interaction.response.send_message("Check your DMs to start character creation!", ephemeral=True)
+        logging.info(f"User {interaction.user.id} initiated character creation.")
+    except discord.Forbidden:
+        await interaction.response.send_message(
+            "Unable to send you a DM. Please check your privacy settings.",
+            ephemeral=True
+        )
+    except Exception as e:
+        logging.error(f"Error in create_character: {e}")
+        await interaction.response.send_message("An error occurred.", ephemeral=True)
+
+@tree.command(name="attack", description="Attack an NPC in your current area.")
+@app_commands.describe(npc_name="The name of the NPC to attack.")
+async def attack(interaction: discord.Interaction, npc_name: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    area = character.current_area
+    for npc in area.npcs:
+        if npc.name.lower() == npc_name.lower():
+            # Implement combat logic here
+            # For simplicity, we'll assume the NPC is defeated
+            area.remove_npc(npc.name)
+            # Optionally, transfer NPC's inventory to the area or player
+            area.inventory.extend(npc.inventory)
+            await interaction.response.send_message(f"You have defeated **{npc.name}**!", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
+
+@tree.command(name="npc_list", description="List all NPCs in your current area.")
+async def npc_list(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    area = character.current_area
+    if area.npcs:
+        npc_names = ', '.join(npc.name for npc in area.npcs)
+        await interaction.response.send_message(f"NPCs in **{area.name}**: {npc_names}", ephemeral=False)
+    else:
+        await interaction.response.send_message(f"There are no NPCs in **{area.name}**.", ephemeral=False)
+
+@tree.command(name="talk", description="Talk to an NPC in your current area.")
+@app_commands.describe(npc_name="The name of the NPC to talk to.")
+async def talk(interaction: discord.Interaction, npc_name: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    area = character.current_area
+    for npc in area.npcs:
+        if npc.name.lower() == npc_name.lower():
+            # For simplicity, send the first dialogue line
+            dialogue = npc.get_dialogue if npc.dialogue else f"{npc.name} has nothing to say."
+            await interaction.response.send_message(f"**{npc.name}** says: \"{dialogue}\"", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
+
+@tree.command(
+    name="inventory",
+    description="View your character's inventory"
+)
+async def inventory_command(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters.get(user_id)
+    
+    if not character:
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
+        return
+        
+    inventory_list = '\n'.join(f"- {item.name} ({item.item_type})" for item in character.inventory)
+    if not inventory_list:
+        inventory_list = "Your inventory is empty."
+        
+    await interaction.response.send_message(
+        f"**{character.name}'s Inventory:**\n{inventory_list}"
+    )
+
+@tree.command(name="pickup", description="Pick up an item from the area.")
+@app_commands.describe(item_name="The name of the item to pick up.")
+async def pickup(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    channel_id = str(interaction.channel_id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet. Use `/create_character` to get started.", ephemeral=True)
+        return
+
+    area_inventory = get_area_inventory(channel_id)
+    # Find the item in the area inventory
+    for item in area_inventory:
+        if item.name.lower() == item_name.lower():
+            # Check if character can carry the item
+            if character.can_carry_more(item.weight):
+                character.add_item_to_inventory(item)
+                area_inventory.remove(item)
+                save_characters(characters)
+                await interaction.response.send_message(f"You picked up **{item.name}**.", ephemeral=False)
+                return
+            else:
+                await interaction.response.send_message("You can't carry any more weight.", ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"The item **{item_name}** is not available in this area.", ephemeral=True)
+
+@tree.command(name="drop", description="Drop an item from your inventory into the area.")
+@app_commands.describe(item_name="The name of the item to drop.")
+async def drop(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    channel_id = str(interaction.channel_id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            character.remove_item_from_inventory(item.name)
+            area_inventory = get_area_inventory(channel_id)
+            area_inventory.append(item)
+            save_characters(characters)
+            await interaction.response.send_message(f"You dropped **{item.name}** into the area.", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
+
+@tree.command(name="destroy", description="Destroy an item in your inventory.")
+@app_commands.describe(item_name="The name of the item to destroy.")
+async def destroy(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            character.remove_item_from_inventory(item.name)
+            save_characters(characters)
+            await interaction.response.send_message(f"You have destroyed **{item.name}**.", ephemeral=False)
+            return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+@tree.command(name="equip", description="Equip an item from your inventory.")
+@app_commands.describe(item_name="The name of the item to equip.", slot="The equipment slot.")
+async def equip(interaction: discord.Interaction, item_name: str, slot: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    slot = slot.lower()
+    valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
+
+    if slot not in valid_slots:
+        await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            try:
+                character.equip_item(item, slot)
+                save_characters(characters)
+                await interaction.response.send_message(f"You have equipped **{item.name}** to **{slot}**.", ephemeral=False)
+                return
+            except ValueError as e:
+                await interaction.response.send_message(str(e), ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
+
+@tree.command(name="unequip", description="Unequip an item from a slot back to your inventory.")
+@app_commands.describe(slot="The equipment slot to unequip.")
+async def unequip(interaction: discord.Interaction, slot: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    slot = slot.lower()
+    valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
+
+    if slot not in valid_slots:
+        await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
+        return
+
+    try:
+        character.unequip_item(slot)
+        save_characters(characters)
+        await interaction.response.send_message(f"You have unequipped the item from **{slot}**.", ephemeral=False)
+    except ValueError as e:
+        await interaction.response.send_message(str(e), ephemeral=True)
+
+@tree.command(name="use", description="Use a consumable item from your inventory.")
+@app_commands.describe(item_name="The name of the item to use.")
+async def use_item(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters.ge(user_id)
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            if item.item_type.lower() == 'consumable':
+                # Apply the item's effect
+                result = character.use_consumable(item)
+                save_characters(characters)
+                await interaction.response.send_message(f"You used **{item.name}**. {result}", ephemeral=False)
+                return
+            else:
+                await interaction.response.send_message(f"**{item.name}** is not a consumable item.", ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+@tree.command(name="examine", description="Examine an item in your inventory or equipment.")
+@app_commands.describe(item_name="The name of the item to examine.")
+async def examine(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Search in inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            await interaction.response.send_message(f"**{item.name}**: {item.description}", ephemeral=True)
+            return
+
+    # Search in equipment
+    for slot, equipped_item in character.equipment.items():
+        if isinstance(equipped_item, list):  # For slots like 'belt_slots' or 'magic_slots'
+            for sub_item in equipped_item:
+                if sub_item and sub_item.name.lower() == item_name.lower():
+                    await interaction.response.send_message(f"**{sub_item.name}**: {sub_item.description}", ephemeral=True)
+                    return
+        elif equipped_item and equipped_item.name.lower() == item_name.lower():
+            await interaction.response.send_message(f"**{equipped_item.name}**: {equipped_item.description}", ephemeral=True)
+            return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory or equipment.", ephemeral=True)
+
+@tree.command(name="identify", description="Identify a magical item in your inventory.")
+@app_commands.describe(item_name="The name of the item to identify.")
+async def identify(interaction: discord.Interaction, item_name: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    # Find the item in the character's inventory
+    for item in character.inventory:
+        if item.name.lower() == item_name.lower():
+            if item.is_magical:
+                # Assume an Arcana check is needed
+                stat = 'Intelligence'
+                roll, total = perform_ability_check(character, stat)
+                # Set a DC for identifying magical items
+                dc = 15  # You can adjust this value
+                if total >= dc:
+                    # Reveal magical properties
+                    item_description = item.description + "\nMagical Properties: " + str(item.effect)
+                    await interaction.response.send_message(f"**{item.name}** identified!\n{item_description}", ephemeral=False)
+                else:
+                    await interaction.response.send_message(f"You failed to identify **{item.name}**.", ephemeral=True)
+                return
+            else:
+                await interaction.response.send_message(f"**{item.name}** is not a magical item.", ephemeral=True)
+                return
+
+    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+@tree.command(name="travel", description="Move to a connected area.")
+@app_commands.describe(destination="The name of the area to move to.")
+async def travel(ctx, destination: str):
+    user_id = str(ctx.author.id)
+    character = characters[user_id]
+    
+    if not character:
+        await ctx.send("You don't have a character yet. Please create one first.")
+        return
+    
+    # Validate destination
+    destination_area = area_lookup.get(destination)
+    if not destination_area:
+        await ctx.send(f"Destination '{destination}' does not exist.")
+        return
+    
+    # Set travel details
+    character.is_traveling = True
+    character.travel_destination = destination_area
+    traveltime = get_travel_time(character, destination_area)
+    dt = datetime.today()  # Get timezone naive now
+    seconds = dt.timestamp()
+    character.travel_end_time = dt + traveltime # Set the travel end time
+    
+    characters[user_id] = character
+    save_characters(characters)
+    
+    await ctx.send(f"Traveling to **{destination}**. You will arrive in {traveltime}.")
+    logging.info(f"User '{user_id}' started traveling to '{destination}'.")
+    
+    # Start the travel task
+    asyncio.create_task(travel_task(bot, character, user_id, characters, save_characters))
+
+# Implement the autocomplete callback
+@travel.autocomplete('destination')
+async def travel_autocomplete(interaction: discord.Interaction, current: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        return []  # No suggestions if user has no character
+
+    current_area = character.current_area
+    if not current_area:
+        return []  # No suggestions if current area is undefined
+
+    # Fetch connected areas
+    connected_areas = current_area.connected_areas
+
+    # Filter based on the current input (case-insensitive)
+    suggestions = [
+        app_commands.Choice(name=area.name, value=area.name)
+        for area in connected_areas
+        if current.lower() in area.name.lower()
+    ]
+
+    # Discord limits to 25 choices
+    return suggestions[:25]
+
+
+@tree.command(name="travel_location", description="Travel to a different location within your current region.")
+@app_commands.describe(location_name="The name of the location to travel to.")
+async def travel_location(interaction: discord.Interaction, location_name: str):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+    
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+    
+    # Find the location in the current region
+    for location in character.current_region.locations:
+        if location.name.lower() == location_name.lower():
+            if character.move_to_location(location):
+                save_characters(characters)
+                await interaction.response.send_message(f"You have moved to **{location.name}**.", ephemeral=False)
+                return
+            else:
+                await interaction.response.send_message(f"You cannot move to **{location.name}**.", ephemeral=True)
+                return
+    
+    await interaction.response.send_message(f"Location **{location_name}** not found in your current region.", ephemeral=True)
+
+
+@tree.command(name="rest", description="Rest to regain health and spell slots.")
+async def rest(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    character.rest()
+    save_characters(characters)
+    await interaction.response.send_message("You have rested and regained health and spell slots.", ephemeral=False)
+
+@tree.command(name="location", description="View your current location.")
+async def location(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
+        return
+
+    area = character.current_area
+    if not area:
+        await interaction.response.send_message(
+            "Your current area could not be found. Please contact the administrator.",
+            ephemeral=True
+        )
+        return
+
+    location = character.current_location
+    region = character.current_region
+    continent = character.current_continent
+    world = character.current_world
+
+    # Ensure 'area' is an Area object
+    if area and not isinstance(area, Area):
+        logging.error(f"current_area for user '{user_id}' is not an Area object.")
+        await interaction.response.send_message("Your character's area data is corrupted.", ephemeral=True)
+        return
+
+    # Construct the response message
+    response_message = (
+        f"You are in **{area.name}**, located in **{location}**, "
+        "in the region of f **{region}**, on the continent of **{continent}**, on the planet **{world}**."
+    )
+
+    await interaction.response.send_message(
+        response_message,
+        ephemeral=False
+    )
+
+@tree.command(name="scene", description="View the description of your current area.")
+async def scene(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
+        return
+
+    area = character.current_area
+    if not area:
+        await interaction.response.send_message(
+            "Your current area could not be found. Please contact the administrator.",
+            ephemeral=True
+        )
+        return
+
+    # Create an embed
+    embed = discord.Embed(title=area.name, description=area.description, color=0x00ff00)
+
+    # Connected Areas
+    if area.connected_areas:
+        connected_area_names = ', '.join(connected_area.name for connected_area in area.connected_areas)
+        embed.add_field(name="Connected Areas", value=connected_area_names, inline=False)
+    else:
+        embed.add_field(name="Connected Areas", value="None", inline=False)
+
+    # NPCs
+    if area.npcs:
+        npc_names = ', '.join(npc.name for npc in area.npcs)
+        embed.add_field(name="NPCs Present", value=npc_names, inline=False)
+    else:
+        embed.add_field(name="NPCs Present", value="None", inline=False)
+
+    # Items
+    if area.inventory:
+        item_names = ', '.join(item.name for item in area.inventory)
+        embed.add_field(name="Items Available", value=item_names, inline=False)
+    else:
+        embed.add_field(name="Items Available", value="None", inline=False)
+
+    # Send the embed
+    await interaction.response.send_message(embed=embed, ephemeral=False)
+
+@tree.command(name="stats", description="View your character's stats.")
+async def stats(interaction: discord.Interaction):
+    user_id = str(interaction.user.id)
+    character = characters[user_id]
+
+    if not character:
+        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+        return
+
+    stats_str = '\n'.join(f"{stat}: {value}" for stat, value in character.stats.items())
+    await interaction.response.send_message(f"**{character.name}'s Stats:**\n{stats_str}", ephemeral=False)
+
 
 # Initialize global variables
 character_creation_sessions = None # List of CharacterCreationSession instances
 last_error_time = None  # For global cooldowns per user
 global_cooldown = 5  # Global cooldown in seconds
 characters = None  # Dictionary to store Character instances
-bot = commands.Bot(command_prefix='/', intents=intents)
 game_data = None
 area_lookup = None
 items = None
@@ -99,8 +608,6 @@ channel_areas = None  # Dictionary mapping channel IDs to Area instances
 # ----------------------------
 #        Game Data Loading
 # ----------------------------
-
-
 
 def load_world(filename='world.json'):
     with open(filename, 'r') as f:
@@ -256,6 +763,9 @@ def load_game_data():
         
         # Load items first
         item_lookup = load_items('items.json')
+        if not item_lookup:
+            logging.error("Failed to load items")
+            return {}
         logging.info(f"Loaded {len(item_lookup)} items")
 
         # Load areas using the item lookup
@@ -267,25 +777,34 @@ def load_game_data():
 
         # Load NPCs using the item lookup
         npc_lookup = load_npcs(item_lookup, 'npcs.json')
+        if not npc_lookup:
+            logging.error("Failed to load NPCs")
+            return {}
         logging.info(f"Loaded {len(npc_lookup)} NPCs")
 
         # Load actions
-        actions= load_actions()
-        logging.info(f"Loaded {len(actions)} actions")
+        action_lookup = load_actions()
+        if not action_lookup:
+            logging.error("Failed to load actions")
+            return {}
+        logging.info(f"Loaded {len(action_lookup)} actions")
 
         # Resolve area connections and NPCs
-        resolve_area_connections_and_npcs(area_lookup, npc_lookup)
+        if not resolve_area_connections_and_npcs(area_lookup, npc_lookup):
+            logging.error("Failed to resolve area connections and NPCs")
+            return {}
 
-        load_characters(filename='characters.json', area_lookup=area_lookup)
-        logging.info(f"Loaded {len(characters)} characters")
+        # Load characters
+        character_lookup = load_characters(filename='characters.json', area_lookup=area_lookup)
+
 
         # Return all lookups
         game_data = {
             'items': item_lookup,
             'areas': area_lookup,
             'npcs': npc_lookup,
-            'actions': actions,
-            'characters': characters
+            'actions': action_lookup,
+            'characters': character_lookup
         }
         
         logging.debug(f"Game data loaded with keys: {game_data.keys()}")
@@ -295,8 +814,7 @@ def load_game_data():
 
     except Exception as e:
         logging.error(f"Error in load_game_data: {e}")
-        return {'items': {}, 'areas': {}, 'npcs': {}}  # Return empty dicts instead of None
-
+        return {}
 
 
 # ---------------------------- #
@@ -305,24 +823,25 @@ def load_game_data():
 
 def initialize_game_data():
     """Initialize all game data at startup."""
-    #global game_data, area_lookup, items, npcs
+    global game_data, area_lookup, items, npcs, actions, characters
     try:
         game_data = load_game_data()
-        area_lookup = game_data.get('areas', {})
-        items = game_data.get('items', {})
-        npcs = game_data.get('npcs', {})
-        actions = game_data.get('actions', {})
-        characters = game_data.get('characters', {})
+        if game_data:
+            area_lookup = game_data.get('areas', {})
+            items = game_data.get('items', {})
+            npcs = game_data.get('npcs', {})
+            actions = game_data.get('actions', {})
+            characters = game_data.get('characters', {})
         
-        # Verify data loading
-        logging.info(f"Initialized with:")
-        logging.info(f"- {len(items)} items")
-        logging.info(f"- {len(area_lookup)} areas")
-        logging.info(f"- {len(npcs)} NPCs")
-        logging.info(f"- {len(actions)} actions")
-        logging.info(f"- {len(characters)} characters")
+            # Verify data loading
+            logging.info(f"Initialized with:")
+            logging.info(f"- {len(items)} items")
+            logging.info(f"- {len(area_lookup)} areas")
+            logging.info(f"- {len(npcs)} NPCs")
+            logging.info(f"- {len(actions)} actions")
+            logging.info(f"- {len(characters)} characters")
         
-        return True
+            return True
     except Exception as e:
         logging.error(f"Failed to initialize game data: {e}", exc_info=True)
         return False
@@ -429,15 +948,6 @@ def load_actions():
     except json.JSONDecodeError as e:
         logging.error(f"Error decoding actions.json: {e}")
         return {}
-
-# First load of data
-# game_data= load_game_data()
-# area_lookup = game_data.get('areas', {})
-# items = game_data.get('items', {})
-# npcs = game_data.get('npcs', {})
-# actions = game_data.get('actions', {})
-# characters = game_data.get('characters', {})
-
 
 
 ######################
@@ -1666,28 +2176,6 @@ def resolve_area_connections_and_npcs(area_lookup, npc_lookup):
         logging.error(f"Error in resolve_area_connections_and_npcs: {e}", exc_info=True)
         return False
 
-        
-#########################
-#   Game Data Loading   #
-#########################
-
-# game_data = load_game_data()
-# area_lookup = game_data.get('areas', {})
-
-# items = game_data.get('items', {})
-# npcs = game_data.get('npcs', {})
-# area_lookup = game_data.get('areas', {})
-# locations = game_data.get('locations', {})
-# regions = game_data.get('regions', {})
-# actions = load_actions()
-
-# # First load of data
-# game_data= load_game_data()
-# area_lookup = game_data.get('areas', {})
-# items = game_data.get('items', {})
-# npcs = game_data.get('npcs', {})
-# actions = game_data.get('actions', {})
-# characters = game_data.get('characters', {})
 
 # ---------------------------- #
 #      UI Component Classes    #
@@ -2359,509 +2847,663 @@ async def finalize_character(interaction: discord.Interaction, user_id, area_loo
 #          Command Tree         #
 # ---------------------------- #
 
-@tree.command(name="create_character", description="Create a new character")
-async def create_character(interaction: discord.Interaction):
+# def register_commands():
+
+#     """Register all commands with the bot's command tree"""
+#     try:
+#         # Keep track of registered commands
+#         registered = []
+
+#         @tree.command(
+#             name="create_character",
+#             description="Create a new character"
+#         )
+#         async def create_character(interaction: discord.Interaction):
+#             try:
+#                 await interaction.user.send("Let's create your character!", view=CharacterCreationView(bot))
+#                 await interaction.response.send_message("Check your DMs to start character creation!", ephemeral=True)
+#                 logging.info(f"User {interaction.user.id} initiated character creation.")
+#             except discord.Forbidden:
+#                 await interaction.response.send_message(
+#                     "Unable to send you a DM. Please check your privacy settings.",
+#                     ephemeral=True
+#                 )
+#             except Exception as e:
+#                 logging.error(f"Error in create_character: {e}")
+#                 await interaction.response.send_message("An error occurred.", ephemeral=True)
+
+
+#         @tree.command(name="attack", description="Attack an NPC in your current area.")
+#         @app_commands.describe(npc_name="The name of the NPC to attack.")
+#         async def attack(interaction: discord.Interaction, npc_name: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             area = character.current_area
+#             for npc in area.npcs:
+#                 if npc.name.lower() == npc_name.lower():
+#                     # Implement combat logic here
+#                     # For simplicity, we'll assume the NPC is defeated
+#                     area.remove_npc(npc.name)
+#                     # Optionally, transfer NPC's inventory to the area or player
+#                     area.inventory.extend(npc.inventory)
+#                     await interaction.response.send_message(f"You have defeated **{npc.name}**!", ephemeral=False)
+#                     return
+
+#             await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
+
+#         @tree.command(name="npc_list", description="List all NPCs in your current area.")
+#         async def npc_list(interaction: discord.Interaction):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             area = character.current_area
+#             if area.npcs:
+#                 npc_names = ', '.join(npc.name for npc in area.npcs)
+#                 await interaction.response.send_message(f"NPCs in **{area.name}**: {npc_names}", ephemeral=False)
+#             else:
+#                 await interaction.response.send_message(f"There are no NPCs in **{area.name}**.", ephemeral=False)
+
+#         @tree.command(name="talk", description="Talk to an NPC in your current area.")
+#         @app_commands.describe(npc_name="The name of the NPC to talk to.")
+#         async def talk(interaction: discord.Interaction, npc_name: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             area = character.current_area
+#             for npc in area.npcs:
+#                 if npc.name.lower() == npc_name.lower():
+#                     # For simplicity, send the first dialogue line
+#                     dialogue = npc.get_dialogue if npc.dialogue else f"{npc.name} has nothing to say."
+#                     await interaction.response.send_message(f"**{npc.name}** says: \"{dialogue}\"", ephemeral=False)
+#                     return
+
+#             await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
+
+
+#         @tree.command(
+#             name="inventory",
+#             description="View your character's inventory"
+#         )
+#         async def inventory_command(interaction: discord.Interaction):
+#             user_id = str(interaction.user.id)
+#             character = characters.get(user_id)
+            
+#             if not character:
+#                 await interaction.response.send_message(
+#                     "You don't have a character yet. Use `/create_character` to get started.",
+#                     ephemeral=True
+#                 )
+#                 return
+                
+#             inventory_list = '\n'.join(f"- {item.name} ({item.item_type})" for item in character.inventory)
+#             if not inventory_list:
+#                 inventory_list = "Your inventory is empty."
+                
+#             await interaction.response.send_message(
+#                 f"**{character.name}'s Inventory:**\n{inventory_list}"
+#             )
+
+#         @tree.command(name="pickup", description="Pick up an item from the area.")
+#         @app_commands.describe(item_name="The name of the item to pick up.")
+#         async def pickup(interaction: discord.Interaction, item_name: str):
+#             user_id = str(interaction.user.id)
+#             channel_id = str(interaction.channel_id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet. Use `/create_character` to get started.", ephemeral=True)
+#                 return
+
+#             area_inventory = get_area_inventory(channel_id)
+#             # Find the item in the area inventory
+#             for item in area_inventory:
+#                 if item.name.lower() == item_name.lower():
+#                     # Check if character can carry the item
+#                     if character.can_carry_more(item.weight):
+#                         character.add_item_to_inventory(item)
+#                         area_inventory.remove(item)
+#                         save_characters(characters)
+#                         await interaction.response.send_message(f"You picked up **{item.name}**.", ephemeral=False)
+#                         return
+#                     else:
+#                         await interaction.response.send_message("You can't carry any more weight.", ephemeral=True)
+#                         return
+
+#             await interaction.response.send_message(f"The item **{item_name}** is not available in this area.", ephemeral=True)
+
+#         @tree.command(name="drop", description="Drop an item from your inventory into the area.")
+#         @app_commands.describe(item_name="The name of the item to drop.")
+#         async def drop(interaction: discord.Interaction, item_name: str):
+#             user_id = str(interaction.user.id)
+#             channel_id = str(interaction.channel_id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             # Find the item in the character's inventory
+#             for item in character.inventory:
+#                 if item.name.lower() == item_name.lower():
+#                     character.remove_item_from_inventory(item.name)
+#                     area_inventory = get_area_inventory(channel_id)
+#                     area_inventory.append(item)
+#                     save_characters(characters)
+#                     await interaction.response.send_message(f"You dropped **{item.name}** into the area.", ephemeral=False)
+#                     return
+
+#             await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
+
+#         @tree.command(name="destroy", description="Destroy an item in your inventory.")
+#         @app_commands.describe(item_name="The name of the item to destroy.")
+#         async def destroy(interaction: discord.Interaction, item_name: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             # Find the item in the character's inventory
+#             for item in character.inventory:
+#                 if item.name.lower() == item_name.lower():
+#                     character.remove_item_from_inventory(item.name)
+#                     save_characters(characters)
+#                     await interaction.response.send_message(f"You have destroyed **{item.name}**.", ephemeral=False)
+#                     return
+
+#             await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+#         @tree.command(name="equip", description="Equip an item from your inventory.")
+#         @app_commands.describe(item_name="The name of the item to equip.", slot="The equipment slot.")
+#         async def equip(interaction: discord.Interaction, item_name: str, slot: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             slot = slot.lower()
+#             valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
+
+#             if slot not in valid_slots:
+#                 await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
+#                 return
+
+#             # Find the item in the character's inventory
+#             for item in character.inventory:
+#                 if item.name.lower() == item_name.lower():
+#                     try:
+#                         character.equip_item(item, slot)
+#                         save_characters(characters)
+#                         await interaction.response.send_message(f"You have equipped **{item.name}** to **{slot}**.", ephemeral=False)
+#                         return
+#                     except ValueError as e:
+#                         await interaction.response.send_message(str(e), ephemeral=True)
+#                         return
+
+#             await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
+
+#         @tree.command(name="unequip", description="Unequip an item from a slot back to your inventory.")
+#         @app_commands.describe(slot="The equipment slot to unequip.")
+#         async def unequip(interaction: discord.Interaction, slot: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             slot = slot.lower()
+#             valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
+
+#             if slot not in valid_slots:
+#                 await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
+#                 return
+
+#             try:
+#                 character.unequip_item(slot)
+#                 save_characters(characters)
+#                 await interaction.response.send_message(f"You have unequipped the item from **{slot}**.", ephemeral=False)
+#             except ValueError as e:
+#                 await interaction.response.send_message(str(e), ephemeral=True)
+
+#         @tree.command(name="use", description="Use a consumable item from your inventory.")
+#         @app_commands.describe(item_name="The name of the item to use.")
+#         async def use_item(interaction: discord.Interaction, item_name: str):
+#             user_id = str(interaction.user.id)
+#             character = characters.ge(user_id)
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             # Find the item in the character's inventory
+#             for item in character.inventory:
+#                 if item.name.lower() == item_name.lower():
+#                     if item.item_type.lower() == 'consumable':
+#                         # Apply the item's effect
+#                         result = character.use_consumable(item)
+#                         save_characters(characters)
+#                         await interaction.response.send_message(f"You used **{item.name}**. {result}", ephemeral=False)
+#                         return
+#                     else:
+#                         await interaction.response.send_message(f"**{item.name}** is not a consumable item.", ephemeral=True)
+#                         return
+
+#             await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+#         @tree.command(name="examine", description="Examine an item in your inventory or equipment.")
+#         @app_commands.describe(item_name="The name of the item to examine.")
+#         async def examine(interaction: discord.Interaction, item_name: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             # Search in inventory
+#             for item in character.inventory:
+#                 if item.name.lower() == item_name.lower():
+#                     await interaction.response.send_message(f"**{item.name}**: {item.description}", ephemeral=True)
+#                     return
+
+#             # Search in equipment
+#             for slot, equipped_item in character.equipment.items():
+#                 if isinstance(equipped_item, list):  # For slots like 'belt_slots' or 'magic_slots'
+#                     for sub_item in equipped_item:
+#                         if sub_item and sub_item.name.lower() == item_name.lower():
+#                             await interaction.response.send_message(f"**{sub_item.name}**: {sub_item.description}", ephemeral=True)
+#                             return
+#                 elif equipped_item and equipped_item.name.lower() == item_name.lower():
+#                     await interaction.response.send_message(f"**{equipped_item.name}**: {equipped_item.description}", ephemeral=True)
+#                     return
+
+#             await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory or equipment.", ephemeral=True)
+
+#         @tree.command(name="identify", description="Identify a magical item in your inventory.")
+#         @app_commands.describe(item_name="The name of the item to identify.")
+#         async def identify(interaction: discord.Interaction, item_name: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             # Find the item in the character's inventory
+#             for item in character.inventory:
+#                 if item.name.lower() == item_name.lower():
+#                     if item.is_magical:
+#                         # Assume an Arcana check is needed
+#                         stat = 'Intelligence'
+#                         roll, total = perform_ability_check(character, stat)
+#                         # Set a DC for identifying magical items
+#                         dc = 15  # You can adjust this value
+#                         if total >= dc:
+#                             # Reveal magical properties
+#                             item_description = item.description + "\nMagical Properties: " + str(item.effect)
+#                             await interaction.response.send_message(f"**{item.name}** identified!\n{item_description}", ephemeral=False)
+#                         else:
+#                             await interaction.response.send_message(f"You failed to identify **{item.name}**.", ephemeral=True)
+#                         return
+#                     else:
+#                         await interaction.response.send_message(f"**{item.name}** is not a magical item.", ephemeral=True)
+#                         return
+
+#             await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
+
+#         @tree.command(name="travel", description="Move to a connected area.")
+#         @app_commands.describe(destination="The name of the area to move to.")
+#         async def travel(ctx, destination: str):
+#             user_id = str(ctx.author.id)
+#             character = characters[user_id]
+            
+#             if not character:
+#                 await ctx.send("You don't have a character yet. Please create one first.")
+#                 return
+            
+#             # Validate destination
+#             destination_area = area_lookup.get(destination)
+#             if not destination_area:
+#                 await ctx.send(f"Destination '{destination}' does not exist.")
+#                 return
+            
+#             # Set travel details
+#             character.is_traveling = True
+#             character.travel_destination = destination_area
+#             traveltime = get_travel_time(character, destination_area)
+#             dt = datetime.today()  # Get timezone naive now
+#             seconds = dt.timestamp()
+#             character.travel_end_time = dt + traveltime # Set the travel end time
+            
+#             characters[user_id] = character
+#             save_characters(characters)
+            
+#             await ctx.send(f"Traveling to **{destination}**. You will arrive in {traveltime}.")
+#             logging.info(f"User '{user_id}' started traveling to '{destination}'.")
+            
+#             # Start the travel task
+#             asyncio.create_task(travel_task(bot, character, user_id, characters, save_characters))
+
+#         # Implement the autocomplete callback
+#         @travel.autocomplete('destination')
+#         async def travel_autocomplete(interaction: discord.Interaction, current: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 return []  # No suggestions if user has no character
+
+#             current_area = character.current_area
+#             if not current_area:
+#                 return []  # No suggestions if current area is undefined
+
+#             # Fetch connected areas
+#             connected_areas = current_area.connected_areas
+
+#             # Filter based on the current input (case-insensitive)
+#             suggestions = [
+#                 app_commands.Choice(name=area.name, value=area.name)
+#                 for area in connected_areas
+#                 if current.lower() in area.name.lower()
+#             ]
+
+#             # Discord limits to 25 choices
+#             return suggestions[:25]
+
+
+#         @tree.command(name="travel_location", description="Travel to a different location within your current region.")
+#         @app_commands.describe(location_name="The name of the location to travel to.")
+#         async def travel_location(interaction: discord.Interaction, location_name: str):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+            
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+            
+#             # Find the location in the current region
+#             for location in character.current_region.locations:
+#                 if location.name.lower() == location_name.lower():
+#                     if character.move_to_location(location):
+#                         save_characters(characters)
+#                         await interaction.response.send_message(f"You have moved to **{location.name}**.", ephemeral=False)
+#                         return
+#                     else:
+#                         await interaction.response.send_message(f"You cannot move to **{location.name}**.", ephemeral=True)
+#                         return
+            
+#             await interaction.response.send_message(f"Location **{location_name}** not found in your current region.", ephemeral=True)
+
+
+#         @tree.command(name="rest", description="Rest to regain health and spell slots.")
+#         async def rest(interaction: discord.Interaction):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             character.rest()
+#             save_characters(characters)
+#             await interaction.response.send_message("You have rested and regained health and spell slots.", ephemeral=False)
+
+#         @tree.command(name="location", description="View your current location.")
+#         async def location(interaction: discord.Interaction):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message(
+#                     "You don't have a character yet. Use `/create_character` to get started.",
+#                     ephemeral=True
+#                 )
+#                 return
+
+#             area = character.current_area
+#             if not area:
+#                 await interaction.response.send_message(
+#                     "Your current area could not be found. Please contact the administrator.",
+#                     ephemeral=True
+#                 )
+#                 return
+
+#             location = character.current_location
+#             region = character.current_region
+#             continent = character.current_continent
+#             world = character.current_world
+
+#             # Ensure 'area' is an Area object
+#             if area and not isinstance(area, Area):
+#                 logging.error(f"current_area for user '{user_id}' is not an Area object.")
+#                 await interaction.response.send_message("Your character's area data is corrupted.", ephemeral=True)
+#                 return
+
+#             # Construct the response message
+#             response_message = (
+#                 f"You are in **{area.name}**, located in **{location}**, "
+#                 "in the region of f **{region}**, on the continent of **{continent}**, on the planet **{world}**."
+#             )
+
+#             await interaction.response.send_message(
+#                 response_message,
+#                 ephemeral=False
+#             )
+
+#         @tree.command(name="scene", description="View the description of your current area.")
+#         async def scene(interaction: discord.Interaction):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message(
+#                     "You don't have a character yet. Use `/create_character` to get started.",
+#                     ephemeral=True
+#                 )
+#                 return
+
+#             area = character.current_area
+#             if not area:
+#                 await interaction.response.send_message(
+#                     "Your current area could not be found. Please contact the administrator.",
+#                     ephemeral=True
+#                 )
+#                 return
+
+#             # Create an embed
+#             embed = discord.Embed(title=area.name, description=area.description, color=0x00ff00)
+
+#             # Connected Areas
+#             if area.connected_areas:
+#                 connected_area_names = ', '.join(connected_area.name for connected_area in area.connected_areas)
+#                 embed.add_field(name="Connected Areas", value=connected_area_names, inline=False)
+#             else:
+#                 embed.add_field(name="Connected Areas", value="None", inline=False)
+
+#             # NPCs
+#             if area.npcs:
+#                 npc_names = ', '.join(npc.name for npc in area.npcs)
+#                 embed.add_field(name="NPCs Present", value=npc_names, inline=False)
+#             else:
+#                 embed.add_field(name="NPCs Present", value="None", inline=False)
+
+#             # Items
+#             if area.inventory:
+#                 item_names = ', '.join(item.name for item in area.inventory)
+#                 embed.add_field(name="Items Available", value=item_names, inline=False)
+#             else:
+#                 embed.add_field(name="Items Available", value="None", inline=False)
+
+#             # Send the embed
+#             await interaction.response.send_message(embed=embed, ephemeral=False)
+
+#         @tree.command(name="stats", description="View your character's stats.")
+#         async def stats(interaction: discord.Interaction):
+#             user_id = str(interaction.user.id)
+#             character = characters[user_id]
+
+#             if not character:
+#                 await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
+#                 return
+
+#             stats_str = '\n'.join(f"{stat}: {value}" for stat, value in character.stats.items())
+#             await interaction.response.send_message(f"**{character.name}'s Stats:**\n{stats_str}", ephemeral=False)
+
+#         @tree.command(name="sync_commands", description="Manually sync bot commands")
+#         @app_commands.checks.has_permissions(administrator=True)
+#         async def sync_commands(interaction: discord.Interaction):
+#             try:
+#                 synced = await tree.sync(guild=interaction.guild)
+#                 await interaction.response.send_message(
+#                     f"Synced {len(synced)} commands!",
+#                     ephemeral=True
+#                 )
+#             except Exception as e:
+#                 logging.error(f"Error in sync_commands: {e}")
+#                 await interaction.response.send_message(
+#                     "Failed to sync commands.",
+#                     ephemeral=True
+#                 )
+#         logging.info(f"Registered {len(registered)} commands: {', '.join(registered)}")
+#         return True
+#     except Exception as e:
+#         logging.error(f"Error registering commands: {e}")
+#         return False
+
+# ---------------------------- #
+#          Helper Functions     #
+# ---------------------------- #
+
+def perform_ability_check(character, stat):
     """
-    Slash command to initiate character creation.
+    Performs an ability check by rolling a die and adding the stat modifier.
+    Args:
+        character (Character): The character performing the check.
+        stat (str): The ability stat being checked.
+    Returns:
+        tuple: (roll, total) or (None, None) if failed.
     """
     try:
-        await interaction.user.send("Let's create your character!", view=CharacterCreationView(bot))
-        await interaction.response.send_message("Check your DMs to start character creation!", ephemeral=True)
-        logging.info(f"User {interaction.user.id} initiated character creation.")
-    except discord.Forbidden:
-        await interaction.response.send_message(
-            "Unable to send you a DM. Please check your privacy settings.",
-            ephemeral=True
-        )
-        logging.warning(f"Could not send DM to user {interaction.user.id} for character creation.")
+        modifier = character.get_stat_modifier(stat)
+        roll = random.randint(1, 20)
+        total = roll + modifier
+        logging.info(f"Ability check for {character.name}: Rolled {roll} + modifier {modifier} = {total}")
+        return roll, total
     except Exception as e:
-        await interaction.response.send_message(
-            "An unexpected error occurred. Please try again later.",
-            ephemeral=True
-        )
-        logging.error(f"Error in create_character command for user {interaction.user.id}: {e}")
+        logging.error(f"Error in perform_ability_check for {character.name}: {e}")
+        return None, None
 
-@tree.command(name="attack", description="Attack an NPC in your current area.")
-@app_commands.describe(npc_name="The name of the NPC to attack.")
-async def attack(interaction: discord.Interaction, npc_name: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
+async def parse_action(message):
+    """
+    Parses the user's message to identify actions prefixed with '?' and returns the action and associated stat.
+    Args:
+        message (discord.Message): The message object.
+    Returns:
+        tuple: (action, stat) or (None, None)
+    """
+    global actions
+    actions = actions
+    message_content = message.content.lower()
+    logging.info(f"Parsing message from user {message.author.id}: '{message_content}'")
 
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+    # Updated regex pattern with negative lookbehind and lookahead
+    pattern = r'(?<!\w)\?[A-Za-z]+(?!\w)'
+    matches = re.findall(pattern, message_content)
+    logging.info(f"Regex matches found: {matches}")
 
-    area = character.current_area
-    for npc in area.npcs:
-        if npc.name.lower() == npc_name.lower():
-            # Implement combat logic here
-            # For simplicity, we'll assume the NPC is defeated
-            area.remove_npc(npc.name)
-            # Optionally, transfer NPC's inventory to the area or player
-            area.inventory.extend(npc.inventory)
-            await interaction.response.send_message(f"You have defeated **{npc.name}**!", ephemeral=False)
-            return
+    # Track if multiple actions are found
+    if len(matches) > 1:
+        logging.warning(f"Multiple actions detected in message: {matches}")
+        await message.channel.send("Please specify only one action at a time.")
+        return None, None
 
-    await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
+    for match in matches:
+        action = match.lstrip('?')
+        logging.info(f"Parsed action: '{action}'")
+        if action in actions:
+            logging.info(f"Action recognized: '{action}'")
+            return action, actions[action]
+        else:
+            await show_actions(message)
+            logging.info(f"Action '{action}' not recognized.")
+    
+    logging.info("No valid action recognized in the message.")
+    return None, None 
 
-@tree.command(name="npc_list", description="List all NPCs in your current area.")
-async def npc_list(interaction: discord.Interaction):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    area = character.current_area
-    if area.npcs:
-        npc_names = ', '.join(npc.name for npc in area.npcs)
-        await interaction.response.send_message(f"NPCs in **{area.name}**: {npc_names}", ephemeral=False)
+async def show_actions(message):
+    """
+    Sends a message listing recognized actions.
+    Args:
+        message (discord.Message): The message object.
+    """
+    if actions:
+        action_list = ', '.join(actions.keys())
+        await message.channel.send(f"Sorry, I don't recognize that action. Recognized actions: {action_list}")
+        logging.info(f"Sent recognized actions list to user {message.author.id}.")
     else:
-        await interaction.response.send_message(f"There are no NPCs in **{area.name}**.", ephemeral=False)
+        await message.channel.send("No actions are currently recognized.")
+        logging.info(f"User {message.author.id} requested actions, but no actions are loaded.")
 
-@tree.command(name="talk", description="Talk to an NPC in your current area.")
-@app_commands.describe(npc_name="The name of the NPC to talk to.")
-async def talk(interaction: discord.Interaction, npc_name: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    area = character.current_area
-    for npc in area.npcs:
-        if npc.name.lower() == npc_name.lower():
-            # For simplicity, send the first dialogue line
-            dialogue = npc.get_dialogue if npc.dialogue else f"{npc.name} has nothing to say."
-            await interaction.response.send_message(f"**{npc.name}** says: \"{dialogue}\"", ephemeral=False)
-            return
-
-    await interaction.response.send_message(f"**{npc_name}** is not in **{area.name}**.", ephemeral=True)
-
-
-@tree.command(name='inventory', description="View your character's inventory.")
-async def inventory_command(ctx):
-    user_id = str(ctx.user.id)
-    character = characters[user_id]
-    if character:
-        inventory_list = '\n'.join(f"- {item.name} ({item.item_type})" for item in character.inventory)
-        if not inventory_list:
-            inventory_list = "Your inventory is empty."
-        await ctx.response.send_message(f"**{character.name}'s Inventory:**\n{inventory_list}")
-    else:
-        await ctx.response.send_message("You don't have a character yet. Use `/create_character` to get started.")
-
-@tree.command(name="pickup", description="Pick up an item from the area.")
-@app_commands.describe(item_name="The name of the item to pick up.")
-async def pickup(interaction: discord.Interaction, item_name: str):
-    user_id = str(interaction.user.id)
-    channel_id = str(interaction.channel_id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet. Use `/create_character` to get started.", ephemeral=True)
-        return
-
-    area_inventory = get_area_inventory(channel_id)
-    # Find the item in the area inventory
-    for item in area_inventory:
-        if item.name.lower() == item_name.lower():
-            # Check if character can carry the item
-            if character.can_carry_more(item.weight):
-                character.add_item_to_inventory(item)
-                area_inventory.remove(item)
-                save_characters(characters)
-                await interaction.response.send_message(f"You picked up **{item.name}**.", ephemeral=False)
-                return
-            else:
-                await interaction.response.send_message("You can't carry any more weight.", ephemeral=True)
-                return
-
-    await interaction.response.send_message(f"The item **{item_name}** is not available in this area.", ephemeral=True)
-
-@tree.command(name="drop", description="Drop an item from your inventory into the area.")
-@app_commands.describe(item_name="The name of the item to drop.")
-async def drop(interaction: discord.Interaction, item_name: str):
-    user_id = str(interaction.user.id)
-    channel_id = str(interaction.channel_id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    # Find the item in the character's inventory
-    for item in character.inventory:
-        if item.name.lower() == item_name.lower():
-            character.remove_item_from_inventory(item.name)
-            area_inventory = get_area_inventory(channel_id)
-            area_inventory.append(item)
-            save_characters(characters)
-            await interaction.response.send_message(f"You dropped **{item.name}** into the area.", ephemeral=False)
-            return
-
-    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
-
-@tree.command(name="destroy", description="Destroy an item in your inventory.")
-@app_commands.describe(item_name="The name of the item to destroy.")
-async def destroy(interaction: discord.Interaction, item_name: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    # Find the item in the character's inventory
-    for item in character.inventory:
-        if item.name.lower() == item_name.lower():
-            character.remove_item_from_inventory(item.name)
-            save_characters(characters)
-            await interaction.response.send_message(f"You have destroyed **{item.name}**.", ephemeral=False)
-            return
-
-    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
-
-@tree.command(name="equip", description="Equip an item from your inventory.")
-@app_commands.describe(item_name="The name of the item to equip.", slot="The equipment slot.")
-async def equip(interaction: discord.Interaction, item_name: str, slot: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    slot = slot.lower()
-    valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
-
-    if slot not in valid_slots:
-        await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
-        return
-
-    # Find the item in the character's inventory
-    for item in character.inventory:
-        if item.name.lower() == item_name.lower():
-            try:
-                character.equip_item(item, slot)
-                save_characters(characters)
-                await interaction.response.send_message(f"You have equipped **{item.name}** to **{slot}**.", ephemeral=False)
-                return
-            except ValueError as e:
-                await interaction.response.send_message(str(e), ephemeral=True)
-                return
-
-    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory.", ephemeral=True)
-
-@tree.command(name="unequip", description="Unequip an item from a slot back to your inventory.")
-@app_commands.describe(slot="The equipment slot to unequip.")
-async def unequip(interaction: discord.Interaction, slot: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    slot = slot.lower()
-    valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
-
-    if slot not in valid_slots:
-        await interaction.response.send_message(f"Invalid slot. Valid slots are: {', '.join(valid_slots)}", ephemeral=True)
-        return
-
+async def get_chatgpt_response(prompt: str, channel_messages: list, stat: str, total: int, roll: int, character: Character, include_roll_info: bool = True) -> str:
+    """
+    Sends a prompt to OpenAI's GPT-4 using the AsyncOpenAI client and returns the response.
+    Args:
+        prompt (str): The prompt to send.
+        channel_messages (list): The list of recent channel messages.
+        stat (str): The ability stat involved in the check.
+        total (int): The total check result.
+        roll (int): The die roll result.
+        character (Character): The character performing the action.
+        include_roll_info (bool): Whether to include roll information in the response.
+    Returns:
+        str: The response from GPT-4.
+    """
     try:
-        character.unequip_item(slot)
-        save_characters(characters)
-        await interaction.response.send_message(f"You have unequipped the item from **{slot}**.", ephemeral=False)
-    except ValueError as e:
-        await interaction.response.send_message(str(e), ephemeral=True)
+        # Prepare the messages for OpenAI
+        messages = [
+            {"role": "system", "content": "You are a game master for a fantasy role-playing game. Your job is to narrate the settings the players journey through, the results of their actions, and provide a sense of atmosphere through vivid and engaging descriptions."}
+        ]
 
-@tree.command(name="use", description="Use a consumable item from your inventory.")
-@app_commands.describe(item_name="The name of the item to use.")
-async def use_item(interaction: discord.Interaction, item_name: str):
-    user_id = str(interaction.user.id)
-    character = characters.ge(user_id)
+        # Add the last channel messages in chronological order
+        for msg_content in reversed(channel_messages):
+            messages.append({"role": "user", "content": msg_content})
 
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        messages.append({"role": "user", "content": prompt})
 
-    # Find the item in the character's inventory
-    for item in character.inventory:
-        if item.name.lower() == item_name.lower():
-            if item.item_type.lower() == 'consumable':
-                # Apply the item's effect
-                result = character.use_consumable(item)
-                save_characters(characters)
-                await interaction.response.send_message(f"You used **{item.name}**. {result}", ephemeral=False)
-                return
-            else:
-                await interaction.response.send_message(f"**{item.name}** is not a consumable item.", ephemeral=True)
-                return
-
-    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
-
-@tree.command(name="examine", description="Examine an item in your inventory or equipment.")
-@app_commands.describe(item_name="The name of the item to examine.")
-async def examine(interaction: discord.Interaction, item_name: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    # Search in inventory
-    for item in character.inventory:
-        if item.name.lower() == item_name.lower():
-            await interaction.response.send_message(f"**{item.name}**: {item.description}", ephemeral=True)
-            return
-
-    # Search in equipment
-    for slot, equipped_item in character.equipment.items():
-        if isinstance(equipped_item, list):  # For slots like 'belt_slots' or 'magic_slots'
-            for sub_item in equipped_item:
-                if sub_item and sub_item.name.lower() == item_name.lower():
-                    await interaction.response.send_message(f"**{sub_item.name}**: {sub_item.description}", ephemeral=True)
-                    return
-        elif equipped_item and equipped_item.name.lower() == item_name.lower():
-            await interaction.response.send_message(f"**{equipped_item.name}**: {equipped_item.description}", ephemeral=True)
-            return
-
-    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory or equipment.", ephemeral=True)
-
-@tree.command(name="identify", description="Identify a magical item in your inventory.")
-@app_commands.describe(item_name="The name of the item to identify.")
-async def identify(interaction: discord.Interaction, item_name: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    # Find the item in the character's inventory
-    for item in character.inventory:
-        if item.name.lower() == item_name.lower():
-            if item.is_magical:
-                # Assume an Arcana check is needed
-                stat = 'Intelligence'
-                roll, total = perform_ability_check(character, stat)
-                # Set a DC for identifying magical items
-                dc = 15  # You can adjust this value
-                if total >= dc:
-                    # Reveal magical properties
-                    item_description = item.description + "\nMagical Properties: " + str(item.effect)
-                    await interaction.response.send_message(f"**{item.name}** identified!\n{item_description}", ephemeral=False)
-                else:
-                    await interaction.response.send_message(f"You failed to identify **{item.name}**.", ephemeral=True)
-                return
-            else:
-                await interaction.response.send_message(f"**{item.name}** is not a magical item.", ephemeral=True)
-                return
-
-    await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
-
-@tree.command(name="travel", description="Move to a connected area.")
-@app_commands.describe(destination="The name of the area to move to.")
-async def travel(ctx, destination: str):
-    user_id = str(ctx.author.id)
-    character = characters[user_id]
-    
-    if not character:
-        await ctx.send("You don't have a character yet. Please create one first.")
-        return
-    
-    # Validate destination
-    destination_area = area_lookup.get(destination)
-    if not destination_area:
-        await ctx.send(f"Destination '{destination}' does not exist.")
-        return
-    
-    # Set travel details
-    character.is_traveling = True
-    character.travel_destination = destination_area
-    traveltime = get_travel_time(character, destination_area)
-    dt = datetime.today()  # Get timezone naive now
-    seconds = dt.timestamp()
-    character.travel_end_time = dt + traveltime # Set the travel end time
-    
-    characters[user_id] = character
-    save_characters(characters)
-    
-    await ctx.send(f"Traveling to **{destination}**. You will arrive in {traveltime}.")
-    logging.info(f"User '{user_id}' started traveling to '{destination}'.")
-    
-    # Start the travel task
-    asyncio.create_task(travel_task(bot, character, user_id, characters, save_characters))
-
-# Implement the autocomplete callback
-@travel.autocomplete('destination')
-async def travel_autocomplete(interaction: discord.Interaction, current: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        return []  # No suggestions if user has no character
-
-    current_area = character.current_area
-    if not current_area:
-        return []  # No suggestions if current area is undefined
-
-    # Fetch connected areas
-    connected_areas = current_area.connected_areas
-
-    # Filter based on the current input (case-insensitive)
-    suggestions = [
-        app_commands.Choice(name=area.name, value=area.name)
-        for area in connected_areas
-        if current.lower() in area.name.lower()
-    ]
-
-    # Discord limits to 25 choices
-    return suggestions[:25]
-
-
-@tree.command(name="travel_location", description="Travel to a different location within your current region.")
-@app_commands.describe(location_name="The name of the location to travel to.")
-async def travel_location(interaction: discord.Interaction, location_name: str):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-    
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-    
-    # Find the location in the current region
-    for location in character.current_region.locations:
-        if location.name.lower() == location_name.lower():
-            if character.move_to_location(location):
-                save_characters(characters)
-                await interaction.response.send_message(f"You have moved to **{location.name}**.", ephemeral=False)
-                return
-            else:
-                await interaction.response.send_message(f"You cannot move to **{location.name}**.", ephemeral=True)
-                return
-    
-    await interaction.response.send_message(f"Location **{location_name}** not found in your current region.", ephemeral=True)
-
-
-@tree.command(name="rest", description="Rest to regain health and spell slots.")
-async def rest(interaction: discord.Interaction):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    character.rest()
-    save_characters(characters)
-    await interaction.response.send_message("You have rested and regained health and spell slots.", ephemeral=False)
-
-@tree.command(name="location", description="View your current location.")
-async def location(interaction: discord.Interaction):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message(
-            "You don't have a character yet. Use `/create_character` to get started.",
-            ephemeral=True
+        # Perform the asynchronous API call using the new method
+        completion = await openai_client.chat.completions.create(
+            model='gpt-4',
+            messages=messages,
+            max_tokens=300,
+            temperature=0.7,
         )
-        return
 
-    area = character.current_area
-    if not area:
-        await interaction.response.send_message(
-            "Your current area could not be found. Please contact the administrator.",
-            ephemeral=True
-        )
-        return
-
-    location = character.current_location
-    region = character.current_region
-    continent = character.current_continent
-    world = character.current_world
-
-    # Ensure 'area' is an Area object
-    if area and not isinstance(area, Area):
-        logging.error(f"current_area for user '{user_id}' is not an Area object.")
-        await interaction.response.send_message("Your character's area data is corrupted.", ephemeral=True)
-        return
-
-    # Construct the response message
-    response_message = (
-        f"You are in **{area.name}**, located in **{location}**, "
-         "in the region of f **{region}**, on the continent of **{continent}**, on the planet **{world}**."
-    )
-
-    await interaction.response.send_message(
-        response_message,
-        ephemeral=False
-    )
-
-@tree.command(name="scene", description="View the description of your current area.")
-async def scene(interaction: discord.Interaction):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message(
-            "You don't have a character yet. Use `/create_character` to get started.",
-            ephemeral=True
-        )
-        return
-
-    area = character.current_area
-    if not area:
-        await interaction.response.send_message(
-            "Your current area could not be found. Please contact the administrator.",
-            ephemeral=True
-        )
-        return
-
-    # Create an embed
-    embed = discord.Embed(title=area.name, description=area.description, color=0x00ff00)
-
-    # Connected Areas
-    if area.connected_areas:
-        connected_area_names = ', '.join(connected_area.name for connected_area in area.connected_areas)
-        embed.add_field(name="Connected Areas", value=connected_area_names, inline=False)
-    else:
-        embed.add_field(name="Connected Areas", value="None", inline=False)
-
-    # NPCs
-    if area.npcs:
-        npc_names = ', '.join(npc.name for npc in area.npcs)
-        embed.add_field(name="NPCs Present", value=npc_names, inline=False)
-    else:
-        embed.add_field(name="NPCs Present", value="None", inline=False)
-
-    # Items
-    if area.inventory:
-        item_names = ', '.join(item.name for item in area.inventory)
-        embed.add_field(name="Items Available", value=item_names, inline=False)
-    else:
-        embed.add_field(name="Items Available", value="None", inline=False)
-
-    # Send the embed
-    await interaction.response.send_message(embed=embed, ephemeral=False)
-
-@tree.command(name="stats", description="View your character's stats.")
-async def stats(interaction: discord.Interaction):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
-
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-
-    stats_str = '\n'.join(f"{stat}: {value}" for stat, value in character.stats.items())
-    await interaction.response.send_message(f"**{character.name}'s Stats:**\n{stats_str}", ephemeral=False)
+        if include_roll_info:
+            message_content = f"*{character.name}, your {stat} check result is {total} (rolled {roll} + modifier {character.get_stat_modifier(stat)}).* \n\n{completion.choices[0].message.content.strip()}"
+        else:
+            message_content = completion.choices[0].message.content.strip()
+        return message_content
+    except Exception as e:
+        logging.error(f"Error in get_chatgpt_response: {e}")
+        return "Sorry, I couldn't process that request."
+ 
 
 
 # ---------------------------- #
@@ -2960,74 +3602,57 @@ def save_world_state():
     except Exception as e:
         logging.error(f"Error saving world state: {e}")
 
-
-# async def gameloop():
-#     # Load game data
-#         game_data = load_game_data()
-#         items = game_data.get('items', {}) 
-#         area_lookup = game_data.get('areas', {})
-#         npcs = game_data.get('npcs', {})
-#         resolve_area_connections_and_npcs(area_lookup, game_data.get('npc_lookup', {}))
-
-
-@bot.event
-async def on_ready():
+async def sync_commands():
     """
-    Event handler for when the bot is ready.
+    Separate function to handle command syncing
     """
     try:
-        #global game_data, area_lookup, items, npcs
+        # Wait until bot is ready and application ID is set
+        await bot.wait_until_ready()
         
-        # Load game data only if not already loaded
-        """ if game_data is None:
-            logging.info("Initializing game data...")
-            game_data = load_game_data()
-            area_lookup = game_data.get('areas', {})
-            items = game_data.get('items', {})
-            npcs = game_data.get('npcs', {})
-            # Verify that DEFAULT_STARTING_AREA is loaded
-            if DEFAULT_STARTING_AREA in area_lookup:
-                logging.info(f"'{DEFAULT_STARTING_AREA}' successfully loaded into area_lookup.")
-            else:
-                logging.error(f"'{DEFAULT_STARTING_AREA}' not found in area_lookup after loading game data.")
-            # Example usage:
-            # Print all Regions
-            for region_name, region in regions.items():
-                print(f"Region: {region.name}, Description: {region.description}")
-                for location in region.locations:
-                    print(f"  Location: {location.name}, Description: {location.description}")
+        # For testing in a specific guild
+        guild_id = 1183315621690224640
+        guild = discord.Object(id=guild_id)
+        
+        # Sync commands
+        synced = await tree.sync(guild=guild)
+        logging.info(f"Synced {len(synced)} commands")
+        
+    except Exception as e:
+        logging.error(f"Error syncing commands: {e}", exc_info=True)
 
-            # Print all Areas
-            for area_name, area in area_lookup.items():
-                print(f"Area: {area.name}, Description: {area.description}")
-
-            # Print all Locations
-            for location_name, location in locations.items():
-                print(f"Location: {location.name}, Description: {location.description}")
-
-            # Print all NPCs
-            for npc_name, npc in npcs.items():
-                print(f"NPC: {npc.name}, Description: {npc.description}")
-
-            # Print all Items
-            for item_name, item in items.items():
-                print(f"Item: {item.Name}, Description: {item.Description}")
- """
-
-        # Start the scheduler only once
+# Modified on_ready that uses the separate sync function
+@bot.event
+async def on_ready():
+    try:
+        logging.info(f'Logged in as {bot.user.name}')
+        
+        # Start the scheduler
         if not hasattr(bot, 'scheduler_running'):
             scheduler = AsyncIOScheduler()
             scheduler.add_job(update_world_state, 'interval', minutes=5)
             scheduler.start()
             bot.scheduler_running = True
+        
+        # Schedule the command sync
+        await sync_commands()
+        
+    except Exception as e:
+        logging.error(f"Error in on_ready: {e}", exc_info=True)
 
-        # Sync commands
-        try:
-            synced = await bot.tree.sync()
-            logging.info(f"Synced {len(synced)} commands.")
-        except Exception as e:
-            logging.error(f"Failed to sync commands: {e}")
 
+@bot.event
+async def on_ready():
+    try:
+        logging.info(f'Logged in as {bot.user.name}')
+        
+        # Start scheduler if not already running
+        if not hasattr(bot, 'scheduler_running'):
+            scheduler = AsyncIOScheduler()
+            scheduler.add_job(update_world_state, 'interval', minutes=5)
+            scheduler.start()
+            bot.scheduler_running = True
+            
     except Exception as e:
         logging.error(f"Error in on_ready: {e}", exc_info=True)
 
@@ -3165,132 +3790,44 @@ async def on_message(message: discord.Message):
 
     await bot.process_commands(message)
 
+# Error handler for app commands
+@tree.error
+async def on_app_command_error(
+    interaction: discord.Interaction,
+    error: app_commands.AppCommandError
+):
+    if isinstance(error, app_commands.CommandOnCooldown):
+        await interaction.response.send_message(
+            f"This command is on cooldown. Try again in {error.retry_after:.2f} seconds.",
+            ephemeral=True
+        )
+    elif isinstance(error, app_commands.MissingPermissions):
+        await interaction.response.send_message(
+            "You don't have permission to use this command.",
+            ephemeral=True
+        )
+    else:
+        logging.error(f"Command error: {error}")
+        await interaction.response.send_message(
+            "An error occurred while executing this command.",
+            ephemeral=True
+        )
 @bot.event
 async def on_shutdown():
     save_characters(characters)
     logging.info("Bot is shutting down. Character data saved.")
-
-
-# ---------------------------- #
-#          Helper Functions     #
-# ---------------------------- #
-
-def perform_ability_check(character, stat):
-    """
-    Performs an ability check by rolling a die and adding the stat modifier.
-    Args:
-        character (Character): The character performing the check.
-        stat (str): The ability stat being checked.
-    Returns:
-        tuple: (roll, total) or (None, None) if failed.
-    """
-    try:
-        modifier = character.get_stat_modifier(stat)
-        roll = random.randint(1, 20)
-        total = roll + modifier
-        logging.info(f"Ability check for {character.name}: Rolled {roll} + modifier {modifier} = {total}")
-        return roll, total
-    except Exception as e:
-        logging.error(f"Error in perform_ability_check for {character.name}: {e}")
-        return None, None
-
-async def parse_action(message):
-    """
-    Parses the user's message to identify actions prefixed with '?' and returns the action and associated stat.
-    Args:
-        message (discord.Message): The message object.
-    Returns:
-        tuple: (action, stat) or (None, None)
-    """
-    actions = actions
-    message_content = message.content.lower()
-    logging.info(f"Parsing message from user {message.author.id}: '{message_content}'")
-
-    # Updated regex pattern with negative lookbehind and lookahead
-    pattern = r'(?<!\w)\?[A-Za-z]+(?!\w)'
-    matches = re.findall(pattern, message_content)
-    logging.info(f"Regex matches found: {matches}")
-
-    # Track if multiple actions are found
-    if len(matches) > 1:
-        logging.warning(f"Multiple actions detected in message: {matches}")
-        await message.channel.send("Please specify only one action at a time.")
-        return None, None
-
-    for match in matches:
-        action = match.lstrip('?')
-        logging.info(f"Parsed action: '{action}'")
-        if action in actions:
-            logging.info(f"Action recognized: '{action}'")
-            return action, actions[action]
-        else:
-            await show_actions(message)
-            logging.info(f"Action '{action}' not recognized.")
-    
-    logging.info("No valid action recognized in the message.")
-    return None, None 
-
-async def show_actions(message):
-    """
-    Sends a message listing recognized actions.
-    Args:
-        message (discord.Message): The message object.
-    """
-    if actions:
-        action_list = ', '.join(actions.keys())
-        await message.channel.send(f"Sorry, I don't recognize that action. Recognized actions: {action_list}")
-        logging.info(f"Sent recognized actions list to user {message.author.id}.")
-    else:
-        await message.channel.send("No actions are currently recognized.")
-        logging.info(f"User {message.author.id} requested actions, but no actions are loaded.")
-
-async def get_chatgpt_response(prompt: str, channel_messages: list, stat: str, total: int, roll: int, character: Character, include_roll_info: bool = True) -> str:
-    """
-    Sends a prompt to OpenAI's GPT-4 using the AsyncOpenAI client and returns the response.
-    Args:
-        prompt (str): The prompt to send.
-        channel_messages (list): The list of recent channel messages.
-        stat (str): The ability stat involved in the check.
-        total (int): The total check result.
-        roll (int): The die roll result.
-        character (Character): The character performing the action.
-        include_roll_info (bool): Whether to include roll information in the response.
-    Returns:
-        str: The response from GPT-4.
-    """
-    try:
-        # Prepare the messages for OpenAI
-        messages = [
-            {"role": "system", "content": "You are a game master for a fantasy role-playing game. Your job is to narrate the settings the players journey through, the results of their actions, and provide a sense of atmosphere through vivid and engaging descriptions."}
-        ]
-
-        # Add the last channel messages in chronological order
-        for msg_content in reversed(channel_messages):
-            messages.append({"role": "user", "content": msg_content})
-
-        messages.append({"role": "user", "content": prompt})
-
-        # Perform the asynchronous API call using the new method
-        completion = await openai_client.chat.completions.create(
-            model='gpt-4',
-            messages=messages,
-            max_tokens=300,
-            temperature=0.7,
-        )
-
-        if include_roll_info:
-            message_content = f"*{character.name}, your {stat} check result is {total} (rolled {roll} + modifier {character.get_stat_modifier(stat)}).* \n\n{completion.choices[0].message.content.strip()}"
-        else:
-            message_content = completion.choices[0].message.content.strip()
-        return message_content
-    except Exception as e:
-        logging.error(f"Error in get_chatgpt_response: {e}")
-        return "Sorry, I couldn't process that request."
+        
 
 # ---------------------------- #
 #         Running the Bot      #
 # ---------------------------- #
-if initialize_game_data():
-    bot.run(DISCORD_BOT_TOKEN)
+
+
+if __name__ == "__main__":
+    if initialize_game_data():
+        bot.run(DISCORD_BOT_TOKEN)
+    else:
+        logging.error("Failed to initialize game data. Bot startup aborted.")
 else:
-    logging.error("Failed to initialize game data. Bot startup aborted.")
+    logging.error("Failed to register commands. Bot startup aborted.")
+

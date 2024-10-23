@@ -1,810 +1,91 @@
-2024-10-22 02:57:10,818:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:06:42,823:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:06:42,827:INFO:Starting to load game data...
-2024-10-22 03:06:42,827:INFO:Loading items from items.json
-2024-10-22 03:06:42,828:INFO:Successfully loaded 17 items
-2024-10-22 03:06:42,828:INFO:Loaded 17 items
-2024-10-22 03:06:42,829:INFO:Successfully loaded 19 areas
-2024-10-22 03:06:42,829:INFO:Loaded 19 areas
-2024-10-22 03:06:42,830:ERROR:Error in load_game_data: load_npcs() takes 1 positional argument but 2 were given
-2024-10-22 03:06:42,830:INFO:Initialized with:
-2024-10-22 03:06:42,830:INFO:- 0 items
-2024-10-22 03:06:42,830:INFO:- 0 areas
-2024-10-22 03:06:42,831:INFO:- 0 NPCs
-2024-10-22 03:06:42,831:INFO:- 0 actions
-2024-10-22 03:06:42,832:INFO:logging in using static token
-2024-10-22 03:06:43,895:INFO:Shard ID None has connected to Gateway (Session ID: 0bc4f97025274a77f79ad509b870f6c8).
-2024-10-22 03:06:45,909:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:06:45,910:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:06:45,911:INFO:Scheduler started
-2024-10-22 03:06:46,211:INFO:Synced 0 commands.
-2024-10-22 03:09:19,300:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:09:19,304:INFO:Starting to load game data...
-2024-10-22 03:09:19,305:INFO:Loading items from items.json
-2024-10-22 03:09:19,305:INFO:Successfully loaded 17 items
-2024-10-22 03:09:19,306:INFO:Loaded 17 items
-2024-10-22 03:09:19,306:INFO:Successfully loaded 19 areas
-2024-10-22 03:09:19,307:INFO:Loaded 19 areas
-2024-10-22 03:09:19,307:INFO:Loading NPCs from npcs.json
-2024-10-22 03:09:19,309:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:09:19,309:INFO:Loaded 38 NPCs
-2024-10-22 03:09:19,310:INFO:Completed area and NPC resolution
-2024-10-22 03:09:19,310:INFO:Initialized with:
-2024-10-22 03:09:19,310:INFO:- 17 items
-2024-10-22 03:09:19,311:INFO:- 19 areas
-2024-10-22 03:09:19,311:INFO:- 38 NPCs
-2024-10-22 03:09:19,311:INFO:- 0 actions
-2024-10-22 03:09:19,313:INFO:logging in using static token
-2024-10-22 03:09:20,211:INFO:Shard ID None has connected to Gateway (Session ID: 71198f14c8f35e781c401bb4d9de05f0).
-2024-10-22 03:09:22,223:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:09:22,224:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:09:22,224:INFO:Scheduler started
-2024-10-22 03:09:22,415:INFO:Synced 0 commands.
-2024-10-22 03:12:02,158:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:12:02,162:INFO:Starting to load game data...
-2024-10-22 03:12:02,162:INFO:Loading items from items.json
-2024-10-22 03:12:02,163:INFO:Successfully loaded 17 items
-2024-10-22 03:12:02,164:INFO:Loaded 17 items
-2024-10-22 03:12:02,164:INFO:Successfully loaded 19 areas
-2024-10-22 03:12:02,165:INFO:Loaded 19 areas
-2024-10-22 03:12:02,165:INFO:Loading NPCs from npcs.json
-2024-10-22 03:12:02,167:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:12:02,167:INFO:Loaded 38 NPCs
-2024-10-22 03:12:02,168:INFO:actions.json loaded successfully.
-2024-10-22 03:12:02,168:INFO:Loaded 43 actions
-2024-10-22 03:12:02,168:INFO:Completed area and NPC resolution
-2024-10-22 03:12:02,169:INFO:Initialized with:
-2024-10-22 03:12:02,169:INFO:- 17 items
-2024-10-22 03:12:02,169:INFO:- 19 areas
-2024-10-22 03:12:02,170:INFO:- 38 NPCs
-2024-10-22 03:12:02,170:INFO:- 0 actions
-2024-10-22 03:12:02,171:INFO:logging in using static token
-2024-10-22 03:12:03,187:INFO:Shard ID None has connected to Gateway (Session ID: f00ba3975649757774ad55d00e8e46e5).
-2024-10-22 03:12:05,190:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:12:05,192:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:12:05,193:INFO:Scheduler started
-2024-10-22 03:12:05,342:INFO:Synced 0 commands.
-2024-10-22 03:13:38,841:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:13:38,846:INFO:Starting to load game data...
-2024-10-22 03:13:38,846:INFO:Loading items from items.json
-2024-10-22 03:13:38,847:INFO:Successfully loaded 17 items
-2024-10-22 03:13:38,847:INFO:Loaded 17 items
-2024-10-22 03:13:38,848:INFO:Successfully loaded 19 areas
-2024-10-22 03:13:38,848:INFO:Loaded 19 areas
-2024-10-22 03:13:38,849:INFO:Loading NPCs from npcs.json
-2024-10-22 03:13:38,851:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:13:38,851:INFO:Loaded 38 NPCs
-2024-10-22 03:13:38,851:INFO:actions.json loaded successfully.
-2024-10-22 03:13:38,852:INFO:Loaded 43 actions
-2024-10-22 03:13:38,852:INFO:Completed area and NPC resolution
-2024-10-22 03:13:38,853:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 03:13:38,853:INFO:Loaded 0 characters
-2024-10-22 03:13:38,853:INFO:Initialized with:
-2024-10-22 03:13:38,854:INFO:- 17 items
-2024-10-22 03:13:38,854:INFO:- 19 areas
-2024-10-22 03:13:38,854:INFO:- 38 NPCs
-2024-10-22 03:13:38,854:INFO:- 43 actions
-2024-10-22 03:13:38,856:INFO:logging in using static token
-2024-10-22 03:13:39,784:INFO:Shard ID None has connected to Gateway (Session ID: 0afcae1604770d1d1e85fc451a50fb1c).
-2024-10-22 03:13:41,794:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:13:41,796:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:13:41,796:INFO:Scheduler started
-2024-10-22 03:13:41,952:INFO:Synced 0 commands.
-2024-10-22 03:14:05,881:INFO:on_message triggered for message from 266384402450350082: '/locations'
-2024-10-22 03:14:05,881:ERROR:Ignoring exception in on_message
-Traceback (most recent call last):
-  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
-    await coro(*args, **kwargs)
-  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3158, in on_message
-    characters[user_id] = Character(user_id=user_id, name=message.author.name)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1171, in __init__
-    capacity = self.calculate_max_carry_weight()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1266, in calculate_max_carry_weight
-    strength = self.stats.get('Strength', 10)
-               ^^^^^^^^^^
-AttributeError: 'Character' object has no attribute 'stats'
-2024-10-22 03:15:48,216:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:15:48,220:INFO:Starting to load game data...
-2024-10-22 03:15:48,221:INFO:Loading items from items.json
-2024-10-22 03:15:48,221:INFO:Successfully loaded 17 items
-2024-10-22 03:15:48,222:INFO:Loaded 17 items
-2024-10-22 03:15:48,222:INFO:Successfully loaded 19 areas
-2024-10-22 03:15:48,223:INFO:Loaded 19 areas
-2024-10-22 03:15:48,223:INFO:Loading NPCs from npcs.json
-2024-10-22 03:15:48,225:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:15:48,225:INFO:Loaded 38 NPCs
-2024-10-22 03:15:48,226:INFO:actions.json loaded successfully.
-2024-10-22 03:15:48,226:INFO:Loaded 43 actions
-2024-10-22 03:15:48,227:INFO:Completed area and NPC resolution
-2024-10-22 03:15:48,227:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 03:15:48,227:INFO:Loaded 0 characters
-2024-10-22 03:15:48,228:INFO:Initialized with:
-2024-10-22 03:15:48,228:INFO:- 17 items
-2024-10-22 03:15:48,228:INFO:- 19 areas
-2024-10-22 03:15:48,228:INFO:- 38 NPCs
-2024-10-22 03:15:48,228:INFO:- 43 actions
-2024-10-22 03:15:48,230:INFO:logging in using static token
-2024-10-22 03:15:49,125:INFO:Shard ID None has connected to Gateway (Session ID: 0488c410884ab9c61b6d23f1bac60be8).
-2024-10-22 03:15:51,141:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:15:51,143:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:15:51,143:INFO:Scheduler started
-2024-10-22 03:15:51,309:INFO:Synced 0 commands.
-2024-10-22 03:16:29,972:INFO:on_message triggered for message from 266384402450350082: '?jump'
-2024-10-22 03:16:29,973:ERROR:Ignoring exception in on_message
-Traceback (most recent call last):
-  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
-    await coro(*args, **kwargs)
-  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3158, in on_message
-    characters[user_id] = Character(user_id=user_id, name=message.author.name)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1171, in __init__
-    capacity = self.calculate_max_carry_weight()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1266, in calculate_max_carry_weight
-    strength = self.Stats.get('Strength', 10)
-               ^^^^^^^^^^
-AttributeError: 'Character' object has no attribute 'Stats'
-2024-10-22 03:20:51,152:INFO:Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-22 03:25:51 EDT)" (scheduled at 2024-10-22 03:20:51.141877-04:00)
-2024-10-22 03:20:51,153:ERROR:Error updating NPC locations: 'str' object has no attribute 'connected_areas'
-2024-10-22 03:20:51,153:ERROR:Error updating area inventories: 'tuple' object has no attribute 'remove'
-2024-10-22 03:20:51,153:ERROR:Error saving world state: 'str' object has no attribute 'name'
-2024-10-22 03:20:51,154:INFO:Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-22 03:25:51 EDT)" executed successfully
-2024-10-22 03:25:51,150:INFO:Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-22 03:30:51 EDT)" (scheduled at 2024-10-22 03:25:51.141877-04:00)
-2024-10-22 03:25:51,151:ERROR:Error updating NPC locations: 'str' object has no attribute 'connected_areas'
-2024-10-22 03:25:51,151:ERROR:Error updating area inventories: name 'generate_random_item' is not defined
-2024-10-22 03:25:51,151:ERROR:Error saving world state: 'str' object has no attribute 'name'
-2024-10-22 03:25:51,152:INFO:Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-22 03:30:51 EDT)" executed successfully
-2024-10-22 03:26:51,712:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:26:51,717:INFO:Starting to load game data...
-2024-10-22 03:26:51,717:INFO:Loading items from items.json
-2024-10-22 03:26:51,718:INFO:Successfully loaded 17 items
-2024-10-22 03:26:51,718:INFO:Loaded 17 items
-2024-10-22 03:26:51,719:INFO:Successfully loaded 19 areas
-2024-10-22 03:26:51,719:INFO:Loaded 19 areas
-2024-10-22 03:26:51,720:INFO:Loading NPCs from npcs.json
-2024-10-22 03:26:51,722:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:26:51,722:INFO:Loaded 38 NPCs
-2024-10-22 03:26:51,722:INFO:actions.json loaded successfully.
-2024-10-22 03:26:51,723:INFO:Loaded 43 actions
-2024-10-22 03:26:51,723:INFO:Completed area and NPC resolution
-2024-10-22 03:26:51,723:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 03:26:51,724:INFO:Loaded 0 characters
-2024-10-22 03:26:51,724:INFO:Initialized with:
-2024-10-22 03:26:51,724:INFO:- 17 items
-2024-10-22 03:26:51,724:INFO:- 19 areas
-2024-10-22 03:26:51,725:INFO:- 38 NPCs
-2024-10-22 03:26:51,725:INFO:- 43 actions
-2024-10-22 03:26:51,726:INFO:logging in using static token
-2024-10-22 03:26:52,599:INFO:Shard ID None has connected to Gateway (Session ID: 8154528acc7cd2a1c4b0b30d4c7e11cc).
-2024-10-22 03:26:54,615:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:26:54,617:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:26:54,618:INFO:Scheduler started
-2024-10-22 03:26:54,752:INFO:Synced 0 commands.
-2024-10-22 03:27:13,737:INFO:on_message triggered for message from 266384402450350082: '?jump'
-2024-10-22 03:27:13,738:ERROR:Ignoring exception in on_message
-Traceback (most recent call last):
-  File "e:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
-    await coro(*args, **kwargs)
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3058, in on_message
-    characters[user_id] = Character(user_id=user_id, name=message.author.name)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1171, in __init__
-    capacity = self.calculate_max_carry_weight()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1266, in calculate_max_carry_weight
-    strength = self.Stats.get('Strength', 10)
-               ^^^^^^^^^^
-AttributeError: 'Character' object has no attribute 'Stats'
-2024-10-22 03:30:07,645:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:30:07,650:INFO:Starting to load game data...
-2024-10-22 03:30:07,650:INFO:Loading items from items.json
-2024-10-22 03:30:07,651:INFO:Successfully loaded 17 items
-2024-10-22 03:30:07,651:INFO:Loaded 17 items
-2024-10-22 03:30:07,652:INFO:Successfully loaded 19 areas
-2024-10-22 03:30:07,652:INFO:Loaded 19 areas
-2024-10-22 03:30:07,653:INFO:Loading NPCs from npcs.json
-2024-10-22 03:30:07,654:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:30:07,655:INFO:Loaded 38 NPCs
-2024-10-22 03:30:07,655:INFO:actions.json loaded successfully.
-2024-10-22 03:30:07,656:INFO:Loaded 43 actions
-2024-10-22 03:30:07,656:INFO:Completed area and NPC resolution
-2024-10-22 03:30:07,657:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 03:30:07,657:INFO:Loaded 0 characters
-2024-10-22 03:30:07,657:INFO:Initialized with:
-2024-10-22 03:30:07,658:INFO:- 17 items
-2024-10-22 03:30:07,658:INFO:- 19 areas
-2024-10-22 03:30:07,659:INFO:- 38 NPCs
-2024-10-22 03:30:07,659:INFO:- 43 actions
-2024-10-22 03:30:07,660:INFO:logging in using static token
-2024-10-22 03:30:08,688:INFO:Shard ID None has connected to Gateway (Session ID: 5bf306c1b8b20c24ff98d82bccf33029).
-2024-10-22 03:30:10,693:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:30:10,696:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:30:10,696:INFO:Scheduler started
-2024-10-22 03:30:10,872:INFO:Synced 0 commands.
-2024-10-22 03:30:20,097:INFO:on_message triggered for message from 266384402450350082: '?jump'
-2024-10-22 03:30:20,098:ERROR:Ignoring exception in on_message
-Traceback (most recent call last):
-  File "e:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
-    await coro(*args, **kwargs)
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3058, in on_message
-    characters[user_id] = Character(user_id=user_id, name=message.author.name)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1187, in __init__
-    capacity = self.calculate_max_carry_weight()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 1266, in calculate_max_carry_weight
-    strength = self.Stats.get('Strength', 10)
-               ^^^^^^^^^^
-AttributeError: 'Character' object has no attribute 'Stats'. Did you mean: 'stats'?
-2024-10-22 03:32:07,729:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:32:07,734:INFO:Starting to load game data...
-2024-10-22 03:32:07,734:INFO:Loading items from items.json
-2024-10-22 03:32:07,735:INFO:Successfully loaded 17 items
-2024-10-22 03:32:07,735:INFO:Loaded 17 items
-2024-10-22 03:32:07,736:INFO:Successfully loaded 19 areas
-2024-10-22 03:32:07,736:INFO:Loaded 19 areas
-2024-10-22 03:32:07,737:INFO:Loading NPCs from npcs.json
-2024-10-22 03:32:07,739:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:32:07,739:INFO:Loaded 38 NPCs
-2024-10-22 03:32:07,740:INFO:actions.json loaded successfully.
-2024-10-22 03:32:07,740:INFO:Loaded 43 actions
-2024-10-22 03:32:07,740:INFO:Completed area and NPC resolution
-2024-10-22 03:32:07,741:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 03:32:07,741:INFO:Loaded 0 characters
-2024-10-22 03:32:07,741:INFO:Initialized with:
-2024-10-22 03:32:07,741:INFO:- 17 items
-2024-10-22 03:32:07,742:INFO:- 19 areas
-2024-10-22 03:32:07,742:INFO:- 38 NPCs
-2024-10-22 03:32:07,742:INFO:- 43 actions
-2024-10-22 03:32:07,743:INFO:logging in using static token
-2024-10-22 03:32:08,643:INFO:Shard ID None has connected to Gateway (Session ID: bc75775e1990fdb7b749d1364aeb3131).
-2024-10-22 03:32:10,655:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:32:10,657:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:32:10,657:INFO:Scheduler started
-2024-10-22 03:32:10,813:INFO:Synced 0 commands.
-2024-10-22 03:32:24,045:INFO:on_message triggered for message from 266384402450350082: '?jump'
-2024-10-22 03:32:24,046:ERROR:Failed to save characters: 'Character' object has no attribute 'to_dict'
-2024-10-22 03:32:24,214:INFO:Character created for user 266384402450350082 with name chibione.
-2024-10-22 03:32:24,215:INFO:Parsing message from user 266384402450350082: '?jump'
-2024-10-22 03:32:24,215:INFO:Regex matches found: ['?jump']
-2024-10-22 03:32:24,216:INFO:Parsed action: 'jump'
-2024-10-22 03:32:24,216:ERROR:Ignoring exception in on_message
-Traceback (most recent call last):
-  File "e:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
-    await coro(*args, **kwargs)
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3063, in on_message
-    action, stat = await parse_action(message)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3221, in parse_action
-    if action in actions:
-                 ^^^^^^^
-NameError: name 'actions' is not defined. Did you mean: 'action'?
-2024-10-22 03:37:22,489:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:37:22,494:INFO:Starting to load game data...
-2024-10-22 03:37:22,495:INFO:Loading items from items.json
-2024-10-22 03:37:22,495:INFO:Successfully loaded 17 items
-2024-10-22 03:37:22,496:INFO:Loaded 17 items
-2024-10-22 03:37:22,496:INFO:Successfully loaded 19 areas
-2024-10-22 03:37:22,497:INFO:Loaded 19 areas
-2024-10-22 03:37:22,497:INFO:Loading NPCs from npcs.json
-2024-10-22 03:37:22,498:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:37:22,499:INFO:Loaded 38 NPCs
-2024-10-22 03:37:22,499:INFO:actions.json loaded successfully.
-2024-10-22 03:37:22,500:INFO:Loaded 43 actions
-2024-10-22 03:37:22,500:INFO:Completed area and NPC resolution
-2024-10-22 03:37:22,500:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 03:37:22,501:INFO:Loaded 0 characters
-2024-10-22 03:37:22,501:INFO:Initialized with:
-2024-10-22 03:37:22,501:INFO:- 17 items
-2024-10-22 03:37:22,501:INFO:- 19 areas
-2024-10-22 03:37:22,502:INFO:- 38 NPCs
-2024-10-22 03:37:22,502:INFO:- 43 actions
-2024-10-22 03:37:22,503:INFO:logging in using static token
-2024-10-22 03:37:24,649:INFO:Shard ID None has connected to Gateway (Session ID: 53baaaa3830841242e8452b6ccc86fd5).
-2024-10-22 03:37:26,660:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:37:26,662:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:37:26,662:INFO:Scheduler started
-2024-10-22 03:37:26,809:INFO:Synced 0 commands.
-2024-10-22 03:37:33,699:INFO:on_message triggered for message from 266384402450350082: '?jump'
-2024-10-22 03:37:33,699:ERROR:Failed to save characters: 'Character' object has no attribute 'to_dict'
-2024-10-22 03:37:33,887:INFO:Character created for user 266384402450350082 with name chibione.
-2024-10-22 03:37:33,887:ERROR:Ignoring exception in on_message
-Traceback (most recent call last):
-  File "e:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
-    await coro(*args, **kwargs)
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3063, in on_message
-    action, stat = await parse_action(message)
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3204, in parse_action
-    actions = actions
-              ^^^^^^^
-UnboundLocalError: cannot access local variable 'actions' where it is not associated with a value
-2024-10-22 03:40:13,109:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:40:13,114:INFO:Starting to load game data...
-2024-10-22 03:40:13,114:INFO:Loading items from items.json
-2024-10-22 03:40:13,115:INFO:Successfully loaded 17 items
-2024-10-22 03:40:13,116:INFO:Loaded 17 items
-2024-10-22 03:40:13,116:INFO:Successfully loaded 19 areas
-2024-10-22 03:40:13,117:INFO:Loaded 19 areas
-2024-10-22 03:40:13,117:INFO:Loading NPCs from npcs.json
-2024-10-22 03:40:13,119:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 03:40:13,119:INFO:Loaded 38 NPCs
-2024-10-22 03:40:13,120:INFO:actions.json loaded successfully.
-2024-10-22 03:40:13,120:INFO:Loaded 43 actions
-2024-10-22 03:40:13,121:INFO:Completed area and NPC resolution
-2024-10-22 03:40:13,121:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 03:40:13,121:ERROR:Error in load_game_data: object of type 'NoneType' has no len()
-2024-10-22 03:40:13,122:INFO:Initialized with:
-2024-10-22 03:40:13,122:INFO:- 0 items
-2024-10-22 03:40:13,122:INFO:- 0 areas
-2024-10-22 03:40:13,122:INFO:- 0 NPCs
-2024-10-22 03:40:13,123:INFO:- 0 actions
-2024-10-22 03:40:13,124:INFO:logging in using static token
-2024-10-22 03:40:14,066:INFO:Shard ID None has connected to Gateway (Session ID: 774b24e8aab6c06a34025d91582aabc5).
-2024-10-22 03:40:16,075:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 03:40:16,076:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 03:40:16,077:INFO:Scheduler started
-2024-10-22 03:40:16,216:INFO:Synced 0 commands.
-2024-10-22 03:40:43,062:INFO:on_message triggered for message from 266384402450350082: '?jump'
-2024-10-22 03:40:43,062:ERROR:Ignoring exception in on_message
-Traceback (most recent call last):
-  File "e:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\client.py", line 449, in _run_event
-    await coro(*args, **kwargs)
-  File "E:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3057, in on_message
-    if user_id not in characters:
-       ^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: argument of type 'NoneType' is not iterable
-2024-10-22 03:44:04,491:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:44:04,493:INFO:Starting to load game data...
-2024-10-22 03:44:04,493:INFO:Loading items from items.json
-2024-10-22 03:44:04,494:ERROR:Error loading item 'Shortsword': name 'Item' is not defined
-2024-10-22 03:44:04,494:ERROR:Error loading item 'Captain's Sword': name 'Item' is not defined
-2024-10-22 03:44:04,494:ERROR:Error loading item 'Crystal Staff': name 'Item' is not defined
-2024-10-22 03:44:04,495:ERROR:Error loading item 'Hunter's Bow': name 'Item' is not defined
-2024-10-22 03:44:04,495:ERROR:Error loading item 'Leather Armor': name 'Item' is not defined
-2024-10-22 03:44:04,495:ERROR:Error loading item 'Merchant's Scale': name 'Item' is not defined
-2024-10-22 03:44:04,495:ERROR:Error loading item 'Resonance Stone': name 'Item' is not defined
-2024-10-22 03:44:04,496:ERROR:Error loading item 'Healing Potion': name 'Item' is not defined
-2024-10-22 03:44:04,496:ERROR:Error loading item 'Backpack': name 'Item' is not defined
-2024-10-22 03:44:04,496:ERROR:Error loading item 'Rope (50 feet)': name 'Item' is not defined
-2024-10-22 03:44:04,496:ERROR:Error loading item 'Crystal Heart Shard': name 'Item' is not defined
-2024-10-22 03:44:04,497:ERROR:Error loading item 'Torch': name 'Item' is not defined
-2024-10-22 03:44:04,497:ERROR:Error loading item 'Bedroll': name 'Item' is not defined
-2024-10-22 03:44:04,497:ERROR:Error loading item 'Tinderbox': name 'Item' is not defined
-2024-10-22 03:44:04,498:ERROR:Error loading item 'Waterskin': name 'Item' is not defined
-2024-10-22 03:44:04,498:ERROR:Error loading item 'Thieves' Tools': name 'Item' is not defined
-2024-10-22 03:44:04,498:ERROR:Error loading item 'Crystal Pendant': name 'Item' is not defined
-2024-10-22 03:44:04,498:INFO:Successfully loaded 0 items
-2024-10-22 03:44:04,499:INFO:Loaded 0 items
-2024-10-22 03:44:04,499:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 03:44:04,500:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 03:44:04,500:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 03:44:04,500:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 03:44:04,500:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 03:44:04,500:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 03:44:04,501:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 03:44:04,501:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 03:44:04,501:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 03:44:04,501:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 03:44:04,501:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 03:44:04,502:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 03:44:04,502:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 03:44:04,502:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 03:44:04,502:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 03:44:04,502:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 03:44:04,503:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 03:44:04,503:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 03:44:04,503:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 03:44:04,503:INFO:Successfully loaded 0 areas
-2024-10-22 03:44:04,504:ERROR:Failed to load areas
-2024-10-22 03:44:04,504:INFO:Initialized with:
-2024-10-22 03:44:04,504:INFO:- 0 items
-2024-10-22 03:44:04,504:INFO:- 0 areas
-2024-10-22 03:44:04,505:INFO:- 0 NPCs
-2024-10-22 03:44:04,505:INFO:- 0 actions
-2024-10-22 03:44:04,508:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 03:45:41,311:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 03:45:41,314:INFO:Starting to load game data...
-2024-10-22 03:45:41,314:INFO:Loading items from items.json
-2024-10-22 03:45:41,315:ERROR:Error loading item 'Shortsword': name 'Item' is not defined
-2024-10-22 03:45:41,315:ERROR:Error loading item 'Captain's Sword': name 'Item' is not defined
-2024-10-22 03:45:41,315:ERROR:Error loading item 'Crystal Staff': name 'Item' is not defined
-2024-10-22 03:45:41,316:ERROR:Error loading item 'Hunter's Bow': name 'Item' is not defined
-2024-10-22 03:45:41,316:ERROR:Error loading item 'Leather Armor': name 'Item' is not defined
-2024-10-22 03:45:41,316:ERROR:Error loading item 'Merchant's Scale': name 'Item' is not defined
-2024-10-22 03:45:41,316:ERROR:Error loading item 'Resonance Stone': name 'Item' is not defined
-2024-10-22 03:45:41,317:ERROR:Error loading item 'Healing Potion': name 'Item' is not defined
-2024-10-22 03:45:41,317:ERROR:Error loading item 'Backpack': name 'Item' is not defined
-2024-10-22 03:45:41,317:ERROR:Error loading item 'Rope (50 feet)': name 'Item' is not defined
-2024-10-22 03:45:41,318:ERROR:Error loading item 'Crystal Heart Shard': name 'Item' is not defined
-2024-10-22 03:45:41,318:ERROR:Error loading item 'Torch': name 'Item' is not defined
-2024-10-22 03:45:41,318:ERROR:Error loading item 'Bedroll': name 'Item' is not defined
-2024-10-22 03:45:41,319:ERROR:Error loading item 'Tinderbox': name 'Item' is not defined
-2024-10-22 03:45:41,319:ERROR:Error loading item 'Waterskin': name 'Item' is not defined
-2024-10-22 03:45:41,319:ERROR:Error loading item 'Thieves' Tools': name 'Item' is not defined
-2024-10-22 03:45:41,319:ERROR:Error loading item 'Crystal Pendant': name 'Item' is not defined
-2024-10-22 03:45:41,320:INFO:Successfully loaded 0 items
-2024-10-22 03:45:41,320:INFO:Loaded 0 items
-2024-10-22 03:45:41,321:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 03:45:41,321:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 03:45:41,321:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 03:45:41,321:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 03:45:41,322:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 03:45:41,322:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 03:45:41,322:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 03:45:41,322:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 03:45:41,323:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 03:45:41,323:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 03:45:41,323:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 03:45:41,323:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 03:45:41,324:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 03:45:41,324:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 03:45:41,324:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 03:45:41,324:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 03:45:41,325:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 03:45:41,325:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 03:45:41,325:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 03:45:41,325:INFO:Successfully loaded 0 areas
-2024-10-22 03:45:41,325:ERROR:Failed to load areas
-2024-10-22 03:45:41,328:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 04:04:46,528:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 04:04:46,530:INFO:Starting to load game data...
-2024-10-22 04:04:46,530:INFO:Loading items from items.json
-2024-10-22 04:04:46,531:ERROR:Unexpected error loading items: cannot access local variable 'item' where it is not associated with a value
-2024-10-22 04:04:46,531:INFO:Loaded 0 items
-2024-10-22 04:04:46,532:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 04:04:46,532:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 04:04:46,532:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 04:04:46,533:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 04:04:46,533:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 04:04:46,533:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 04:04:46,533:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 04:04:46,534:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 04:04:46,534:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 04:04:46,534:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 04:04:46,534:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 04:04:46,534:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 04:04:46,535:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 04:04:46,535:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 04:04:46,535:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 04:04:46,536:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 04:04:46,536:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 04:04:46,536:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 04:04:46,536:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 04:04:46,536:INFO:Successfully loaded 0 areas
-2024-10-22 04:04:46,537:ERROR:Failed to load areas
-2024-10-22 04:04:46,539:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:15:26,069:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:15:26,071:INFO:Starting to load game data...
-2024-10-22 15:15:26,072:INFO:Loading items from items.json
-2024-10-22 15:15:26,072:ERROR:Unexpected error loading items: cannot access local variable 'item' where it is not associated with a value
-2024-10-22 15:15:26,073:INFO:Loaded 0 items
-2024-10-22 15:15:26,074:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 15:15:26,074:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 15:15:26,074:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 15:15:26,075:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 15:15:26,075:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 15:15:26,075:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 15:15:26,076:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 15:15:26,076:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 15:15:26,076:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 15:15:26,077:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 15:15:26,077:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 15:15:26,077:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 15:15:26,077:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 15:15:26,078:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 15:15:26,078:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 15:15:26,078:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 15:15:26,079:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 15:15:26,079:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 15:15:26,079:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 15:15:26,080:INFO:Successfully loaded 0 areas
-2024-10-22 15:15:26,080:ERROR:Failed to load areas
-2024-10-22 15:15:26,083:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:26:40,205:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:26:40,207:INFO:Starting to load game data...
-2024-10-22 15:26:40,207:INFO:Loading items from items.json
-2024-10-22 15:26:40,208:ERROR:Unexpected error loading items: Invalid items file format. Expected {'Items': {...}}
-2024-10-22 15:26:40,208:INFO:Loaded 0 items
-2024-10-22 15:26:40,209:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 15:26:40,209:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 15:26:40,210:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 15:26:40,210:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 15:26:40,210:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 15:26:40,210:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 15:26:40,211:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 15:26:40,211:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 15:26:40,211:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 15:26:40,212:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 15:26:40,212:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 15:26:40,212:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 15:26:40,212:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 15:26:40,213:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 15:26:40,213:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 15:26:40,213:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 15:26:40,213:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 15:26:40,213:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 15:26:40,214:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 15:26:40,214:INFO:Successfully loaded 0 areas
-2024-10-22 15:26:40,214:ERROR:Failed to load areas
-2024-10-22 15:26:40,217:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:28:20,808:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:28:20,810:INFO:Starting to load game data...
-2024-10-22 15:28:20,810:INFO:Loading items from items.json
-2024-10-22 15:28:20,811:ERROR:Error loading item 'Shortsword': name 'Item' is not defined
-2024-10-22 15:28:20,811:ERROR:Error loading item 'Captain's Sword': name 'Item' is not defined
-2024-10-22 15:28:20,811:ERROR:Error loading item 'Crystal Staff': name 'Item' is not defined
-2024-10-22 15:28:20,811:ERROR:Error loading item 'Hunter's Bow': name 'Item' is not defined
-2024-10-22 15:28:20,812:ERROR:Error loading item 'Leather Armor': name 'Item' is not defined
-2024-10-22 15:28:20,812:ERROR:Error loading item 'Merchant's Scale': name 'Item' is not defined
-2024-10-22 15:28:20,812:ERROR:Error loading item 'Resonance Stone': name 'Item' is not defined
-2024-10-22 15:28:20,813:ERROR:Error loading item 'Healing Potion': name 'Item' is not defined
-2024-10-22 15:28:20,813:ERROR:Error loading item 'Backpack': name 'Item' is not defined
-2024-10-22 15:28:20,813:ERROR:Error loading item 'Rope (50 feet)': name 'Item' is not defined
-2024-10-22 15:28:20,813:ERROR:Error loading item 'Crystal Heart Shard': name 'Item' is not defined
-2024-10-22 15:28:20,814:ERROR:Error loading item 'Torch': name 'Item' is not defined
-2024-10-22 15:28:20,814:ERROR:Error loading item 'Bedroll': name 'Item' is not defined
-2024-10-22 15:28:20,814:ERROR:Error loading item 'Tinderbox': name 'Item' is not defined
-2024-10-22 15:28:20,815:ERROR:Error loading item 'Waterskin': name 'Item' is not defined
-2024-10-22 15:28:20,815:ERROR:Error loading item 'Thieves' Tools': name 'Item' is not defined
-2024-10-22 15:28:20,815:ERROR:Error loading item 'Crystal Pendant': name 'Item' is not defined
-2024-10-22 15:28:20,816:INFO:Successfully loaded 0 items
-2024-10-22 15:28:20,816:INFO:Loaded 0 items
-2024-10-22 15:28:20,817:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 15:28:20,817:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 15:28:20,817:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 15:28:20,818:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 15:28:20,818:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 15:28:20,818:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 15:28:20,818:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 15:28:20,819:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 15:28:20,819:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 15:28:20,819:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 15:28:20,819:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 15:28:20,820:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 15:28:20,820:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 15:28:20,820:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 15:28:20,821:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 15:28:20,821:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 15:28:20,821:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 15:28:20,821:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 15:28:20,821:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 15:28:20,822:INFO:Successfully loaded 0 areas
-2024-10-22 15:28:20,822:ERROR:Failed to load areas
-2024-10-22 15:28:20,825:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:30:06,117:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:30:06,119:INFO:Starting to load game data...
-2024-10-22 15:30:06,119:INFO:Loading items from items.json
-2024-10-22 15:30:06,120:ERROR:Unexpected error loading items: cannot access local variable 'item' where it is not associated with a value
-2024-10-22 15:30:06,120:INFO:Loaded 0 items
-2024-10-22 15:30:06,121:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 15:30:06,121:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 15:30:06,121:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 15:30:06,122:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 15:30:06,122:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 15:30:06,122:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 15:30:06,122:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 15:30:06,123:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 15:30:06,123:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 15:30:06,123:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 15:30:06,123:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 15:30:06,123:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 15:30:06,124:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 15:30:06,124:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 15:30:06,124:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 15:30:06,125:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 15:30:06,125:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 15:30:06,125:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 15:30:06,125:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 15:30:06,125:INFO:Successfully loaded 0 areas
-2024-10-22 15:30:06,126:ERROR:Failed to load areas
-2024-10-22 15:30:06,128:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:33:39,441:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:33:39,443:INFO:Starting to load game data...
-2024-10-22 15:33:39,443:INFO:Loading items from items.json
-2024-10-22 15:33:39,444:ERROR:Unexpected error loading items: cannot access local variable 'item' where it is not associated with a value
-2024-10-22 15:33:39,444:INFO:Loaded 0 items
-2024-10-22 15:33:39,445:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 15:33:39,445:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 15:33:39,446:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 15:33:39,446:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 15:33:39,446:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 15:33:39,447:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 15:33:39,447:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 15:33:39,447:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 15:33:39,448:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 15:33:39,448:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 15:33:39,448:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 15:33:39,448:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 15:33:39,449:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 15:33:39,449:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 15:33:39,449:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 15:33:39,449:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 15:33:39,450:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 15:33:39,450:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 15:33:39,450:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 15:33:39,451:INFO:Successfully loaded 0 areas
-2024-10-22 15:33:39,451:ERROR:Failed to load areas
-2024-10-22 15:33:39,454:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:39:57,422:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:39:57,424:INFO:Starting to load game data...
-2024-10-22 15:39:57,424:INFO:Loading items from items.json
-2024-10-22 15:39:57,424:ERROR:Unexpected error loading items: cannot access local variable 'item' where it is not associated with a value
-2024-10-22 15:39:57,425:INFO:Loaded 0 items
-2024-10-22 15:39:57,425:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 15:39:57,425:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 15:39:57,426:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 15:39:57,426:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 15:39:57,426:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 15:39:57,426:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 15:39:57,427:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 15:39:57,427:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 15:39:57,427:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 15:39:57,427:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 15:39:57,428:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 15:39:57,428:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 15:39:57,428:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 15:39:57,428:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 15:39:57,429:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 15:39:57,429:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 15:39:57,429:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 15:39:57,430:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 15:39:57,430:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 15:39:57,430:INFO:Successfully loaded 0 areas
-2024-10-22 15:39:57,430:ERROR:Failed to load areas
-2024-10-22 15:39:57,431:INFO:Starting to load game data...
-2024-10-22 15:39:57,431:INFO:Loading items from items.json
-2024-10-22 15:39:57,432:INFO:Successfully loaded 17 items
-2024-10-22 15:39:57,432:INFO:Loaded 17 items
-2024-10-22 15:39:57,433:INFO:Successfully loaded 19 areas
-2024-10-22 15:39:57,433:INFO:Loaded 19 areas
-2024-10-22 15:39:57,433:INFO:Loading NPCs from npcs.json
-2024-10-22 15:39:57,434:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 15:39:57,435:INFO:Loaded 38 NPCs
-2024-10-22 15:39:57,441:INFO:actions.json loaded successfully.
-2024-10-22 15:39:57,442:INFO:Loaded 43 actions
-2024-10-22 15:39:57,442:INFO:Completed area and NPC resolution
-2024-10-22 15:39:57,443:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 15:39:57,443:INFO:Loaded 0 characters
-2024-10-22 15:39:57,447:INFO:logging in using static token
-2024-10-22 15:39:58,306:INFO:Shard ID None has connected to Gateway (Session ID: db0904206b95221008dda112697dade8).
-2024-10-22 15:40:00,352:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 15:40:00,354:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 15:40:00,354:INFO:Scheduler started
-2024-10-22 15:40:00,557:INFO:Synced 0 commands.
-2024-10-22 15:40:57,703:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:40:57,717:INFO:Starting to load game data...
-2024-10-22 15:40:57,717:INFO:Loading items from items.json
-2024-10-22 15:40:57,718:ERROR:Unexpected error loading items: cannot access local variable 'item' where it is not associated with a value
-2024-10-22 15:40:57,719:INFO:Loaded 0 items
-2024-10-22 15:40:57,720:ERROR:Error processing area City Gates: name 'Area' is not defined
-2024-10-22 15:40:57,720:ERROR:Error processing area Marketplace Square: name 'Area' is not defined
-2024-10-22 15:40:57,720:ERROR:Error processing area Merchant's Row: name 'Area' is not defined
-2024-10-22 15:40:57,721:ERROR:Error processing area Temple District: name 'Area' is not defined
-2024-10-22 15:40:57,721:ERROR:Error processing area Noble Quarter: name 'Area' is not defined
-2024-10-22 15:40:57,721:ERROR:Error processing area Craftsmen's Quarter: name 'Area' is not defined
-2024-10-22 15:40:57,722:ERROR:Error processing area Harbor District: name 'Area' is not defined
-2024-10-22 15:40:57,722:ERROR:Error processing area Forest Edge: name 'Area' is not defined
-2024-10-22 15:40:57,723:ERROR:Error processing area Old Trading Road: name 'Area' is not defined
-2024-10-22 15:40:57,723:ERROR:Error processing area Mystic Grove: name 'Area' is not defined
-2024-10-22 15:40:57,723:ERROR:Error processing area Forgotten Shrine: name 'Area' is not defined
-2024-10-22 15:40:57,724:ERROR:Error processing area Hunter's Camp: name 'Area' is not defined
-2024-10-22 15:40:57,724:ERROR:Error processing area Crystal Spring: name 'Area' is not defined
-2024-10-22 15:40:57,725:ERROR:Error processing area Cave Entrance: name 'Area' is not defined
-2024-10-22 15:40:57,725:ERROR:Error processing area Crystalline Chamber: name 'Area' is not defined
-2024-10-22 15:40:57,726:ERROR:Error processing area Underground Lake: name 'Area' is not defined
-2024-10-22 15:40:57,726:ERROR:Error processing area Ancient Temple Ruins: name 'Area' is not defined
-2024-10-22 15:40:57,726:ERROR:Error processing area Crystal Heart Chamber: name 'Area' is not defined
-2024-10-22 15:40:57,727:ERROR:Error processing area Mysterious Portal Room: name 'Area' is not defined
-2024-10-22 15:40:57,727:INFO:Successfully loaded 0 areas
-2024-10-22 15:40:57,727:ERROR:Failed to load areas
-2024-10-22 15:40:57,731:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:47:02,787:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:47:02,791:ERROR:Failed to initialize game data. Bot startup aborted.
-2024-10-22 15:49:11,835:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:49:11,839:INFO:Starting to load game data...
-2024-10-22 15:49:11,840:INFO:Loading items from items.json
-2024-10-22 15:49:11,840:INFO:Successfully loaded 17 items
-2024-10-22 15:49:11,841:INFO:Loaded 17 items
-2024-10-22 15:49:11,841:INFO:Successfully loaded 19 areas
-2024-10-22 15:49:11,842:INFO:Loaded 19 areas
-2024-10-22 15:49:11,842:INFO:Loading NPCs from npcs.json
-2024-10-22 15:49:11,844:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 15:49:11,844:INFO:Loaded 38 NPCs
-2024-10-22 15:49:11,845:INFO:actions.json loaded successfully.
-2024-10-22 15:49:11,845:INFO:Loaded 43 actions
-2024-10-22 15:49:11,846:INFO:Completed area and NPC resolution
-2024-10-22 15:49:11,846:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 15:49:11,847:ERROR:Error in load_game_data: object of type 'NoneType' has no len()
-2024-10-22 15:49:11,847:INFO:Initialized with:
-2024-10-22 15:49:11,848:INFO:- 0 items
-2024-10-22 15:49:11,848:INFO:- 0 areas
-2024-10-22 15:49:11,848:INFO:- 0 NPCs
-2024-10-22 15:49:11,848:INFO:- 0 actions
-2024-10-22 15:49:11,849:INFO:logging in using static token
-2024-10-22 15:49:12,853:INFO:Shard ID None has connected to Gateway (Session ID: 68f8de387351dd9141b2fc14b2ffa87a).
-2024-10-22 15:49:14,866:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 15:49:14,867:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 15:49:14,868:INFO:Scheduler started
-2024-10-22 15:49:15,033:INFO:Synced 0 commands.
-2024-10-22 15:53:36,801:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:53:36,806:INFO:Starting to load game data...
-2024-10-22 15:53:36,806:INFO:Loading items from items.json
-2024-10-22 15:53:36,807:INFO:Successfully loaded 17 items
-2024-10-22 15:53:36,807:INFO:Loaded 17 items
-2024-10-22 15:53:36,807:INFO:Successfully loaded 19 areas
-2024-10-22 15:53:36,808:INFO:Loaded 19 areas
-2024-10-22 15:53:36,808:INFO:Loading NPCs from npcs.json
-2024-10-22 15:53:36,810:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 15:53:36,810:INFO:Loaded 38 NPCs
-2024-10-22 15:53:36,811:INFO:actions.json loaded successfully.
-2024-10-22 15:53:36,811:INFO:Loaded 43 actions
-2024-10-22 15:53:36,812:INFO:Completed area and NPC resolution
-2024-10-22 15:53:36,812:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 15:53:36,812:ERROR:Error in load_game_data: object of type 'NoneType' has no len()
-2024-10-22 15:53:36,813:INFO:Initialized with:
-2024-10-22 15:53:36,813:INFO:- 0 items
-2024-10-22 15:53:36,813:INFO:- 0 areas
-2024-10-22 15:53:36,813:INFO:- 0 NPCs
-2024-10-22 15:53:36,814:INFO:- 0 actions
-2024-10-22 15:53:36,815:INFO:logging in using static token
-2024-10-22 15:53:37,821:INFO:Shard ID None has connected to Gateway (Session ID: 67bef63ecb3f553d906cb5cba5a19e44).
-2024-10-22 15:53:39,826:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 15:53:39,828:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 15:53:39,829:INFO:Scheduler started
-2024-10-22 15:53:39,981:INFO:Synced 0 commands.
-2024-10-22 15:55:47,568:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:55:47,572:INFO:Starting to load game data...
-2024-10-22 15:55:47,573:INFO:Loading items from items.json
-2024-10-22 15:55:47,573:INFO:Successfully loaded 17 items
-2024-10-22 15:55:47,574:INFO:Loaded 17 items
-2024-10-22 15:55:47,574:INFO:Successfully loaded 19 areas
-2024-10-22 15:55:47,575:INFO:Loaded 19 areas
-2024-10-22 15:55:47,575:INFO:Loading NPCs from npcs.json
-2024-10-22 15:55:47,577:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 15:55:47,577:INFO:Loaded 38 NPCs
-2024-10-22 15:55:47,578:INFO:actions.json loaded successfully.
-2024-10-22 15:55:47,578:INFO:Loaded 43 actions
-2024-10-22 15:55:47,579:INFO:Completed area and NPC resolution
-2024-10-22 15:55:47,579:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 15:55:47,579:ERROR:Error in load_game_data: object of type 'NoneType' has no len()
-2024-10-22 15:55:47,580:INFO:Initialized with:
-2024-10-22 15:55:47,580:INFO:- 0 items
-2024-10-22 15:55:47,580:INFO:- 0 areas
-2024-10-22 15:55:47,581:INFO:- 0 NPCs
-2024-10-22 15:55:47,581:INFO:- 0 actions
-2024-10-22 15:55:47,582:INFO:logging in using static token
-2024-10-22 15:55:48,584:INFO:Shard ID None has connected to Gateway (Session ID: f1687c26774ae105a9aeef1ecd1516f8).
-2024-10-22 15:55:50,589:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 15:55:50,591:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 15:55:50,591:INFO:Scheduler started
-2024-10-22 15:55:50,763:INFO:Synced 0 commands.
-2024-10-22 15:56:55,974:WARNING:PyNaCl is not installed, voice will NOT be supported
-2024-10-22 15:56:55,978:INFO:Starting to load game data...
-2024-10-22 15:56:55,979:INFO:Loading items from items.json
-2024-10-22 15:56:55,979:INFO:Successfully loaded 17 items
-2024-10-22 15:56:55,980:INFO:Loaded 17 items
-2024-10-22 15:56:55,980:INFO:Successfully loaded 19 areas
-2024-10-22 15:56:55,981:INFO:Loaded 19 areas
-2024-10-22 15:56:55,981:INFO:Loading NPCs from npcs.json
-2024-10-22 15:56:55,983:INFO:Successfully loaded 38 NPCs from npcs.json
-2024-10-22 15:56:55,983:INFO:Loaded 38 NPCs
-2024-10-22 15:56:55,984:INFO:actions.json loaded successfully.
-2024-10-22 15:56:55,984:INFO:Loaded 43 actions
-2024-10-22 15:56:55,984:INFO:Completed area and NPC resolution
-2024-10-22 15:56:55,985:INFO:Successfully loaded 0 characters from 'characters.json'.
-2024-10-22 15:56:55,985:ERROR:Error in load_game_data: object of type 'NoneType' has no len()
-2024-10-22 15:56:55,986:INFO:Initialized with:
-2024-10-22 15:56:55,986:INFO:- 0 items
-2024-10-22 15:56:55,986:INFO:- 0 areas
-2024-10-22 15:56:55,986:INFO:- 0 NPCs
-2024-10-22 15:56:55,987:INFO:- 0 actions
-2024-10-22 15:56:55,987:INFO:- 0 characters
-2024-10-22 15:56:55,988:INFO:logging in using static token
-2024-10-22 15:56:56,917:INFO:Shard ID None has connected to Gateway (Session ID: 4c622bb9d8fe5013d23b2b2123a7c6fe).
-2024-10-22 15:56:58,928:INFO:Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2024-10-22 15:56:58,930:INFO:Added job "update_world_state" to job store "default"
-2024-10-22 15:56:58,930:INFO:Scheduler started
-2024-10-22 15:56:59,072:INFO:Synced 0 commands.
+2024-10-23 03:15:16,269 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-23 03:15:16,273 - INFO - rpGenerator.py:771:load_game_data - Starting to load game data...
+2024-10-23 03:15:16,273 - INFO - rpGenerator.py:637:load_items - Loading items from items.json
+2024-10-23 03:15:16,274 - INFO - rpGenerator.py:659:load_items - Successfully loaded 17 items
+2024-10-23 03:15:16,275 - INFO - rpGenerator.py:778:load_game_data - Loaded 17 items
+2024-10-23 03:15:16,275 - INFO - rpGenerator.py:726:load_areas - Successfully loaded 19 areas
+2024-10-23 03:15:16,276 - INFO - rpGenerator.py:785:load_game_data - Loaded 19 areas
+2024-10-23 03:15:16,276 - INFO - rpGenerator.py:680:load_npcs - Loading NPCs from npcs.json
+2024-10-23 03:15:16,277 - INFO - rpGenerator.py:694:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-23 03:15:16,278 - INFO - rpGenerator.py:792:load_game_data - Loaded 38 NPCs
+2024-10-23 03:15:16,278 - INFO - rpGenerator.py:952:load_actions - actions.json loaded successfully.
+2024-10-23 03:15:16,278 - INFO - rpGenerator.py:799:load_game_data - Loaded 43 actions
+2024-10-23 03:15:16,279 - INFO - rpGenerator.py:2181:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-23 03:15:16,279 - INFO - rpGenerator.py:752:load_characters - Successfully loaded 0 characters from 'characters.json'.
+2024-10-23 03:15:16,279 - INFO - rpGenerator.py:846:initialize_game_data - Initialized with:
+2024-10-23 03:15:16,280 - INFO - rpGenerator.py:847:initialize_game_data - - 17 items
+2024-10-23 03:15:16,280 - INFO - rpGenerator.py:848:initialize_game_data - - 19 areas
+2024-10-23 03:15:16,280 - INFO - rpGenerator.py:849:initialize_game_data - - 38 NPCs
+2024-10-23 03:15:16,281 - INFO - rpGenerator.py:850:initialize_game_data - - 43 actions
+2024-10-23 03:15:16,281 - INFO - rpGenerator.py:851:initialize_game_data - - 0 characters
+2024-10-23 03:15:16,282 - INFO - client.py:611:login - logging in using static token
+2024-10-23 03:15:17,301 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 2ed7378958e63d286f31eedd0761ac40).
+2024-10-23 03:15:19,307 - INFO - rpGenerator.py:3656:on_ready - Logged in as RPGenerator
+2024-10-23 03:15:19,308 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-23 03:15:19,310 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-23 03:15:19,311 - INFO - base.py:181:start - Scheduler started
+2024-10-23 03:20:19,310 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-23 03:25:19 EDT)" (scheduled at 2024-10-23 03:20:19.308565-04:00)
+2024-10-23 03:20:19,311 - ERROR - rpGenerator.py:3556:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-23 03:20:19,312 - ERROR - rpGenerator.py:3612:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-23 03:20:19,312 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-23 03:25:19 EDT)" executed successfully
+2024-10-23 03:21:01,829 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-23 03:21:01,833 - INFO - rpGenerator.py:762:load_game_data - Starting to load game data...
+2024-10-23 03:21:01,833 - INFO - rpGenerator.py:628:load_items - Loading items from items.json
+2024-10-23 03:21:01,834 - INFO - rpGenerator.py:650:load_items - Successfully loaded 17 items
+2024-10-23 03:21:01,834 - INFO - rpGenerator.py:769:load_game_data - Loaded 17 items
+2024-10-23 03:21:01,835 - INFO - rpGenerator.py:717:load_areas - Successfully loaded 19 areas
+2024-10-23 03:21:01,835 - INFO - rpGenerator.py:776:load_game_data - Loaded 19 areas
+2024-10-23 03:21:01,836 - INFO - rpGenerator.py:671:load_npcs - Loading NPCs from npcs.json
+2024-10-23 03:21:01,838 - INFO - rpGenerator.py:685:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-23 03:21:01,838 - INFO - rpGenerator.py:783:load_game_data - Loaded 38 NPCs
+2024-10-23 03:21:01,838 - INFO - rpGenerator.py:943:load_actions - actions.json loaded successfully.
+2024-10-23 03:21:01,839 - INFO - rpGenerator.py:790:load_game_data - Loaded 43 actions
+2024-10-23 03:21:01,840 - INFO - rpGenerator.py:2172:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-23 03:21:01,841 - INFO - rpGenerator.py:743:load_characters - Successfully loaded 0 characters from 'characters.json'.
+2024-10-23 03:21:01,841 - INFO - rpGenerator.py:837:initialize_game_data - Initialized with:
+2024-10-23 03:21:01,841 - INFO - rpGenerator.py:838:initialize_game_data - - 17 items
+2024-10-23 03:21:01,842 - INFO - rpGenerator.py:839:initialize_game_data - - 19 areas
+2024-10-23 03:21:01,842 - INFO - rpGenerator.py:840:initialize_game_data - - 38 NPCs
+2024-10-23 03:21:01,842 - INFO - rpGenerator.py:841:initialize_game_data - - 43 actions
+2024-10-23 03:21:01,843 - INFO - rpGenerator.py:842:initialize_game_data - - 0 characters
+2024-10-23 03:21:01,844 - INFO - client.py:611:login - logging in using static token
+2024-10-23 03:21:02,869 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: ba2ddf78c67cde84bb92838fb5f0ad6f).
+2024-10-23 03:21:04,889 - INFO - rpGenerator.py:3647:on_ready - Logged in as RPGenerator
+2024-10-23 03:21:04,891 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-23 03:21:04,893 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-23 03:21:04,893 - INFO - base.py:181:start - Scheduler started
+2024-10-23 03:21:46,244 - INFO - rpGenerator.py:3667:on_message - on_message triggered for message from 266384402450350082: '/locations'
+2024-10-23 03:21:46,245 - ERROR - rpGenerator.py:1920:save_characters - Failed to save characters: 'Character' object has no attribute 'to_dict'
+2024-10-23 03:21:46,614 - INFO - rpGenerator.py:3686:on_message - Character created for user 266384402450350082 with name chibione.
+2024-10-23 03:21:46,615 - INFO - rpGenerator.py:3424:parse_action - Parsing message from user 266384402450350082: '/locations'
+2024-10-23 03:21:46,615 - INFO - rpGenerator.py:3429:parse_action - Regex matches found: []
+2024-10-23 03:21:46,615 - INFO - rpGenerator.py:3447:parse_action - No valid action recognized in the message.
+2024-10-23 03:21:46,616 - INFO - rpGenerator.py:3788:on_message - No valid action found in the message.
+2024-10-23 03:21:46,616 - ERROR - bot.py:355:on_command_error - Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "locations" is not found
+2024-10-23 03:21:52,071 - INFO - rpGenerator.py:3667:on_message - on_message triggered for message from 266384402450350082: '/locations'
+2024-10-23 03:21:52,072 - INFO - rpGenerator.py:3424:parse_action - Parsing message from user 266384402450350082: '/locations'
+2024-10-23 03:21:52,072 - INFO - rpGenerator.py:3429:parse_action - Regex matches found: []
+2024-10-23 03:21:52,072 - INFO - rpGenerator.py:3447:parse_action - No valid action recognized in the message.
+2024-10-23 03:21:52,073 - INFO - rpGenerator.py:3788:on_message - No valid action found in the message.
+2024-10-23 03:21:52,073 - ERROR - bot.py:355:on_command_error - Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "locations" is not found
+2024-10-23 03:22:01,548 - INFO - rpGenerator.py:3667:on_message - on_message triggered for message from 266384402450350082: '?jump'
+2024-10-23 03:22:01,549 - INFO - rpGenerator.py:3424:parse_action - Parsing message from user 266384402450350082: '?jump'
+2024-10-23 03:22:01,549 - INFO - rpGenerator.py:3429:parse_action - Regex matches found: ['?jump']
+2024-10-23 03:22:01,549 - INFO - rpGenerator.py:3439:parse_action - Parsed action: 'jump'
+2024-10-23 03:22:01,550 - INFO - rpGenerator.py:3441:parse_action - Action recognized: 'jump'
+2024-10-23 03:22:01,550 - INFO - rpGenerator.py:3691:on_message - Processing action 'jump' for user 266384402450350082 associated with stat 'Strength'.
+2024-10-23 03:22:01,550 - INFO - rpGenerator.py:3407:perform_ability_check - Ability check for chibione: Rolled 20 + modifier 0 = 20
+2024-10-23 03:22:01,784 - INFO - rpGenerator.py:3722:on_message - Calling get_chatgpt_response for difficulty determination.
+2024-10-23 03:22:02,448 - INFO - _client.py:1786:_send_single_request - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-23 03:22:02,451 - INFO - rpGenerator.py:3732:on_message - Completed get_chatgpt_response for difficulty determination.
+2024-10-23 03:22:02,452 - INFO - rpGenerator.py:3736:on_message - Difficulty determined for user 266384402450350082: 10
+2024-10-23 03:22:02,452 - INFO - rpGenerator.py:3756:on_message - Player chibione (user 266384402450350082) attempted to jump. The DC was 10. It was a succeed with a critical success, obtaining an unexpected advantage or extraordinary result..
+2024-10-23 03:22:02,452 - INFO - rpGenerator.py:3769:on_message - Calling get_chatgpt_response for narrative response.
+2024-10-23 03:22:09,796 - INFO - _client.py:1786:_send_single_request - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-10-23 03:22:09,797 - INFO - rpGenerator.py:3779:on_message - Completed get_chatgpt_response for narrative response.
+2024-10-23 03:22:09,798 - INFO - rpGenerator.py:3781:on_message - Sending narrative response to channel: *chibione, your Strength check result is 20 (rolled 20 + modifier 0).* 
+
+As Chibione vaults into the air, a gust of wind catches them, propelling them further than they had anticipated. They sail over the obstacle with an astonishing grace, landing deftly on the other side. The group of guards, who had been casually watching, now stare in open-mouthed amazement. Even the wary wildlife seems stunned into silence. The forest holds its breath as a hush falls over the scene. Chibione's extraordinary leap has certainly drawn attention, and perhaps a bit of respect. What do you do? The DC was: 10. This was due to it being a fairly easy task, but the critical success turned the simple action into something extraordinary.
+2024-10-23 03:22:10,003 - INFO - rpGenerator.py:3783:on_message - Narrative response sent to user 266384402450350082.
