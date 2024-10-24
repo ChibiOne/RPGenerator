@@ -1,1 +1,57 @@
-{}
+{
+    "266384402450350082": {
+        "user_id": "266384402450350082",
+        "name": "Unnamed Character",
+        "species": "Human",
+        "char_class": "Warrior",
+        "gender": "Female",
+        "pronouns": "She/Her",
+        "description": "No description provided.",
+        "stats": {
+            "Strength": 12,
+            "Dexterity": 15,
+            "Constitution": 15,
+            "Intelligence": 15,
+            "Wisdom": 12,
+            "Charisma": 12
+        },
+        "skills": {},
+        "inventory": {},
+        "equipment": {
+            "Armor": null,
+            "Left_Hand": null,
+            "Right_Hand": null,
+            "Belt_Slots": [
+                null,
+                null,
+                null,
+                null
+            ],
+            "Back": null,
+            "Magic_Slots": [
+                null,
+                null,
+                null
+            ]
+        },
+        "currency": {},
+        "spells": {},
+        "abilities": {},
+        "capacity": 150,
+        "ac": 10,
+        "max_hp": 1,
+        "curr_hp": 1,
+        "movement_speed": 30,
+        "travel_end_time": null,
+        "spellslots": {},
+        "level": 1,
+        "xp": 0,
+        "reputation": {},
+        "is_traveling": false,
+        "current_area": "Marketplace Square",
+        "current_location": "Stonehaven",
+        "current_region": "Northern Kingdoms",
+        "current_continent": "Aetheria",
+        "current_world": "Eldoria"
+    }
+}
