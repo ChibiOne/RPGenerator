@@ -2712,3 +2712,1203 @@ NoneType: None
 2024-10-24 00:19:51,261 - ERROR - rpGenerator.py:3277:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
 2024-10-24 00:19:51,262 - ERROR - rpGenerator.py:3315:save_world_state - Error saving world state: 'str' object has no attribute 'name'
 2024-10-24 00:19:51,262 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:24:51 EDT)" executed successfully
+2024-10-24 00:24:51,253 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:29:51 EDT)" (scheduled at 2024-10-24 00:24:51.242458-04:00)
+2024-10-24 00:24:51,254 - ERROR - rpGenerator.py:3259:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 00:24:51,255 - ERROR - rpGenerator.py:3277:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 00:24:51,255 - ERROR - rpGenerator.py:3315:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 00:24:51,256 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:29:51 EDT)" executed successfully
+2024-10-24 00:29:51,252 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:34:51 EDT)" (scheduled at 2024-10-24 00:29:51.242458-04:00)
+2024-10-24 00:29:51,253 - ERROR - rpGenerator.py:3259:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 00:29:51,254 - ERROR - rpGenerator.py:3277:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 00:29:51,255 - ERROR - rpGenerator.py:3315:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 00:29:51,255 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:34:51 EDT)" executed successfully
+2024-10-24 00:30:42,860 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 00:30:42,867 - INFO - rpGenerator.py:266:load_game_data - Starting to load game data...
+2024-10-24 00:30:42,867 - INFO - rpGenerator.py:132:load_items - Loading items from items.json
+2024-10-24 00:30:42,869 - INFO - rpGenerator.py:154:load_items - Successfully loaded 17 items
+2024-10-24 00:30:42,869 - INFO - rpGenerator.py:273:load_game_data - Loaded 17 items
+2024-10-24 00:30:42,870 - INFO - rpGenerator.py:221:load_areas - Successfully loaded 19 areas
+2024-10-24 00:30:42,871 - INFO - rpGenerator.py:280:load_game_data - Loaded 19 areas
+2024-10-24 00:30:42,871 - INFO - rpGenerator.py:175:load_npcs - Loading NPCs from npcs.json
+2024-10-24 00:30:42,874 - INFO - rpGenerator.py:189:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 00:30:42,874 - INFO - rpGenerator.py:287:load_game_data - Loaded 38 NPCs
+2024-10-24 00:30:42,875 - INFO - rpGenerator.py:463:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 00:30:42,875 - INFO - rpGenerator.py:294:load_game_data - Loaded 43 actions
+2024-10-24 00:30:42,876 - INFO - rpGenerator.py:1850:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 00:30:42,877 - ERROR - rpGenerator.py:1384:from_dict - Error creating Character from dict: name 'item_lookup' is not defined
+2024-10-24 00:30:42,877 - ERROR - rpGenerator.py:256:load_characters - Unexpected error loading characters from 'characters.json': name 'item_lookup' is not defined
+2024-10-24 00:30:42,878 - INFO - rpGenerator.py:357:initialize_game_data - Initialized with:
+2024-10-24 00:30:42,878 - INFO - rpGenerator.py:358:initialize_game_data - - 17 items
+2024-10-24 00:30:42,878 - INFO - rpGenerator.py:359:initialize_game_data - - 19 areas
+2024-10-24 00:30:42,879 - INFO - rpGenerator.py:360:initialize_game_data - - 38 NPCs
+2024-10-24 00:30:42,879 - INFO - rpGenerator.py:361:initialize_game_data - - 43 actions
+2024-10-24 00:30:42,879 - INFO - rpGenerator.py:362:initialize_game_data - - 0 characters
+2024-10-24 00:30:42,881 - INFO - client.py:611:login - logging in using static token
+2024-10-24 00:30:43,785 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 3b27ca5813f2162af54c585d7c8ad61f).
+2024-10-24 00:30:45,801 - INFO - rpGenerator.py:3451:on_ready - Logged in as RPGenerator
+2024-10-24 00:30:45,804 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 00:30:45,807 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 00:30:45,807 - INFO - base.py:181:start - Scheduler started
+2024-10-24 00:30:45,923 - INFO - rpGenerator.py:3443:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 00:31:15,106 - INFO - rpGenerator.py:2821:create_character - User 266384402450350082 initiated character creation.
+2024-10-24 00:31:28,535 - INFO - rpGenerator.py:2139:on_submit - User 266384402450350082 entered name: Ralynn
+2024-10-24 00:31:34,711 - INFO - rpGenerator.py:1943:gender_callback - User 266384402450350082 selected gender: Female
+2024-10-24 00:31:40,779 - INFO - rpGenerator.py:1962:pronouns_callback - User 266384402450350082 selected pronouns: She/Her
+2024-10-24 00:31:57,670 - ERROR - modal.py:167:on_error - Ignoring exception in modal <DescriptionModal timeout=None children=1>:
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\ui\modal.py", line 189, in _scheduled_task
+    await self.on_submit(interaction)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2169, in on_submit
+    embed = self.create_progress_embed(4)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DescriptionModal' object has no attribute 'create_progress_embed'
+2024-10-24 00:32:27,053 - INFO - rpGenerator.py:1962:pronouns_callback - User 266384402450350082 selected pronouns: They/Them
+2024-10-24 00:32:46,448 - ERROR - modal.py:167:on_error - Ignoring exception in modal <DescriptionModal timeout=None children=1>:
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\ui\modal.py", line 189, in _scheduled_task
+    await self.on_submit(interaction)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2169, in on_submit
+    embed = self.create_progress_embed(4)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DescriptionModal' object has no attribute 'create_progress_embed'
+2024-10-24 00:35:45,814 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:40:45 EDT)" (scheduled at 2024-10-24 00:35:45.804688-04:00)
+2024-10-24 00:35:45,815 - ERROR - rpGenerator.py:3372:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 00:35:45,816 - ERROR - rpGenerator.py:3390:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 00:35:45,817 - ERROR - rpGenerator.py:3428:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 00:35:45,817 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:40:45 EDT)" executed successfully
+2024-10-24 00:40:11,558 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 00:40:11,563 - INFO - rpGenerator.py:266:load_game_data - Starting to load game data...
+2024-10-24 00:40:11,564 - INFO - rpGenerator.py:132:load_items - Loading items from items.json
+2024-10-24 00:40:11,565 - INFO - rpGenerator.py:154:load_items - Successfully loaded 17 items
+2024-10-24 00:40:11,566 - INFO - rpGenerator.py:273:load_game_data - Loaded 17 items
+2024-10-24 00:40:11,567 - INFO - rpGenerator.py:221:load_areas - Successfully loaded 19 areas
+2024-10-24 00:40:11,567 - INFO - rpGenerator.py:280:load_game_data - Loaded 19 areas
+2024-10-24 00:40:11,568 - INFO - rpGenerator.py:175:load_npcs - Loading NPCs from npcs.json
+2024-10-24 00:40:11,570 - INFO - rpGenerator.py:189:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 00:40:11,570 - INFO - rpGenerator.py:287:load_game_data - Loaded 38 NPCs
+2024-10-24 00:40:11,571 - INFO - rpGenerator.py:463:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 00:40:11,572 - INFO - rpGenerator.py:294:load_game_data - Loaded 43 actions
+2024-10-24 00:40:11,572 - INFO - rpGenerator.py:1850:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 00:40:11,572 - ERROR - rpGenerator.py:1384:from_dict - Error creating Character from dict: name 'item_lookup' is not defined
+2024-10-24 00:40:11,573 - ERROR - rpGenerator.py:256:load_characters - Unexpected error loading characters from 'characters.json': name 'item_lookup' is not defined
+2024-10-24 00:40:11,574 - INFO - rpGenerator.py:357:initialize_game_data - Initialized with:
+2024-10-24 00:40:11,574 - INFO - rpGenerator.py:358:initialize_game_data - - 17 items
+2024-10-24 00:40:11,574 - INFO - rpGenerator.py:359:initialize_game_data - - 19 areas
+2024-10-24 00:40:11,575 - INFO - rpGenerator.py:360:initialize_game_data - - 38 NPCs
+2024-10-24 00:40:11,575 - INFO - rpGenerator.py:361:initialize_game_data - - 43 actions
+2024-10-24 00:40:11,576 - INFO - rpGenerator.py:362:initialize_game_data - - 0 characters
+2024-10-24 00:40:11,578 - INFO - client.py:611:login - logging in using static token
+2024-10-24 00:40:12,313 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 0e8388093bdaee2a053518228379112e).
+2024-10-24 00:40:14,334 - INFO - rpGenerator.py:3483:on_ready - Logged in as RPGenerator
+2024-10-24 00:40:14,335 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 00:40:14,338 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 00:40:14,338 - INFO - base.py:181:start - Scheduler started
+2024-10-24 00:40:14,465 - INFO - rpGenerator.py:3475:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 00:40:41,149 - INFO - rpGenerator.py:2853:create_character - User 266384402450350082 initiated character creation.
+2024-10-24 00:40:59,126 - INFO - rpGenerator.py:2152:on_submit - User 266384402450350082 entered name: Ralynn Fargoer
+2024-10-24 00:41:03,596 - INFO - rpGenerator.py:2169:gender_callback - User 266384402450350082 selected gender: Female
+2024-10-24 00:41:05,501 - INFO - rpGenerator.py:1988:pronouns_callback - User 266384402450350082 selected pronouns: She/Her
+2024-10-24 00:41:18,625 - INFO - rpGenerator.py:2213:on_submit - User 266384402450350082 provided description with 1 words.
+2024-10-24 00:41:21,749 - INFO - rpGenerator.py:2004:species_callback - User 266384402450350082 selected species: Human
+2024-10-24 00:41:24,831 - INFO - rpGenerator.py:2023:class_callback - User 266384402450350082 selected class: Warrior
+2024-10-24 00:41:24,831 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Strength with current_score=None.
+2024-10-24 00:41:24,832 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-24 00:41:24,832 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Constitution with current_score=None.
+2024-10-24 00:41:24,833 - INFO - rpGenerator.py:2317:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 00:41:29,428 - INFO - rpGenerator.py:2384:callback - User 266384402450350082 set Strength to 12. Cost: 2. Total points spent: 2.
+2024-10-24 00:41:29,429 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Strength with current_score=12.
+2024-10-24 00:41:29,430 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-24 00:41:29,430 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Constitution with current_score=None.
+2024-10-24 00:41:29,431 - INFO - rpGenerator.py:2317:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 00:41:33,393 - INFO - rpGenerator.py:2384:callback - User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 9.
+2024-10-24 00:41:33,394 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Strength with current_score=12.
+2024-10-24 00:41:33,395 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-24 00:41:33,395 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Constitution with current_score=None.
+2024-10-24 00:41:33,396 - INFO - rpGenerator.py:2317:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 00:41:36,698 - INFO - rpGenerator.py:2384:callback - User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 16.
+2024-10-24 00:41:36,699 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Strength with current_score=12.
+2024-10-24 00:41:36,700 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-24 00:41:36,700 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Constitution with current_score=15.
+2024-10-24 00:41:36,701 - INFO - rpGenerator.py:2317:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 00:41:38,097 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Intelligence with current_score=None.
+2024-10-24 00:41:38,097 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-24 00:41:38,098 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 00:41:38,098 - INFO - rpGenerator.py:2332:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 00:41:38,228 - INFO - rpGenerator.py:2457:callback - User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-24 00:41:42,183 - INFO - rpGenerator.py:2384:callback - User 266384402450350082 set Intelligence to 12. Cost: 2. Total points spent: 18.
+2024-10-24 00:41:42,183 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 00:41:42,184 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-24 00:41:42,184 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 00:41:42,185 - INFO - rpGenerator.py:2332:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 00:41:44,279 - INFO - rpGenerator.py:2384:callback - User 266384402450350082 set Wisdom to 12. Cost: 2. Total points spent: 20.
+2024-10-24 00:41:44,280 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 00:41:44,281 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-24 00:41:44,282 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 00:41:44,282 - INFO - rpGenerator.py:2332:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 00:41:47,419 - INFO - rpGenerator.py:2384:callback - User 266384402450350082 set Charisma to 15. Cost: 7. Total points spent: 27.
+2024-10-24 00:41:47,420 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 00:41:47,420 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-24 00:41:47,421 - INFO - rpGenerator.py:2363:__init__ - AbilitySelect initialized for Charisma with current_score=15.
+2024-10-24 00:41:47,421 - INFO - rpGenerator.py:2332:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 00:41:48,791 - INFO - rpGenerator.py:2562:__init__ - FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-24 00:41:48,937 - INFO - rpGenerator.py:2542:callback - User 266384402450350082 prepared to finalize character creation.
+2024-10-24 00:41:51,530 - INFO - rpGenerator.py:1595:save_characters - Successfully saved 1 characters to characters.json
+2024-10-24 00:41:51,530 - INFO - rpGenerator.py:2595:callback - Character 'Ralynn Fargoer' created successfully for user 266384402450350082.
+2024-10-24 00:42:36,829 - ERROR - tree.py:832:on_error - Ignoring exception in command 'scene'
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 858, in _do_call
+    return await self._callback(interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3346, in scene
+    item_names = ', '.join(item.name for item in area.inventory)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3346, in <genexpr>
+    item_names = ', '.join(item.name for item in area.inventory)
+                           ^^^^^^^^^
+AttributeError: 'list' object has no attribute 'name'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\app_commands\commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'scene' raised an exception: AttributeError: 'list' object has no attribute 'name'
+2024-10-24 00:45:14,347 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:50:14 EDT)" (scheduled at 2024-10-24 00:45:14.335787-04:00)
+2024-10-24 00:45:14,348 - ERROR - rpGenerator.py:3404:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 00:45:14,348 - ERROR - rpGenerator.py:3422:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 00:45:14,349 - ERROR - rpGenerator.py:3460:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 00:45:14,350 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:50:14 EDT)" executed successfully
+2024-10-24 00:50:14,357 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:55:14 EDT)" (scheduled at 2024-10-24 00:50:14.335787-04:00)
+2024-10-24 00:50:14,358 - ERROR - rpGenerator.py:3404:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 00:50:14,358 - ERROR - rpGenerator.py:3422:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 00:50:14,359 - ERROR - rpGenerator.py:3460:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 00:50:14,360 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 00:55:14 EDT)" executed successfully
+2024-10-24 00:53:48,552 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 00:53:48,557 - INFO - rpGenerator.py:266:load_game_data - Starting to load game data...
+2024-10-24 00:53:48,557 - INFO - rpGenerator.py:132:load_items - Loading items from items.json
+2024-10-24 00:53:48,558 - INFO - rpGenerator.py:154:load_items - Successfully loaded 17 items
+2024-10-24 00:53:48,559 - INFO - rpGenerator.py:273:load_game_data - Loaded 17 items
+2024-10-24 00:53:48,560 - INFO - rpGenerator.py:221:load_areas - Successfully loaded 19 areas
+2024-10-24 00:53:48,560 - INFO - rpGenerator.py:280:load_game_data - Loaded 19 areas
+2024-10-24 00:53:48,561 - INFO - rpGenerator.py:175:load_npcs - Loading NPCs from npcs.json
+2024-10-24 00:53:48,563 - INFO - rpGenerator.py:189:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 00:53:48,564 - INFO - rpGenerator.py:287:load_game_data - Loaded 38 NPCs
+2024-10-24 00:53:48,564 - INFO - rpGenerator.py:463:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 00:53:48,565 - INFO - rpGenerator.py:294:load_game_data - Loaded 43 actions
+2024-10-24 00:53:48,565 - INFO - rpGenerator.py:1850:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 00:53:48,566 - ERROR - rpGenerator.py:1384:from_dict - Error creating Character from dict: name 'item_lookup' is not defined
+2024-10-24 00:53:48,566 - ERROR - rpGenerator.py:256:load_characters - Unexpected error loading characters from 'characters.json': name 'item_lookup' is not defined
+2024-10-24 00:53:48,567 - INFO - rpGenerator.py:357:initialize_game_data - Initialized with:
+2024-10-24 00:53:48,567 - INFO - rpGenerator.py:358:initialize_game_data - - 17 items
+2024-10-24 00:53:48,567 - INFO - rpGenerator.py:359:initialize_game_data - - 19 areas
+2024-10-24 00:53:48,567 - INFO - rpGenerator.py:360:initialize_game_data - - 38 NPCs
+2024-10-24 00:53:48,568 - INFO - rpGenerator.py:361:initialize_game_data - - 43 actions
+2024-10-24 00:53:48,568 - INFO - rpGenerator.py:362:initialize_game_data - - 0 characters
+2024-10-24 00:53:48,570 - INFO - client.py:611:login - logging in using static token
+2024-10-24 00:53:49,193 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 43da527ff49eda270575e822348f45bb).
+2024-10-24 00:53:51,205 - INFO - rpGenerator.py:3689:on_ready - Logged in as RPGenerator
+2024-10-24 00:53:51,207 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 00:53:51,210 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 00:53:51,211 - INFO - base.py:181:start - Scheduler started
+2024-10-24 00:53:51,338 - INFO - rpGenerator.py:3681:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 00:58:51,220 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:03:51 EDT)" (scheduled at 2024-10-24 00:58:51.207186-04:00)
+2024-10-24 00:58:51,222 - ERROR - rpGenerator.py:3610:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 00:58:51,223 - ERROR - rpGenerator.py:3628:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 00:58:51,223 - ERROR - rpGenerator.py:3666:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 00:58:51,224 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:03:51 EDT)" executed successfully
+2024-10-24 01:03:51,215 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:08:51 EDT)" (scheduled at 2024-10-24 01:03:51.207186-04:00)
+2024-10-24 01:03:51,216 - ERROR - rpGenerator.py:3610:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:03:51,217 - ERROR - rpGenerator.py:3628:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:03:51,217 - ERROR - rpGenerator.py:3666:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:03:51,218 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:08:51 EDT)" executed successfully
+2024-10-24 01:08:51,217 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:13:51 EDT)" (scheduled at 2024-10-24 01:08:51.207186-04:00)
+2024-10-24 01:08:51,218 - ERROR - rpGenerator.py:3610:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:08:51,219 - ERROR - rpGenerator.py:3628:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:08:51,220 - ERROR - rpGenerator.py:3666:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:08:51,220 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:13:51 EDT)" executed successfully
+2024-10-24 01:13:51,216 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:18:51 EDT)" (scheduled at 2024-10-24 01:13:51.207186-04:00)
+2024-10-24 01:13:51,217 - ERROR - rpGenerator.py:3610:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:13:51,218 - ERROR - rpGenerator.py:3628:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 01:13:51,219 - ERROR - rpGenerator.py:3666:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:13:51,219 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:18:51 EDT)" executed successfully
+2024-10-24 01:18:51,221 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:23:51 EDT)" (scheduled at 2024-10-24 01:18:51.207186-04:00)
+2024-10-24 01:18:51,222 - ERROR - rpGenerator.py:3610:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:18:51,223 - ERROR - rpGenerator.py:3628:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:18:51,224 - ERROR - rpGenerator.py:3666:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:18:51,224 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:23:51 EDT)" executed successfully
+2024-10-24 01:23:51,227 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:28:51 EDT)" (scheduled at 2024-10-24 01:23:51.207186-04:00)
+2024-10-24 01:23:51,228 - ERROR - rpGenerator.py:3610:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:23:51,229 - ERROR - rpGenerator.py:3628:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 01:23:51,229 - ERROR - rpGenerator.py:3666:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:23:51,230 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:28:51 EDT)" executed successfully
+2024-10-24 01:28:51,222 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:33:51 EDT)" (scheduled at 2024-10-24 01:28:51.207186-04:00)
+2024-10-24 01:28:51,223 - ERROR - rpGenerator.py:3610:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:28:51,224 - ERROR - rpGenerator.py:3628:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:28:51,225 - ERROR - rpGenerator.py:3666:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:28:51,225 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:33:51 EDT)" executed successfully
+2024-10-24 01:33:30,352 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 01:34:17,146 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 01:35:06,246 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 01:35:06,251 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 01:35:06,252 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 01:35:06,253 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 01:35:06,253 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 01:35:06,254 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 01:35:06,254 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 01:35:06,255 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 01:35:06,257 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 01:35:06,257 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 01:35:06,258 - INFO - rpGenerator.py:526:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 01:35:06,258 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 01:35:06,259 - INFO - rpGenerator.py:1913:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 01:35:06,259 - ERROR - rpGenerator.py:1447:from_dict - Error creating Character from dict: name 'item_lookup' is not defined
+2024-10-24 01:35:06,260 - ERROR - rpGenerator.py:261:load_characters - Unexpected error loading characters from 'characters.json': name 'item_lookup' is not defined
+2024-10-24 01:35:06,260 - INFO - rpGenerator.py:420:initialize_game_data - Initialized with:
+2024-10-24 01:35:06,260 - INFO - rpGenerator.py:421:initialize_game_data - - 17 items
+2024-10-24 01:35:06,261 - INFO - rpGenerator.py:422:initialize_game_data - - 19 areas
+2024-10-24 01:35:06,261 - INFO - rpGenerator.py:423:initialize_game_data - - 38 NPCs
+2024-10-24 01:35:06,261 - INFO - rpGenerator.py:424:initialize_game_data - - 43 actions
+2024-10-24 01:35:06,261 - INFO - rpGenerator.py:425:initialize_game_data - - 0 characters
+2024-10-24 01:35:06,263 - INFO - client.py:611:login - logging in using static token
+2024-10-24 01:35:06,908 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: aee295e6d841ed940058fdc2788de6c8).
+2024-10-24 01:35:08,941 - INFO - rpGenerator.py:3779:on_ready - Logged in as RPGenerator
+2024-10-24 01:35:08,943 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 01:35:08,945 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 01:35:08,946 - INFO - base.py:181:start - Scheduler started
+2024-10-24 01:35:09,070 - INFO - rpGenerator.py:3771:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 01:35:52,841 - INFO - rpGenerator.py:347:load_or_get_character - Reloading character cache from file
+2024-10-24 01:35:52,843 - ERROR - rpGenerator.py:1447:from_dict - Error creating Character from dict: name 'item_lookup' is not defined
+2024-10-24 01:35:52,843 - ERROR - rpGenerator.py:383:load_or_get_character - Error loading character for user 266384402450350082: name 'item_lookup' is not defined
+2024-10-24 01:36:07,742 - INFO - rpGenerator.py:347:load_or_get_character - Reloading character cache from file
+2024-10-24 01:36:07,744 - ERROR - rpGenerator.py:1447:from_dict - Error creating Character from dict: name 'item_lookup' is not defined
+2024-10-24 01:36:07,745 - ERROR - rpGenerator.py:383:load_or_get_character - Error loading character for user 266384402450350082: name 'item_lookup' is not defined
+2024-10-24 01:40:08,959 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:45:08 EDT)" (scheduled at 2024-10-24 01:40:08.943107-04:00)
+2024-10-24 01:40:08,960 - ERROR - rpGenerator.py:3700:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:40:08,961 - ERROR - rpGenerator.py:3718:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:40:08,962 - ERROR - rpGenerator.py:3756:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:40:08,962 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:45:08 EDT)" executed successfully
+2024-10-24 01:45:08,952 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:50:08 EDT)" (scheduled at 2024-10-24 01:45:08.943107-04:00)
+2024-10-24 01:45:08,953 - ERROR - rpGenerator.py:3700:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:45:08,954 - ERROR - rpGenerator.py:3718:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:45:08,955 - ERROR - rpGenerator.py:3756:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:45:08,955 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:50:08 EDT)" executed successfully
+2024-10-24 01:50:08,957 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:55:08 EDT)" (scheduled at 2024-10-24 01:50:08.943107-04:00)
+2024-10-24 01:50:08,958 - ERROR - rpGenerator.py:3700:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:50:08,959 - ERROR - rpGenerator.py:3718:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:50:08,959 - ERROR - rpGenerator.py:3756:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:50:08,960 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 01:55:08 EDT)" executed successfully
+2024-10-24 01:55:08,947 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:00:08 EDT)" (scheduled at 2024-10-24 01:55:08.943107-04:00)
+2024-10-24 01:55:08,948 - ERROR - rpGenerator.py:3700:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 01:55:08,949 - ERROR - rpGenerator.py:3718:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 01:55:08,950 - ERROR - rpGenerator.py:3756:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 01:55:08,950 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:00:08 EDT)" executed successfully
+2024-10-24 01:56:26,971 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 01:57:12,456 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 01:57:12,462 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 01:57:12,462 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 01:57:12,463 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 01:57:12,463 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 01:57:12,464 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 01:57:12,465 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 01:57:12,465 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 01:57:12,469 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 01:57:12,470 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 01:57:12,471 - INFO - rpGenerator.py:527:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 01:57:12,471 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 01:57:12,472 - INFO - rpGenerator.py:1928:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 01:57:12,473 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 01:57:12,473 - INFO - rpGenerator.py:421:initialize_game_data - Initialized with:
+2024-10-24 01:57:12,473 - INFO - rpGenerator.py:422:initialize_game_data - - 17 items
+2024-10-24 01:57:12,474 - INFO - rpGenerator.py:423:initialize_game_data - - 19 areas
+2024-10-24 01:57:12,474 - INFO - rpGenerator.py:424:initialize_game_data - - 38 NPCs
+2024-10-24 01:57:12,475 - INFO - rpGenerator.py:425:initialize_game_data - - 43 actions
+2024-10-24 01:57:12,475 - INFO - rpGenerator.py:426:initialize_game_data - - 1 characters
+2024-10-24 01:57:12,477 - INFO - client.py:611:login - logging in using static token
+2024-10-24 01:57:13,095 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 2d86f8440b6d1fd6b3feb71f7b88f0dd).
+2024-10-24 01:57:15,119 - INFO - rpGenerator.py:3794:on_ready - Logged in as RPGenerator
+2024-10-24 01:57:15,121 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 01:57:15,124 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 01:57:15,124 - INFO - base.py:181:start - Scheduler started
+2024-10-24 01:57:15,270 - INFO - rpGenerator.py:3786:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 01:57:30,548 - INFO - rpGenerator.py:2931:create_character - User 266384402450350082 initiated character creation.
+2024-10-24 01:57:35,973 - INFO - rpGenerator.py:347:load_or_get_character - Reloading character cache from file
+2024-10-24 01:57:35,974 - INFO - rpGenerator.py:363:load_or_get_character - Successfully loaded 1 characters
+2024-10-24 01:57:35,974 - INFO - rpGenerator.py:379:load_or_get_character - No character found for user 266384402450350082
+2024-10-24 01:58:08,058 - ERROR - rpGenerator.py:383:load_or_get_character - Error loading character for user 266384402450350082: '>' not supported between instances of 'datetime.timedelta' and 'int'
+2024-10-24 02:02:15,133 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:07:15 EDT)" (scheduled at 2024-10-24 02:02:15.121109-04:00)
+2024-10-24 02:02:15,134 - ERROR - rpGenerator.py:3715:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:02:15,135 - ERROR - rpGenerator.py:3733:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 02:02:15,136 - ERROR - rpGenerator.py:3771:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:02:15,136 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:07:15 EDT)" executed successfully
+2024-10-24 02:07:25,847 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 02:07:57,059 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 02:07:57,068 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 02:07:57,068 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 02:07:57,069 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 02:07:57,070 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 02:07:57,071 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 02:07:57,071 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 02:07:57,071 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 02:07:57,074 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 02:07:57,074 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 02:07:57,075 - INFO - rpGenerator.py:527:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 02:07:57,075 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 02:07:57,076 - INFO - rpGenerator.py:1933:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 02:07:57,077 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 02:07:57,077 - INFO - rpGenerator.py:421:initialize_game_data - Initialized with:
+2024-10-24 02:07:57,078 - INFO - rpGenerator.py:422:initialize_game_data - - 17 items
+2024-10-24 02:07:57,078 - INFO - rpGenerator.py:423:initialize_game_data - - 19 areas
+2024-10-24 02:07:57,078 - INFO - rpGenerator.py:424:initialize_game_data - - 38 NPCs
+2024-10-24 02:07:57,079 - INFO - rpGenerator.py:425:initialize_game_data - - 43 actions
+2024-10-24 02:07:57,079 - INFO - rpGenerator.py:426:initialize_game_data - - 1 characters
+2024-10-24 02:07:57,081 - INFO - client.py:611:login - logging in using static token
+2024-10-24 02:07:57,623 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: b68a18d669eb67fb3409415daa35f1c0).
+2024-10-24 02:07:59,631 - INFO - rpGenerator.py:3799:on_ready - Logged in as RPGenerator
+2024-10-24 02:07:59,633 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 02:07:59,635 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 02:07:59,635 - INFO - base.py:181:start - Scheduler started
+2024-10-24 02:07:59,747 - INFO - rpGenerator.py:3791:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 02:08:14,059 - INFO - rpGenerator.py:347:load_or_get_character - Reloading character cache from file
+2024-10-24 02:08:14,060 - INFO - rpGenerator.py:363:load_or_get_character - Successfully loaded 1 characters
+2024-10-24 02:08:14,060 - INFO - rpGenerator.py:379:load_or_get_character - No character found for user 266384402450350082
+2024-10-24 02:08:18,295 - ERROR - rpGenerator.py:383:load_or_get_character - Error loading character for user 266384402450350082: '>=' not supported between instances of 'datetime.timedelta' and 'int'
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 345, in load_or_get_character
+    (current_time - last_cache_update) >= CACHE_DURATION):  # Compare timestamps
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'datetime.timedelta' and 'int'
+2024-10-24 02:09:41,182 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 02:09:41,187 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 02:09:41,188 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 02:09:41,189 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 02:09:41,189 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 02:09:41,190 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 02:09:41,191 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 02:09:41,192 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 02:09:41,196 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 02:09:41,197 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 02:09:41,198 - INFO - rpGenerator.py:527:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 02:09:41,199 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 02:09:41,199 - INFO - rpGenerator.py:1933:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 02:09:41,200 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 02:09:41,201 - INFO - rpGenerator.py:421:initialize_game_data - Initialized with:
+2024-10-24 02:09:41,201 - INFO - rpGenerator.py:422:initialize_game_data - - 17 items
+2024-10-24 02:09:41,202 - INFO - rpGenerator.py:423:initialize_game_data - - 19 areas
+2024-10-24 02:09:41,202 - INFO - rpGenerator.py:424:initialize_game_data - - 38 NPCs
+2024-10-24 02:09:41,202 - INFO - rpGenerator.py:425:initialize_game_data - - 43 actions
+2024-10-24 02:09:41,203 - INFO - rpGenerator.py:426:initialize_game_data - - 1 characters
+2024-10-24 02:09:41,205 - INFO - client.py:611:login - logging in using static token
+2024-10-24 02:09:41,763 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: bcc688e793dbd53e62f8a01a2415d572).
+2024-10-24 02:09:43,780 - INFO - rpGenerator.py:3799:on_ready - Logged in as RPGenerator
+2024-10-24 02:09:43,782 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 02:09:43,785 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 02:09:43,785 - INFO - base.py:181:start - Scheduler started
+2024-10-24 02:09:43,893 - INFO - rpGenerator.py:3791:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 02:09:52,135 - INFO - rpGenerator.py:347:load_or_get_character - Reloading character cache from file
+2024-10-24 02:09:52,137 - INFO - rpGenerator.py:363:load_or_get_character - Successfully loaded 1 characters
+2024-10-24 02:09:52,137 - INFO - rpGenerator.py:379:load_or_get_character - No character found for user 266384402450350082
+2024-10-24 02:14:43,787 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:19:43 EDT)" (scheduled at 2024-10-24 02:14:43.782422-04:00)
+2024-10-24 02:14:43,788 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:14:43,789 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 02:14:43,790 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:14:43,790 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:19:43 EDT)" executed successfully
+2024-10-24 02:19:43,793 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:24:43 EDT)" (scheduled at 2024-10-24 02:19:43.782422-04:00)
+2024-10-24 02:19:43,794 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:19:43,794 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 02:19:43,794 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:19:43,794 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:24:43 EDT)" executed successfully
+2024-10-24 02:24:43,786 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:29:43 EDT)" (scheduled at 2024-10-24 02:24:43.782422-04:00)
+2024-10-24 02:24:43,787 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:24:43,787 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 02:24:43,788 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:24:43,788 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:29:43 EDT)" executed successfully
+2024-10-24 02:29:43,800 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:34:43 EDT)" (scheduled at 2024-10-24 02:29:43.782422-04:00)
+2024-10-24 02:29:43,801 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:29:43,801 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 02:29:43,802 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:29:43,802 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:34:43 EDT)" executed successfully
+2024-10-24 02:34:43,793 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:39:43 EDT)" (scheduled at 2024-10-24 02:34:43.782422-04:00)
+2024-10-24 02:34:43,794 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:34:43,794 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 02:34:43,794 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:34:43,795 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:39:43 EDT)" executed successfully
+2024-10-24 02:39:43,783 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:44:43 EDT)" (scheduled at 2024-10-24 02:39:43.782422-04:00)
+2024-10-24 02:39:43,783 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:39:43,784 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:39:43,784 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:44:43 EDT)" executed successfully
+2024-10-24 02:44:43,787 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:49:43 EDT)" (scheduled at 2024-10-24 02:44:43.782422-04:00)
+2024-10-24 02:44:43,788 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:44:43,788 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:44:43,788 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:49:43 EDT)" executed successfully
+2024-10-24 02:49:43,796 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:54:43 EDT)" (scheduled at 2024-10-24 02:49:43.782422-04:00)
+2024-10-24 02:49:43,797 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:49:43,797 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 02:49:43,798 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:49:43,798 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:54:43 EDT)" executed successfully
+2024-10-24 02:54:43,790 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:59:43 EDT)" (scheduled at 2024-10-24 02:54:43.782422-04:00)
+2024-10-24 02:54:43,791 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:54:43,791 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 02:54:43,792 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:54:43,792 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 02:59:43 EDT)" executed successfully
+2024-10-24 02:59:43,789 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:04:43 EDT)" (scheduled at 2024-10-24 02:59:43.782422-04:00)
+2024-10-24 02:59:43,789 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 02:59:43,789 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 02:59:43,790 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 02:59:43,790 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:04:43 EDT)" executed successfully
+2024-10-24 03:04:43,805 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:09:43 EDT)" (scheduled at 2024-10-24 03:04:43.782422-04:00)
+2024-10-24 03:04:43,806 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:04:43,806 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 03:04:43,806 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:04:43,806 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:09:43 EDT)" executed successfully
+2024-10-24 03:09:43,791 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:14:43 EDT)" (scheduled at 2024-10-24 03:09:43.782422-04:00)
+2024-10-24 03:09:43,792 - ERROR - rpGenerator.py:3720:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:09:43,793 - ERROR - rpGenerator.py:3738:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 03:09:43,793 - ERROR - rpGenerator.py:3776:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:09:43,794 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:14:43 EDT)" executed successfully
+2024-10-24 03:12:13,526 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:12:40,511 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:12:40,517 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 03:12:40,517 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 03:12:40,519 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 03:12:40,519 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 03:12:40,520 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 03:12:40,520 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 03:12:40,521 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 03:12:40,523 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 03:12:40,525 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 03:12:40,526 - INFO - rpGenerator.py:557:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 03:12:40,527 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 03:12:40,528 - INFO - rpGenerator.py:1963:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 03:12:40,528 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 03:12:40,529 - INFO - rpGenerator.py:451:initialize_game_data - Initialized with:
+2024-10-24 03:12:40,529 - INFO - rpGenerator.py:452:initialize_game_data - - 17 items
+2024-10-24 03:12:40,529 - INFO - rpGenerator.py:453:initialize_game_data - - 19 areas
+2024-10-24 03:12:40,530 - INFO - rpGenerator.py:454:initialize_game_data - - 38 NPCs
+2024-10-24 03:12:40,530 - INFO - rpGenerator.py:455:initialize_game_data - - 43 actions
+2024-10-24 03:12:40,530 - INFO - rpGenerator.py:456:initialize_game_data - - 1 characters
+2024-10-24 03:12:40,532 - INFO - client.py:611:login - logging in using static token
+2024-10-24 03:12:41,294 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: d67afab71c7dbe5b682699fb2ba12599).
+2024-10-24 03:12:43,311 - INFO - rpGenerator.py:3829:on_ready - Logged in as RPGenerator
+2024-10-24 03:12:43,312 - INFO - rpGenerator.py:427:verify_character_data - Character file contents:
+2024-10-24 03:12:43,312 - INFO - rpGenerator.py:428:verify_character_data - Number of characters: 1
+2024-10-24 03:12:43,313 - INFO - rpGenerator.py:430:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 03:12:43,313 - INFO - rpGenerator.py:431:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 03:12:43,315 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 03:12:43,318 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 03:12:43,318 - INFO - base.py:181:start - Scheduler started
+2024-10-24 03:12:43,429 - INFO - rpGenerator.py:3821:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 03:13:03,758 - INFO - rpGenerator.py:347:load_or_get_character - Reloading character cache from file
+2024-10-24 03:13:03,759 - INFO - rpGenerator.py:369:load_or_get_character - Successfully loaded 1 characters. Available IDs: ['266384402450350082']
+2024-10-24 03:13:03,760 - INFO - rpGenerator.py:391:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 03:17:43,322 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:22:43 EDT)" (scheduled at 2024-10-24 03:17:43.315268-04:00)
+2024-10-24 03:17:43,323 - ERROR - rpGenerator.py:3750:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:17:43,323 - ERROR - rpGenerator.py:3768:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 03:17:43,324 - ERROR - rpGenerator.py:3806:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:17:43,324 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:22:43 EDT)" executed successfully
+2024-10-24 03:22:43,327 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:27:43 EDT)" (scheduled at 2024-10-24 03:22:43.315268-04:00)
+2024-10-24 03:22:43,328 - ERROR - rpGenerator.py:3750:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:22:43,329 - ERROR - rpGenerator.py:3768:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 03:22:43,330 - ERROR - rpGenerator.py:3806:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:22:43,330 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:27:43 EDT)" executed successfully
+2024-10-24 03:27:43,324 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:32:43 EDT)" (scheduled at 2024-10-24 03:27:43.315268-04:00)
+2024-10-24 03:27:43,325 - ERROR - rpGenerator.py:3750:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:27:43,325 - ERROR - rpGenerator.py:3768:update_area_inventories - Error updating area inventories: 'tuple' object has no attribute 'remove'
+2024-10-24 03:27:43,326 - ERROR - rpGenerator.py:3806:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:27:43,326 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:32:43 EDT)" executed successfully
+2024-10-24 03:29:17,019 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:29:47,370 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:29:47,374 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 03:29:47,375 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 03:29:47,375 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 03:29:47,376 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 03:29:47,376 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 03:29:47,377 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 03:29:47,377 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 03:29:47,379 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 03:29:47,379 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 03:29:47,380 - INFO - rpGenerator.py:577:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 03:29:47,380 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 03:29:47,380 - INFO - rpGenerator.py:1983:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 03:29:47,381 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 03:29:47,381 - INFO - rpGenerator.py:471:initialize_game_data - Initialized with:
+2024-10-24 03:29:47,381 - INFO - rpGenerator.py:472:initialize_game_data - - 17 items
+2024-10-24 03:29:47,382 - INFO - rpGenerator.py:473:initialize_game_data - - 19 areas
+2024-10-24 03:29:47,382 - INFO - rpGenerator.py:474:initialize_game_data - - 38 NPCs
+2024-10-24 03:29:47,382 - INFO - rpGenerator.py:475:initialize_game_data - - 43 actions
+2024-10-24 03:29:47,382 - INFO - rpGenerator.py:476:initialize_game_data - - 1 characters
+2024-10-24 03:29:47,384 - INFO - client.py:611:login - logging in using static token
+2024-10-24 03:29:47,863 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 94196ebea5f8e70b1e1e6c8f4117286a).
+2024-10-24 03:29:49,868 - INFO - rpGenerator.py:3851:on_ready - Logged in as RPGenerator
+2024-10-24 03:29:49,868 - INFO - rpGenerator.py:447:verify_character_data - Character file contents:
+2024-10-24 03:29:49,869 - INFO - rpGenerator.py:448:verify_character_data - Number of characters: 1
+2024-10-24 03:29:49,869 - INFO - rpGenerator.py:450:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 03:29:49,869 - INFO - rpGenerator.py:451:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 03:29:49,872 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 03:29:49,874 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 03:29:49,875 - INFO - base.py:181:start - Scheduler started
+2024-10-24 03:29:49,973 - INFO - rpGenerator.py:3843:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 03:30:03,460 - INFO - rpGenerator.py:417:debug_cache_state - === Cache Debug Information ===
+2024-10-24 03:30:03,460 - INFO - rpGenerator.py:418:debug_cache_state - Cache exists: True
+2024-10-24 03:30:03,460 - INFO - rpGenerator.py:420:debug_cache_state - Cache size: 0
+2024-10-24 03:30:03,461 - INFO - rpGenerator.py:421:debug_cache_state - Cache keys: []
+2024-10-24 03:30:03,461 - INFO - rpGenerator.py:424:debug_cache_state - ===========================
+2024-10-24 03:30:03,461 - INFO - rpGenerator.py:336:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:30:03,462 - ERROR - rpGenerator.py:3696:stats - Error displaying character sheet: name 'time' is not defined
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 3594, in stats
+    character = load_or_get_character(user_id)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 338, in load_or_get_character
+    current_time = time.time()
+                   ^^^^
+NameError: name 'time' is not defined. Did you forget to import 'time'
+2024-10-24 03:30:53,613 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:30:53,617 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 03:30:53,618 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 03:30:53,618 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 03:30:53,619 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 03:30:53,620 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 03:30:53,620 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 03:30:53,620 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 03:30:53,622 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 03:30:53,623 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 03:30:53,623 - INFO - rpGenerator.py:577:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 03:30:53,624 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 03:30:53,624 - INFO - rpGenerator.py:1983:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 03:30:53,625 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 03:30:53,625 - INFO - rpGenerator.py:471:initialize_game_data - Initialized with:
+2024-10-24 03:30:53,625 - INFO - rpGenerator.py:472:initialize_game_data - - 17 items
+2024-10-24 03:30:53,625 - INFO - rpGenerator.py:473:initialize_game_data - - 19 areas
+2024-10-24 03:30:53,626 - INFO - rpGenerator.py:474:initialize_game_data - - 38 NPCs
+2024-10-24 03:30:53,626 - INFO - rpGenerator.py:475:initialize_game_data - - 43 actions
+2024-10-24 03:30:53,626 - INFO - rpGenerator.py:476:initialize_game_data - - 1 characters
+2024-10-24 03:30:53,628 - INFO - client.py:611:login - logging in using static token
+2024-10-24 03:30:54,208 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: edbe72218742f8d7f0fca281a5814984).
+2024-10-24 03:30:56,225 - INFO - rpGenerator.py:3851:on_ready - Logged in as RPGenerator
+2024-10-24 03:30:56,225 - INFO - rpGenerator.py:447:verify_character_data - Character file contents:
+2024-10-24 03:30:56,226 - INFO - rpGenerator.py:448:verify_character_data - Number of characters: 1
+2024-10-24 03:30:56,226 - INFO - rpGenerator.py:450:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 03:30:56,226 - INFO - rpGenerator.py:451:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 03:30:56,227 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 03:30:56,229 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 03:30:56,229 - INFO - base.py:181:start - Scheduler started
+2024-10-24 03:30:56,404 - INFO - rpGenerator.py:3843:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 03:31:27,868 - INFO - rpGenerator.py:417:debug_cache_state - === Cache Debug Information ===
+2024-10-24 03:31:27,869 - INFO - rpGenerator.py:418:debug_cache_state - Cache exists: True
+2024-10-24 03:31:27,869 - INFO - rpGenerator.py:420:debug_cache_state - Cache size: 0
+2024-10-24 03:31:27,869 - INFO - rpGenerator.py:421:debug_cache_state - Cache keys: []
+2024-10-24 03:31:27,869 - INFO - rpGenerator.py:424:debug_cache_state - ===========================
+2024-10-24 03:31:27,869 - INFO - rpGenerator.py:336:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:31:27,870 - INFO - rpGenerator.py:346:load_or_get_character - Reloading character cache from file
+2024-10-24 03:31:27,870 - INFO - rpGenerator.py:353:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:31:27,870 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: '266384402450350082' of type <class 'str'>
+2024-10-24 03:31:27,871 - INFO - rpGenerator.py:362:load_or_get_character - Successfully created Character object for 266384402450350082
+2024-10-24 03:31:27,871 - INFO - rpGenerator.py:367:load_or_get_character - Characters dict keys: ['266384402450350082']
+2024-10-24 03:31:27,871 - INFO - rpGenerator.py:374:load_or_get_character - Cache keys after update: ['266384402450350082']
+2024-10-24 03:31:27,872 - INFO - rpGenerator.py:387:load_or_get_character - Checking cache for user_id: '266384402450350082'
+2024-10-24 03:31:27,872 - INFO - rpGenerator.py:388:load_or_get_character - Cache contains keys: ['266384402450350082']
+2024-10-24 03:31:27,872 - INFO - rpGenerator.py:392:load_or_get_character - Comparing cached_id: '266384402450350082' (<class 'str'>) with user_id: '266384402450350082' (<class 'str'>)
+2024-10-24 03:31:27,872 - INFO - rpGenerator.py:393:load_or_get_character - Direct equality test: True
+2024-10-24 03:31:27,873 - INFO - rpGenerator.py:394:load_or_get_character - repr comparison: True
+2024-10-24 03:31:27,873 - INFO - rpGenerator.py:403:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 03:31:27,873 - INFO - rpGenerator.py:417:debug_cache_state - === Cache Debug Information ===
+2024-10-24 03:31:27,873 - INFO - rpGenerator.py:418:debug_cache_state - Cache exists: True
+2024-10-24 03:31:27,874 - INFO - rpGenerator.py:420:debug_cache_state - Cache size: 1
+2024-10-24 03:31:27,874 - INFO - rpGenerator.py:421:debug_cache_state - Cache keys: ['266384402450350082']
+2024-10-24 03:31:27,874 - INFO - rpGenerator.py:423:debug_cache_state - Cache entry: '266384402450350082' -> NoneType
+2024-10-24 03:31:27,874 - INFO - rpGenerator.py:424:debug_cache_state - ===========================
+2024-10-24 03:35:56,232 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:40:56 EDT)" (scheduled at 2024-10-24 03:35:56.227738-04:00)
+2024-10-24 03:35:56,233 - ERROR - rpGenerator.py:3772:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:35:56,233 - ERROR - rpGenerator.py:3790:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 03:35:56,233 - ERROR - rpGenerator.py:3828:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:35:56,233 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:40:56 EDT)" executed successfully
+2024-10-24 03:40:56,234 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:45:56 EDT)" (scheduled at 2024-10-24 03:40:56.227738-04:00)
+2024-10-24 03:40:56,235 - ERROR - rpGenerator.py:3772:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:40:56,236 - ERROR - rpGenerator.py:3828:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:40:56,236 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 03:45:56 EDT)" executed successfully
+2024-10-24 03:44:32,691 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:45:20,390 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:45:20,395 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 03:45:20,395 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 03:45:20,395 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 03:45:20,395 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 03:45:20,396 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 03:45:20,396 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 03:45:20,397 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 03:45:20,398 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 03:45:20,399 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 03:45:20,399 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 03:45:20,399 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 03:45:20,400 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 03:45:20,400 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:45:20,401 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 03:45:20,401 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 03:45:20,401 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 03:45:20,402 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 03:45:20,402 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 03:45:20,402 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 03:45:20,402 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 03:45:20,404 - INFO - client.py:611:login - logging in using static token
+2024-10-24 03:45:21,049 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: ed32f07486dbb45cbb530ba86e0bc451).
+2024-10-24 03:45:23,064 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 03:45:23,064 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 03:45:23,065 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 03:45:23,065 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 03:45:23,065 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 03:45:23,066 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 03:45:23,067 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 03:45:23,067 - INFO - base.py:181:start - Scheduler started
+2024-10-24 03:45:23,165 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 03:45:48,066 - INFO - rpGenerator.py:446:debug_cache_state - === Cache Debug Information ===
+2024-10-24 03:45:48,066 - INFO - rpGenerator.py:447:debug_cache_state - Cache exists: True
+2024-10-24 03:45:48,067 - INFO - rpGenerator.py:449:debug_cache_state - Cache size: 0
+2024-10-24 03:45:48,067 - INFO - rpGenerator.py:450:debug_cache_state - Cache keys: []
+2024-10-24 03:45:48,067 - INFO - rpGenerator.py:453:debug_cache_state - ===========================
+2024-10-24 03:45:48,068 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:45:48,068 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:45:48,068 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:45:48,069 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: '266384402450350082'
+2024-10-24 03:45:48,069 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:45:48,070 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for 266384402450350082
+2024-10-24 03:45:48,070 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 03:45:48,070 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 03:45:48,071 - INFO - rpGenerator.py:446:debug_cache_state - === Cache Debug Information ===
+2024-10-24 03:45:48,071 - INFO - rpGenerator.py:447:debug_cache_state - Cache exists: True
+2024-10-24 03:45:48,071 - INFO - rpGenerator.py:449:debug_cache_state - Cache size: 0
+2024-10-24 03:45:48,071 - INFO - rpGenerator.py:450:debug_cache_state - Cache keys: []
+2024-10-24 03:45:48,072 - INFO - rpGenerator.py:453:debug_cache_state - ===========================
+2024-10-24 03:50:20,650 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:50:20,654 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 03:50:20,655 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 03:50:20,655 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 03:50:20,655 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 03:50:20,656 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 03:50:20,656 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 03:50:20,656 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 03:50:20,658 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 03:50:20,658 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 03:50:20,660 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 03:50:20,660 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 03:50:20,660 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 03:50:20,661 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:50:20,661 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 03:50:20,662 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 03:50:20,662 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 03:50:20,662 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 03:50:20,662 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 03:50:20,663 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 03:50:20,663 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 03:50:20,664 - INFO - client.py:611:login - logging in using static token
+2024-10-24 03:50:21,215 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: bf5d5ed31ad751ed731651c4e898afb4).
+2024-10-24 03:50:23,243 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 03:50:23,243 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 03:50:23,244 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 03:50:23,244 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 03:50:23,244 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 03:50:23,246 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 03:50:23,247 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 03:50:23,247 - INFO - base.py:181:start - Scheduler started
+2024-10-24 03:50:23,384 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 03:50:31,403 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:50:31,403 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:50:31,404 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:50:31,404 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: '[266384402450350082]'
+2024-10-24 03:50:31,404 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:50:31,405 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for [266384402450350082]
+2024-10-24 03:50:31,405 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 03:50:31,405 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 03:50:41,402 - INFO - rpGenerator.py:3032:create_character - User 266384402450350082 initiated character creation.
+2024-10-24 03:50:58,709 - INFO - rpGenerator.py:2331:on_submit - User 266384402450350082 entered name: Ralynn Fargoer
+2024-10-24 03:51:02,491 - INFO - rpGenerator.py:2348:gender_callback - User 266384402450350082 selected gender: Female
+2024-10-24 03:51:07,769 - INFO - rpGenerator.py:2167:pronouns_callback - User 266384402450350082 selected pronouns: She/Her
+2024-10-24 03:51:19,416 - INFO - rpGenerator.py:2392:on_submit - User 266384402450350082 provided description with 4 words.
+2024-10-24 03:51:23,104 - INFO - rpGenerator.py:2183:species_callback - User 266384402450350082 selected species: Human
+2024-10-24 03:51:25,711 - INFO - rpGenerator.py:2202:class_callback - User 266384402450350082 selected class: Warrior
+2024-10-24 03:51:25,712 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Strength with current_score=None.
+2024-10-24 03:51:25,712 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-24 03:51:25,713 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Constitution with current_score=None.
+2024-10-24 03:51:25,713 - INFO - rpGenerator.py:2496:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 03:51:28,281 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Strength to 12. Cost: 2. Total points spent: 2.
+2024-10-24 03:51:28,282 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Strength with current_score=12.
+2024-10-24 03:51:28,282 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Dexterity with current_score=None.
+2024-10-24 03:51:28,282 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Constitution with current_score=None.
+2024-10-24 03:51:28,282 - INFO - rpGenerator.py:2496:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 03:51:30,937 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Dexterity to 15. Cost: 7. Total points spent: 9.
+2024-10-24 03:51:30,937 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Strength with current_score=12.
+2024-10-24 03:51:30,937 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-24 03:51:30,937 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Constitution with current_score=None.
+2024-10-24 03:51:30,938 - INFO - rpGenerator.py:2496:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 03:51:33,384 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Constitution to 15. Cost: 7. Total points spent: 16.
+2024-10-24 03:51:33,385 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Strength with current_score=12.
+2024-10-24 03:51:33,385 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Dexterity with current_score=15.
+2024-10-24 03:51:33,386 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Constitution with current_score=15.
+2024-10-24 03:51:33,386 - INFO - rpGenerator.py:2496:__init__ - PhysicalAbilitiesView created for user 266384402450350082 with 4 components.
+2024-10-24 03:51:34,764 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Intelligence with current_score=None.
+2024-10-24 03:51:34,765 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-24 03:51:34,765 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 03:51:34,765 - INFO - rpGenerator.py:2511:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 03:51:34,884 - INFO - rpGenerator.py:2636:callback - User 266384402450350082 navigated to MentalAbilitiesView.
+2024-10-24 03:51:39,127 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Intelligence to 12. Cost: 2. Total points spent: 18.
+2024-10-24 03:51:39,128 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 03:51:39,128 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Wisdom with current_score=None.
+2024-10-24 03:51:39,128 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 03:51:39,129 - INFO - rpGenerator.py:2511:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 03:51:41,175 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Wisdom to 12. Cost: 2. Total points spent: 20.
+2024-10-24 03:51:41,176 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 03:51:41,176 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-24 03:51:41,176 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 03:51:41,177 - INFO - rpGenerator.py:2511:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 03:51:48,476 - ERROR - view.py:417:on_error - Ignoring exception in view <MentalAbilitiesView timeout=180.0 children=5> for item <AbilitySelect placeholder='Assign Wisdom score...' min_values=1 max_values=1 disabled=False>
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2592, in callback
+    await interaction.response.edit_message(
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\interactions.py", line 990, in edit_message
+    await adapter.create_interaction_response(
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\webhook\async_.py", line 221, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\ui\view.py", line 430, in _scheduled_task
+    await item.callback(interaction)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2603, in callback
+    await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\interactions.py", line 855, in send_message
+    await adapter.create_interaction_response(
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\webhook\async_.py", line 221, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+2024-10-24 03:51:49,928 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Wisdom to 12. Cost: 2. Total points spent: 20.
+2024-10-24 03:51:49,928 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 03:51:49,928 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Wisdom with current_score=12.
+2024-10-24 03:51:49,929 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 03:51:49,929 - INFO - rpGenerator.py:2511:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 03:52:02,086 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Wisdom to 15. Cost: 7. Total points spent: 25.
+2024-10-24 03:52:02,086 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 03:52:02,086 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Wisdom with current_score=15.
+2024-10-24 03:52:02,087 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 03:52:02,087 - INFO - rpGenerator.py:2511:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 03:52:07,515 - ERROR - view.py:417:on_error - Ignoring exception in view <MentalAbilitiesView timeout=180.0 children=5> for item <AbilitySelect placeholder='Wisdom: 12' min_values=1 max_values=1 disabled=False>
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2592, in callback
+    await interaction.response.edit_message(
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\interactions.py", line 990, in edit_message
+    await adapter.create_interaction_response(
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\webhook\async_.py", line 221, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\ui\view.py", line 430, in _scheduled_task
+    await item.callback(interaction)
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 2603, in callback
+    await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\interactions.py", line 855, in send_message
+    await adapter.create_interaction_response(
+  File "E:\Documents\GitHub\RPGenerator\.conda\Lib\site-packages\discord\webhook\async_.py", line 221, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+2024-10-24 03:52:10,686 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Wisdom to 15. Cost: 7. Total points spent: 25.
+2024-10-24 03:52:10,686 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 03:52:10,687 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Wisdom with current_score=15.
+2024-10-24 03:52:10,687 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Charisma with current_score=None.
+2024-10-24 03:52:10,687 - INFO - rpGenerator.py:2511:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 03:52:24,617 - INFO - rpGenerator.py:2563:callback - User 266384402450350082 set Charisma to 12. Cost: 2. Total points spent: 27.
+2024-10-24 03:52:24,618 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Intelligence with current_score=12.
+2024-10-24 03:52:24,618 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Wisdom with current_score=15.
+2024-10-24 03:52:24,619 - INFO - rpGenerator.py:2542:__init__ - AbilitySelect initialized for Charisma with current_score=12.
+2024-10-24 03:52:24,619 - INFO - rpGenerator.py:2511:__init__ - MentalAbilitiesView created for user 266384402450350082 with 5 components.
+2024-10-24 03:52:26,627 - INFO - rpGenerator.py:2741:__init__ - FinalizeCharacterView created for user 266384402450350082 with 1 components.
+2024-10-24 03:52:26,784 - INFO - rpGenerator.py:2721:callback - User 266384402450350082 prepared to finalize character creation.
+2024-10-24 03:52:28,143 - INFO - rpGenerator.py:1774:save_characters - Successfully saved 1 characters to characters.json
+2024-10-24 03:52:28,144 - INFO - rpGenerator.py:2774:callback - Character 'Ralynn Fargoer' created successfully for user 266384402450350082.
+2024-10-24 03:52:50,847 - INFO - rpGenerator.py:3921:on_message - on_message triggered for message from 266384402450350082: '/stats'
+2024-10-24 03:52:50,847 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:52:50,848 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:52:50,848 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:52:50,848 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: '[266384402450350082]'
+2024-10-24 03:52:50,849 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:52:50,849 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for [266384402450350082]
+2024-10-24 03:52:50,849 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 03:52:50,850 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 03:52:50,850 - INFO - rpGenerator.py:2918:parse_action - Parsing message from user 266384402450350082: '/stats'
+2024-10-24 03:52:50,850 - INFO - rpGenerator.py:2923:parse_action - Regex matches found: []
+2024-10-24 03:52:50,851 - INFO - rpGenerator.py:2941:parse_action - No valid action recognized in the message.
+2024-10-24 03:52:50,851 - INFO - rpGenerator.py:4043:on_message - No valid action found in the message.
+2024-10-24 03:52:50,851 - ERROR - bot.py:355:on_command_error - Ignoring exception in command None
+discord.ext.commands.errors.CommandNotFound: Command "stats" is not found
+2024-10-24 03:55:08,715 - INFO - rpGenerator.py:446:debug_cache_state - === Cache Debug Information ===
+2024-10-24 03:55:08,716 - INFO - rpGenerator.py:447:debug_cache_state - Cache exists: True
+2024-10-24 03:55:08,716 - INFO - rpGenerator.py:449:debug_cache_state - Cache size: 0
+2024-10-24 03:55:08,716 - INFO - rpGenerator.py:450:debug_cache_state - Cache keys: []
+2024-10-24 03:55:08,718 - INFO - rpGenerator.py:453:debug_cache_state - ===========================
+2024-10-24 03:55:08,718 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:55:08,718 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:55:08,719 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:55:08,719 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: '[266384402450350082]'
+2024-10-24 03:55:08,719 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:55:08,720 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for [266384402450350082]
+2024-10-24 03:55:08,720 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 03:55:08,720 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 03:55:08,720 - INFO - rpGenerator.py:446:debug_cache_state - === Cache Debug Information ===
+2024-10-24 03:55:08,721 - INFO - rpGenerator.py:447:debug_cache_state - Cache exists: True
+2024-10-24 03:55:08,721 - INFO - rpGenerator.py:449:debug_cache_state - Cache size: 0
+2024-10-24 03:55:08,721 - INFO - rpGenerator.py:450:debug_cache_state - Cache keys: []
+2024-10-24 03:55:08,721 - INFO - rpGenerator.py:453:debug_cache_state - ===========================
+2024-10-24 03:55:15,726 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:55:15,726 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:55:15,727 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:55:15,727 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: '[266384402450350082]'
+2024-10-24 03:55:15,728 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:55:15,728 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for [266384402450350082]
+2024-10-24 03:55:15,728 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 03:55:15,728 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 03:55:23,254 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:00:23 EDT)" (scheduled at 2024-10-24 03:55:23.245611-04:00)
+2024-10-24 03:55:23,256 - ERROR - rpGenerator.py:3818:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 03:55:23,257 - ERROR - rpGenerator.py:3836:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 03:55:23,258 - ERROR - rpGenerator.py:3874:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 03:55:23,259 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:00:23 EDT)" executed successfully
+2024-10-24 03:56:49,923 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:56:49,927 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 03:56:49,927 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 03:56:49,928 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 03:56:49,928 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 03:56:49,929 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 03:56:49,929 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 03:56:49,930 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 03:56:49,932 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 03:56:49,932 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 03:56:49,933 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 03:56:49,933 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 03:56:49,933 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 03:56:49,934 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:56:49,934 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 03:56:49,935 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 03:56:49,935 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 03:56:49,935 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 03:56:49,935 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 03:56:49,936 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 03:56:49,936 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 03:56:49,937 - INFO - client.py:611:login - logging in using static token
+2024-10-24 03:56:50,594 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 130889295b5567fc4224816b55914afb).
+2024-10-24 03:56:52,600 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 03:56:52,600 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 03:56:52,601 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 03:56:52,601 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 03:56:52,602 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 03:56:52,603 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 03:56:52,604 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 03:56:52,604 - INFO - base.py:181:start - Scheduler started
+2024-10-24 03:56:52,713 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 03:57:01,861 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:57:01,862 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:57:01,862 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:57:01,863 - ERROR - rpGenerator.py:419:load_or_get_character - Error loading character for user 266384402450350082: '_io.TextIOWrapper' object is not subscriptable
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 358, in load_or_get_character
+    uid = str(f['{uid}'])
+              ~^^^^^^^^^
+TypeError: '_io.TextIOWrapper' object is not subscriptable
+2024-10-24 03:57:06,912 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:57:06,913 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:57:06,913 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:57:06,914 - ERROR - rpGenerator.py:419:load_or_get_character - Error loading character for user 266384402450350082: '_io.TextIOWrapper' object is not subscriptable
+Traceback (most recent call last):
+  File "e:\Documents\GitHub\RPGenerator\rpGenerator.py", line 358, in load_or_get_character
+    uid = str(f['{uid}'])
+              ~^^^^^^^^^
+TypeError: '_io.TextIOWrapper' object is not subscriptable
+2024-10-24 03:59:37,875 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 03:59:37,879 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 03:59:37,880 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 03:59:37,880 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 03:59:37,881 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 03:59:37,882 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 03:59:37,882 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 03:59:37,882 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 03:59:37,884 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 03:59:37,884 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 03:59:37,885 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 03:59:37,885 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 03:59:37,886 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 03:59:37,886 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:59:37,886 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 03:59:37,886 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 03:59:37,886 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 03:59:37,886 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 03:59:37,886 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 03:59:37,887 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 03:59:37,887 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 03:59:37,888 - INFO - client.py:611:login - logging in using static token
+2024-10-24 03:59:38,394 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: cf5c3bc844eb04c86cf93eb5c6654d3a).
+2024-10-24 03:59:40,399 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 03:59:40,399 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 03:59:40,400 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 03:59:40,400 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 03:59:40,400 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 03:59:40,402 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 03:59:40,403 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 03:59:40,403 - INFO - base.py:181:start - Scheduler started
+2024-10-24 03:59:40,509 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 03:59:50,274 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 03:59:50,275 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 03:59:50,276 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 03:59:50,276 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: "[/'266384402450350082/']"
+2024-10-24 03:59:50,276 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 03:59:50,277 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for [/'266384402450350082/']
+2024-10-24 03:59:50,277 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 03:59:50,277 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 04:00:30,754 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 04:00:30,759 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 04:00:30,760 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 04:00:30,761 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 04:00:30,761 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 04:00:30,762 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 04:00:30,762 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 04:00:30,762 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 04:00:30,765 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 04:00:30,765 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 04:00:30,766 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 04:00:30,766 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 04:00:30,767 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 04:00:30,767 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:00:30,768 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 04:00:30,768 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 04:00:30,768 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 04:00:30,769 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 04:00:30,769 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 04:00:30,769 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 04:00:30,769 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 04:00:30,771 - INFO - client.py:611:login - logging in using static token
+2024-10-24 04:00:31,351 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 021e2b186c23e2d918186a4ef5fe7c74).
+2024-10-24 04:00:33,361 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 04:00:33,361 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 04:00:33,362 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 04:00:33,362 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 04:00:33,362 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 04:00:33,363 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 04:00:33,364 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 04:00:33,365 - INFO - base.py:181:start - Scheduler started
+2024-10-24 04:00:33,478 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 04:00:58,954 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 04:00:58,958 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 04:00:58,959 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 04:00:58,960 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 04:00:58,960 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 04:00:58,961 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 04:00:58,961 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 04:00:58,961 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 04:00:58,963 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 04:00:58,963 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 04:00:58,964 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 04:00:58,964 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 04:00:58,964 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 04:00:58,965 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:00:58,965 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 04:00:58,965 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 04:00:58,966 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 04:00:58,966 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 04:00:58,967 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 04:00:58,967 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 04:00:58,967 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 04:00:58,969 - INFO - client.py:611:login - logging in using static token
+2024-10-24 04:00:59,554 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: e987ec54950246280f2b0539537c9a0a).
+2024-10-24 04:01:01,569 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 04:01:01,569 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 04:01:01,570 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 04:01:01,570 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 04:01:01,570 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 04:01:01,572 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 04:01:01,573 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 04:01:01,574 - INFO - base.py:181:start - Scheduler started
+2024-10-24 04:01:33,489 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 04:03:07,806 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 04:03:07,810 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 04:03:07,810 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 04:03:07,811 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 04:03:07,811 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 04:03:07,812 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 04:03:07,812 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 04:03:07,812 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 04:03:07,813 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 04:03:07,813 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 04:03:07,814 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 04:03:07,814 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 04:03:07,815 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 04:03:07,815 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:03:07,815 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 04:03:07,816 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 04:03:07,816 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 04:03:07,816 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 04:03:07,816 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 04:03:07,817 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 04:03:07,817 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 04:03:07,818 - INFO - client.py:611:login - logging in using static token
+2024-10-24 04:03:08,628 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: bb9666c8aa250d7564d4c73b3331cb42).
+2024-10-24 04:03:10,636 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 04:03:10,636 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 04:03:10,637 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 04:03:10,637 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 04:03:10,637 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 04:03:10,639 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 04:03:10,640 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 04:03:10,640 - INFO - base.py:181:start - Scheduler started
+2024-10-24 04:03:10,732 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 04:03:38,534 - INFO - rpGenerator.py:3032:create_character - User 266384402450350082 initiated character creation.
+2024-10-24 04:03:44,898 - INFO - rpGenerator.py:446:debug_cache_state - === Cache Debug Information ===
+2024-10-24 04:03:44,899 - INFO - rpGenerator.py:447:debug_cache_state - Cache exists: True
+2024-10-24 04:03:44,899 - INFO - rpGenerator.py:449:debug_cache_state - Cache size: 0
+2024-10-24 04:03:44,900 - INFO - rpGenerator.py:450:debug_cache_state - Cache keys: []
+2024-10-24 04:03:44,900 - INFO - rpGenerator.py:453:debug_cache_state - ===========================
+2024-10-24 04:03:44,900 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 04:03:44,901 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 04:03:44,901 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 04:03:44,902 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: "['266384402450350082']"
+2024-10-24 04:03:44,902 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:03:44,902 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for ['266384402450350082']
+2024-10-24 04:03:44,903 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 04:03:44,903 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 04:03:44,903 - INFO - rpGenerator.py:446:debug_cache_state - === Cache Debug Information ===
+2024-10-24 04:03:44,903 - INFO - rpGenerator.py:447:debug_cache_state - Cache exists: True
+2024-10-24 04:03:44,904 - INFO - rpGenerator.py:449:debug_cache_state - Cache size: 0
+2024-10-24 04:03:44,904 - INFO - rpGenerator.py:450:debug_cache_state - Cache keys: []
+2024-10-24 04:03:44,904 - INFO - rpGenerator.py:453:debug_cache_state - ===========================
+2024-10-24 04:08:10,641 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:13:10 EDT)" (scheduled at 2024-10-24 04:08:10.638005-04:00)
+2024-10-24 04:08:10,642 - ERROR - rpGenerator.py:3818:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 04:08:10,642 - ERROR - rpGenerator.py:3836:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 04:08:10,642 - ERROR - rpGenerator.py:3874:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 04:08:10,643 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:13:10 EDT)" executed successfully
+2024-10-24 04:13:10,642 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:18:10 EDT)" (scheduled at 2024-10-24 04:13:10.638005-04:00)
+2024-10-24 04:13:10,643 - ERROR - rpGenerator.py:3818:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 04:13:10,643 - ERROR - rpGenerator.py:3836:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 04:13:10,644 - ERROR - rpGenerator.py:3874:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 04:13:10,644 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:18:10 EDT)" executed successfully
+2024-10-24 04:16:20,548 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 04:16:20,552 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 04:16:20,553 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 04:16:20,553 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 04:16:20,554 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 04:16:20,554 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 04:16:20,555 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 04:16:20,555 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 04:16:20,557 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 04:16:20,557 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 04:16:20,558 - INFO - rpGenerator.py:607:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 04:16:20,558 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 04:16:20,559 - INFO - rpGenerator.py:2029:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 04:16:20,559 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:16:20,560 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 04:16:20,560 - INFO - rpGenerator.py:501:initialize_game_data - Initialized with:
+2024-10-24 04:16:20,560 - INFO - rpGenerator.py:502:initialize_game_data - - 17 items
+2024-10-24 04:16:20,560 - INFO - rpGenerator.py:503:initialize_game_data - - 19 areas
+2024-10-24 04:16:20,560 - INFO - rpGenerator.py:504:initialize_game_data - - 38 NPCs
+2024-10-24 04:16:20,561 - INFO - rpGenerator.py:505:initialize_game_data - - 43 actions
+2024-10-24 04:16:20,561 - INFO - rpGenerator.py:506:initialize_game_data - - 1 characters
+2024-10-24 04:16:20,562 - INFO - client.py:611:login - logging in using static token
+2024-10-24 04:16:21,114 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: e3c83441eb962e0725923a0966ef455e).
+2024-10-24 04:16:23,121 - INFO - rpGenerator.py:3897:on_ready - Logged in as RPGenerator
+2024-10-24 04:16:23,121 - INFO - rpGenerator.py:477:verify_character_data - Character file contents:
+2024-10-24 04:16:23,122 - INFO - rpGenerator.py:478:verify_character_data - Number of characters: 1
+2024-10-24 04:16:23,122 - INFO - rpGenerator.py:480:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 04:16:23,123 - INFO - rpGenerator.py:481:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 04:16:23,124 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 04:16:23,126 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 04:16:23,126 - INFO - base.py:181:start - Scheduler started
+2024-10-24 04:16:23,254 - INFO - rpGenerator.py:3889:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 04:16:33,872 - INFO - rpGenerator.py:335:load_or_get_character - Looking for user_id: '266384402450350082' of type <class 'str'>
+2024-10-24 04:16:33,872 - INFO - rpGenerator.py:344:load_or_get_character - Reloading character cache from file
+2024-10-24 04:16:33,873 - INFO - rpGenerator.py:350:load_or_get_character - Raw data keys from file: ['266384402450350082']
+2024-10-24 04:16:33,873 - INFO - rpGenerator.py:359:load_or_get_character - Processing character data for uid: "['266384402450350082']"
+2024-10-24 04:16:33,873 - ERROR - rpGenerator.py:1560:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:16:33,874 - ERROR - rpGenerator.py:367:load_or_get_character - Character.from_dict returned None for ['266384402450350082']
+2024-10-24 04:16:33,874 - INFO - rpGenerator.py:386:load_or_get_character - Final cache state - keys: []
+2024-10-24 04:16:33,874 - INFO - rpGenerator.py:410:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 04:21:23,131 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:26:23 EDT)" (scheduled at 2024-10-24 04:21:23.124300-04:00)
+2024-10-24 04:21:23,132 - ERROR - rpGenerator.py:3818:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 04:21:23,133 - ERROR - rpGenerator.py:3836:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 04:21:23,133 - ERROR - rpGenerator.py:3874:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 04:21:23,134 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:26:23 EDT)" executed successfully
+2024-10-24 04:28:01,689 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 04:28:32,303 - WARNING - client.py:300:__init__ - PyNaCl is not installed, voice will NOT be supported
+2024-10-24 04:28:32,307 - INFO - rpGenerator.py:271:load_game_data - Starting to load game data...
+2024-10-24 04:28:32,307 - INFO - rpGenerator.py:137:load_items - Loading items from items.json
+2024-10-24 04:28:32,308 - INFO - rpGenerator.py:159:load_items - Successfully loaded 17 items
+2024-10-24 04:28:32,308 - INFO - rpGenerator.py:278:load_game_data - Loaded 17 items
+2024-10-24 04:28:32,309 - INFO - rpGenerator.py:226:load_areas - Successfully loaded 19 areas
+2024-10-24 04:28:32,309 - INFO - rpGenerator.py:285:load_game_data - Loaded 19 areas
+2024-10-24 04:28:32,310 - INFO - rpGenerator.py:180:load_npcs - Loading NPCs from npcs.json
+2024-10-24 04:28:32,312 - INFO - rpGenerator.py:194:load_npcs - Successfully loaded 38 NPCs from npcs.json
+2024-10-24 04:28:32,312 - INFO - rpGenerator.py:292:load_game_data - Loaded 38 NPCs
+2024-10-24 04:28:32,312 - INFO - rpGenerator.py:618:load_actions - ACTIONS_FILE loaded successfully.
+2024-10-24 04:28:32,313 - INFO - rpGenerator.py:299:load_game_data - Loaded 43 actions
+2024-10-24 04:28:32,313 - INFO - rpGenerator.py:2037:resolve_area_connections_and_npcs - Completed area and NPC resolution
+2024-10-24 04:28:32,314 - ERROR - rpGenerator.py:1571:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:28:32,314 - INFO - rpGenerator.py:252:load_characters - Successfully loaded 1 characters from 'characters.json'.
+2024-10-24 04:28:32,314 - INFO - rpGenerator.py:512:initialize_game_data - Initialized with:
+2024-10-24 04:28:32,315 - INFO - rpGenerator.py:513:initialize_game_data - - 17 items
+2024-10-24 04:28:32,315 - INFO - rpGenerator.py:514:initialize_game_data - - 19 areas
+2024-10-24 04:28:32,315 - INFO - rpGenerator.py:515:initialize_game_data - - 38 NPCs
+2024-10-24 04:28:32,315 - INFO - rpGenerator.py:516:initialize_game_data - - 43 actions
+2024-10-24 04:28:32,315 - INFO - rpGenerator.py:517:initialize_game_data - - 1 characters
+2024-10-24 04:28:32,317 - INFO - client.py:611:login - logging in using static token
+2024-10-24 04:28:32,922 - INFO - gateway.py:563:received_message - Shard ID None has connected to Gateway (Session ID: 716c3ff57b73bd304b762e1621ac050d).
+2024-10-24 04:28:34,936 - INFO - rpGenerator.py:3905:on_ready - Logged in as RPGenerator
+2024-10-24 04:28:34,936 - INFO - rpGenerator.py:488:verify_character_data - Character file contents:
+2024-10-24 04:28:34,937 - INFO - rpGenerator.py:489:verify_character_data - Number of characters: 1
+2024-10-24 04:28:34,937 - INFO - rpGenerator.py:491:verify_character_data - User ID: 266384402450350082 (type: <class 'str'>)
+2024-10-24 04:28:34,937 - INFO - rpGenerator.py:492:verify_character_data - Character name: Ralynn Fargoer
+2024-10-24 04:28:34,939 - INFO - base.py:454:add_job - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-10-24 04:28:34,940 - INFO - base.py:895:_real_add_job - Added job "update_world_state" to job store "default"
+2024-10-24 04:28:34,940 - INFO - base.py:181:start - Scheduler started
+2024-10-24 04:28:35,046 - INFO - rpGenerator.py:3897:sync_commands - Commands synced successfully.: [<AppCommand id=1298782361240080384 name='create_character' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080385 name='attack' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080386 name='npc_list' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080387 name='talk' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080388 name='inventory' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080389 name='pickup' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080390 name='drop' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080391 name='destroy' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080392 name='equip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361240080393 name='unequip' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128223 name='use' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128224 name='examine' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128225 name='identify' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128226 name='travel' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128227 name='travel_location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128228 name='rest' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128229 name='location' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128230 name='scene' type=<AppCommandType.chat_input: 1>>, <AppCommand id=1298782361349128231 name='stats' type=<AppCommandType.chat_input: 1>>]
+NoneType: None
+2024-10-24 04:31:42,377 - INFO - rpGenerator.py:336:load_or_get_character - Looking for cleaned user_id: 266384402450350082
+2024-10-24 04:31:42,377 - INFO - rpGenerator.py:345:load_or_get_character - Reloading character cache from file
+2024-10-24 04:31:42,378 - INFO - rpGenerator.py:355:load_or_get_character - Cleaned user ID from '266384402450350082' to '266384402450350082'
+2024-10-24 04:31:42,378 - INFO - rpGenerator.py:364:load_or_get_character - Processing character data for uid: '266384402450350082'
+2024-10-24 04:31:42,379 - ERROR - rpGenerator.py:1571:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:31:42,379 - ERROR - rpGenerator.py:376:load_or_get_character - Failed to create character for user 266384402450350082
+2024-10-24 04:31:42,379 - INFO - rpGenerator.py:385:load_or_get_character - Final cache state:
+2024-10-24 04:31:42,380 - INFO - rpGenerator.py:386:load_or_get_character - Cache keys: []
+2024-10-24 04:31:42,380 - INFO - rpGenerator.py:408:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 04:31:48,253 - INFO - rpGenerator.py:336:load_or_get_character - Looking for cleaned user_id: 266384402450350082
+2024-10-24 04:31:48,253 - INFO - rpGenerator.py:345:load_or_get_character - Reloading character cache from file
+2024-10-24 04:31:48,254 - INFO - rpGenerator.py:355:load_or_get_character - Cleaned user ID from '266384402450350082' to '266384402450350082'
+2024-10-24 04:31:48,254 - INFO - rpGenerator.py:364:load_or_get_character - Processing character data for uid: '266384402450350082'
+2024-10-24 04:31:48,255 - ERROR - rpGenerator.py:1571:from_dict - Error creating Character from dict: cannot access local variable 'char' where it is not associated with a value
+2024-10-24 04:31:48,255 - ERROR - rpGenerator.py:376:load_or_get_character - Failed to create character for user 266384402450350082
+2024-10-24 04:31:48,256 - INFO - rpGenerator.py:385:load_or_get_character - Final cache state:
+2024-10-24 04:31:48,257 - INFO - rpGenerator.py:386:load_or_get_character - Cache keys: []
+2024-10-24 04:31:48,257 - INFO - rpGenerator.py:408:load_or_get_character - No character found for user 266384402450350082 in cache
+2024-10-24 04:33:34,959 - INFO - base_py3.py:28:run_coroutine_job - Running job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:38:34 EDT)" (scheduled at 2024-10-24 04:33:34.938045-04:00)
+2024-10-24 04:33:34,960 - ERROR - rpGenerator.py:3826:update_npc_locations - Error updating NPC locations: 'str' object has no attribute 'connected_areas'
+2024-10-24 04:33:34,960 - ERROR - rpGenerator.py:3844:update_area_inventories - Error updating area inventories: name 'generate_random_item' is not defined
+2024-10-24 04:33:34,961 - ERROR - rpGenerator.py:3882:save_world_state - Error saving world state: 'str' object has no attribute 'name'
+2024-10-24 04:33:34,961 - INFO - base_py3.py:41:run_coroutine_job - Job "update_world_state (trigger: interval[0:05:00], next run at: 2024-10-24 04:38:34 EDT)" executed successfully

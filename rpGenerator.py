@@ -58,6 +58,11 @@ if 'actions' not in globals():
     actions = None
 if 'channel_areas' not in globals():
     channel_areas = None  # Dictionary mapping channel IDs to Area instances
+if 'character_cache' not in globals():
+    character_cache = {}
+    last_cache_update = 0
+    CACHE_DURATION = 300  # 5 minutes in seconds
+
 
 
 # ---------------------------- #
@@ -320,10 +325,144 @@ def load_game_data():
         logging.error(f"Error in load_game_data: {e}")
         return {}
 
+def load_or_get_character(user_id: str, force_reload: bool = False):
+    """
+    Gets a character from cache or loads it from file if needed.
+    """
+    global character_cache, last_cache_update, characters
+    
+    # Clean the input user_id
+    user_id = clean_user_id(user_id)
+    logging.info(f"Looking for cleaned user_id: {user_id}")
+    
+    current_time = datetime.today()
+    
+    try:
+        if (force_reload or 
+            not character_cache or 
+            (current_time - last_cache_update) >= CACHE_DURATION):
+            
+            logging.info("Reloading character cache from file")
+            
+            try:
+                with open('characters.json', 'r', encoding='utf-8') as f:
+                    char_data = json.load(f)
+                
+                # Clean all keys from the file
+                cleaned_data = {}
+                for raw_uid, data in char_data.items():
+                    cleaned_uid = clean_user_id(raw_uid)
+                    logging.info(f"Cleaned user ID from {raw_uid!r} to {cleaned_uid!r}")
+                    cleaned_data[cleaned_uid] = data
+                
+                # Clear existing cache and characters
+                characters = {}
+                character_cache = {}
+                
+                # Process each character with cleaned IDs
+                for uid, data in cleaned_data.items():
+                    logging.info(f"Processing character data for uid: {uid!r}")
+                    
+                    try:
+                        # Create the character object
+                        char_obj = Character.from_dict(data, uid, area_lookup=area_lookup, item_lookup=items)
+                        
+                        if char_obj is not None:
+                            # Store in both dictionaries with cleaned ID
+                            characters[uid] = char_obj
+                            character_cache[uid] = char_obj
+                            logging.info(f"Successfully stored character with name {char_obj.name} for user {uid}")
+                        else:
+                            logging.error(f"Failed to create character for user {uid}")
+                            
+                    except Exception as e:
+                        logging.error(f"Error creating Character object for {uid}: {e}")
+                        continue
+                
+                last_cache_update = current_time
+                
+                # Log final cache state
+                logging.info(f"Final cache state:")
+                logging.info(f"Cache keys: {list(character_cache.keys())}")
+                for k, v in character_cache.items():
+                    logging.info(f"Cache entry: {k!r} -> {type(v).__name__}")
+                
+            except FileNotFoundError:
+                logging.warning("characters.json not found - creating new file")
+                characters = {}
+                character_cache = {}
+                with open('characters.json', 'w', encoding='utf-8') as f:
+                    json.dump({}, f)
+                    
+            except json.JSONDecodeError as e:
+                logging.error(f"Error decoding characters.json: {e}")
+                return None
+        
+        # Get character from cache using cleaned ID
+        character = character_cache.get(user_id)
+        
+        if character is not None:
+            logging.info(f"Found character {character.name} for user {user_id}")
+            return character
+            
+        logging.info(f"No character found for user {user_id} in cache")
+        return None
+        
+    except Exception as e:
+        logging.error(f"Error loading character for user {user_id}: {e}", exc_info=True)
+        return None
+
 
 # ---------------------------- #
 #          Utilities           #
 # ---------------------------- #
+
+def clean_user_id(user_id: str) -> str:
+    """
+    Cleans a user ID string to ensure consistent format.
+    Removes brackets, quotes, and whitespace.
+    """
+    if user_id is None:
+        return ""
+    
+    # Convert to string if not already
+    user_id = str(user_id)
+    
+    # Remove common wrapping characters
+    chars_to_remove = "[]'\"\ "
+    for char in chars_to_remove:
+        user_id = user_id.replace(char, '')
+    
+    return user_id
+
+def verify_character(char_obj, user_id: str) -> bool:
+    """Verify that a character object is valid"""
+    if char_obj is None:
+        logging.error(f"Character object is None for user {user_id}")
+        return False
+        
+    if not hasattr(char_obj, 'name'):
+        logging.error(f"Character object has no 'name' attribute for user {user_id}")
+        return False
+        
+    if not hasattr(char_obj, 'user_id'):
+        logging.error(f"Character object has no 'user_id' attribute for user {user_id}")
+        return False
+        
+    logging.info(f"Verified character object for {user_id}: {char_obj.name}")
+    return True
+
+def debug_cache_state():
+    """Debug helper to examine current cache state"""
+    logging.info("=== Cache Debug Information ===")
+    logging.info(f"Cache exists: {character_cache is not None}")
+    if character_cache is not None:
+        logging.info(f"Cache size: {len(character_cache)}")
+        logging.info(f"Cache keys: {list(character_cache.keys())}")
+        for k, v in character_cache.items():
+            logging.info(f"Cache entry: {k!r} -> {type(v).__name__}")
+    logging.info("===========================")
+
 
 #Verify a file is writable
 def verify_file_permissions(filename):
@@ -340,6 +479,22 @@ def verify_file_permissions(filename):
         logging.error(f"File {filename} is not writable")
         return False
 
+def verify_character_data(filename='characters.json'):
+    """Debug helper to verify character data in file"""
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        logging.info(f"Character file contents:")
+        logging.info(f"Number of characters: {len(data)}")
+        for user_id, char_data in data.items():
+            logging.info(f"User ID: {user_id} (type: {type(user_id)})")
+            logging.info(f"Character name: {char_data.get('Name')}")
+            
+        return True
+    except Exception as e:
+        logging.error(f"Error verifying character data: {e}")
+        return False
 
 def initialize_game_data():
     """Initialize all game data at startup."""
@@ -1288,98 +1443,133 @@ class Character(Entity):
             raise
 
     @classmethod
-    def from_dict(cls, data, user_id, area_lookup=None):
+    def from_dict(cls, data, user_id, area_lookup=None, item_lookup=None):
         """
         Create a Character instance from a dictionary with capitalized keys.
         Args:
             data (dict): Dictionary containing character data
             user_id (str): User ID for the character
             area_lookup (dict): Dictionary mapping area names to Area instances
+            item_lookup (dict): Dictionary mapping item names to Item instances
         Returns:
             Character: New Character instance
         """
         try:
+            
             # Helper function to convert equipment data
-            def convert_equipment_item(item_data, item_lookup):
+            def convert_equipment_item(item_data):
                 if not item_data:
                     return None
-                return Item.from_dict(item_data) if isinstance(item_data, dict) else None
+                if isinstance(item_data, dict):
+                    item_name = item_data.get('Name')
+                    if item_lookup and item_name in item_lookup:
+                        return item_lookup[item_name]
+                    return Item.from_dict(item_data)
+                return None
 
             # Convert equipment data
             equipment_data = data.get('Equipment', {})
             equipment = {
-                'Armor': convert_equipment_item(equipment_data.get('Armor'), item_lookup),
-                'Left_Hand': convert_equipment_item(equipment_data.get('Left_Hand'), item_lookup),
-                'Right_Hand': convert_equipment_item(equipment_data.get('Right_Hand'), item_lookup),
-                'Belt_Slots': [convert_equipment_item(item, item_lookup) 
+                'Armor': convert_equipment_item(equipment_data.get('Armor')),
+                'Left_Hand': convert_equipment_item(equipment_data.get('Left_Hand')),
+                'Right_Hand': convert_equipment_item(equipment_data.get('Right_Hand')),
+                'Belt_Slots': [convert_equipment_item(item) 
                             for item in equipment_data.get('Belt_Slots', [None] * 4)],
-                'Back': convert_equipment_item(equipment_data.get('Back'), item_lookup),
-                'Magic_Slots': [convert_equipment_item(item, item_lookup) 
+                'Back': convert_equipment_item(equipment_data.get('Back')),
+                'Magic_Slots': [convert_equipment_item(item) 
                             for item in equipment_data.get('Magic_Slots', [None] * 3)]
             }
 
             # Convert inventory data
             inventory_data = data.get('Inventory', {})
-            inventory = {k: Item.from_dict(v) if isinstance(v, dict) else v 
-                        for k, v in inventory_data.items()}
+            inventory = {}
+            for k, v in inventory_data.items():
+                if isinstance(v, dict):
+                    item_name = v.get('Name')
+                    if item_lookup and item_name in item_lookup:
+                        inventory[k] = item_lookup[item_name]
+                    else:
+                        inventory[k] = Item.from_dict(v)
+                else:
+                    inventory[k] = v
 
-            # Convert travel_end_time
-            travel_end_time = None
-            if data.get('Travel_End_Time'):
-                try:
-                    travel_end_time = datetime.fromtimestamp(data['Travel_End_Time'])
-                except (TypeError, ValueError) as e:
-                    logging.warning(f"Could not parse Travel_End_Time: {e}")
+                # Convert travel_end_time
+                travel_end_time = None
+                if data.get('Travel_End_Time'):
+                    try:
+                        # If it's stored as a timestamp
+                        if isinstance(data['Travel_End_Time'], (int, float)):
+                            travel_end_time = datetime.fromtimestamp(data['Travel_End_Time'])
+                        # If it's stored as an ISO format string
+                        elif isinstance(data['Travel_End_Time'], str):
+                            travel_end_time = datetime.fromisoformat(data['Travel_End_Time'])
+                    except (TypeError, ValueError) as e:
+                        logging.warning(f"Could not parse Travel_End_Time: {e}")
 
-            # Get current area from area_lookup
-            current_area_name = data.get('Current_Area')
-            current_area = None
-            if area_lookup and current_area_name:
-                current_area = area_lookup.get(current_area_name)
-                if not current_area:
-                    logging.warning(f"Could not find area '{current_area_name}' in area_lookup")
+                        # Get current area from area_lookup
+                        current_area_name = data.get('Current_Area')
+                        current_area = None
+                        if area_lookup and current_area_name:
+                            current_area = area_lookup.get(current_area_name)
+                            if not current_area:
+                                logging.warning(f"Could not find area '{current_area_name}' in area_lookup")
 
-            # Create and return new Character instance
-            return cls(
-                user_id=user_id,
-                name=data.get('Name'),
-                species=data.get('Species'),
-                char_class=data.get('Char_Class'),
-                gender=data.get('Gender'),
-                pronouns=data.get('Pronouns'),
-                description=data.get('Description'),
-                stats=data.get('Stats', {
-                    'Strength': 10,
-                    'Dexterity': 10,
-                    'Constitution': 10,
-                    'Intelligence': 10,
-                    'Wisdom': 10,
-                    'Charisma': 10
-                }),
-                skills=data.get('Skills', {}),
-                inventory=inventory,
-                equipment=equipment,
-                currency=data.get('Currency', {}),
-                spells=data.get('Spells', {}),
-                abilities=data.get('Abilities', {}),
-                ac=data.get('AC', 5),
-                max_hp=data.get('Max_HP', 1),
-                curr_hp=data.get('Curr_HP', 1),
-                movement_speed=data.get('Movement_Speed', 30),
-                travel_end_time=travel_end_time,
-                spellslots=data.get('Spellslots'),
-                level=data.get('Level', 1),
-                xp=data.get('XP', 0),
-                reputation=data.get('Reputation', {}),
-                is_traveling=data.get('Is_Traveling', False),
-                current_area=current_area,
-                current_location=data.get('Current_Location', "Northhold"),
-                current_region=data.get('Current_Region', "Northern Mountains"),
-                current_continent=data.get('Current_Continent', "Aerilon"),
-                current_world=data.get('Current_World', "Eldoria"),
-                area_lookup=area_lookup,
-                capacity=data.get('Capacity', 150)
-            )
+                # Create and return new Character instance
+                char = cls(
+                    user_id=user_id,
+                    name=data.get('Name'),
+                    species=data.get('Species'),
+                    char_class=data.get('Char_Class'),
+                    gender=data.get('Gender'),
+                    pronouns=data.get('Pronouns'),
+                    description=data.get('Description'),
+                    stats=data.get('Stats', {
+                        'Strength': 10,
+                        'Dexterity': 10,
+                        'Constitution': 10,
+                        'Intelligence': 10,
+                        'Wisdom': 10,
+                        'Charisma': 10
+                    }),
+                    skills=data.get('Skills', {}),
+                    inventory=inventory,
+                    equipment=equipment,
+                    currency=data.get('Currency', {}),
+                    spells=data.get('Spells', {}),
+                    abilities=data.get('Abilities', {}),
+                    ac=data.get('AC', 5),
+                    max_hp=data.get('Max_HP', 1),
+                    curr_hp=data.get('Curr_HP', 1),
+                    movement_speed=data.get('Movement_Speed', 30),
+                    travel_end_time=travel_end_time,
+                    spellslots=data.get('Spellslots'),
+                    level=data.get('Level', 1),
+                    xp=data.get('XP', 0),
+                    reputation=data.get('Reputation', {}),
+                    is_traveling=data.get('Is_Traveling', False),
+                    current_area=current_area,
+                    current_location=data.get('Current_Location', "Northhold"),
+                    current_region=data.get('Current_Region', "Northern Mountains"),
+                    current_continent=data.get('Current_Continent', "Aerilon"),
+                    current_world=data.get('Current_World', "Eldoria"),
+                    area_lookup=area_lookup,
+                    capacity=data.get('Capacity', 150)
+                )
+            # Structure verification before returning
+            if not hasattr(char, 'Name') or not char.name:
+                logging.error(f"Created character has no name for user {user_id}")
+                return None
+                
+            if not hasattr(char, 'User_ID') or not char.user_id:
+                logging.error(f"Created character has no user_id for user {user_id}")
+                return None
+                
+            logging.info(f"Successfully created character {char.name} for user {user_id}")
+            return char
+            
+        except Exception as e:
+            logging.error(f"Error creating Character from dict: {e}")
+            return None
         except Exception as e:
             logging.error(f"Error creating Character from dict: {e}")
             raise
@@ -1554,7 +1744,7 @@ class Character(Entity):
     async def start_travel(self, destination_area, travel_time):
         self.is_traveling = True
         self.travel_destination = destination_area
-        user_id = self.user_id
+        user_id = str(self.user_id)
         dt = datetime.today()  # Get timezone naive now
         seconds = dt.timestamp()
         self.travel_end_time = seconds + (timedelta(hours=travel_time).total_seconds())
@@ -1573,33 +1763,30 @@ def check_travel_completion(character):
             return True  # Travel completed
     return False  # Still traveling
 
-def save_characters(characters, filename='characters.json'):
-    """
-    Save characters to a JSON file.
-    Args:
-        characters (dict): Dictionary of Character objects
-        filename (str): Path to the JSON file
-    """
-    if not isinstance(characters, dict):
-        logging.error("Invalid data type for 'characters'. Expected a dictionary.")
-        return
-    
+def save_characters(characters_dict: dict[str, Character], filename='characters.json'):
     try:
-        # Convert characters to dictionary format
-        data = {user_id: character.to_dict() for user_id, character in characters.items()}
+        # Convert characters to dictionary format with cleaned IDs
+        data = {
+            clean_user_id(user_id): char.to_dict() 
+            for user_id, char in characters_dict.items()
+        }
         
-        # Write to file with proper encoding and formatting
+        # Write to file
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
             
-        logging.info(f"Successfully saved {len(characters)} characters to {filename}")
+        # Update cache with cleaned IDs
+        character_cache = {
+            clean_user_id(user_id): char 
+            for user_id, char in characters_dict.items()
+        }
+        last_cache_update = time.time()
         
-    except PermissionError:
-        logging.error(f"Permission denied when trying to write to {filename}. Check file permissions.")
-    except IOError as e:
-        logging.error(f"IO Error when saving characters: {e}")
+        logging.info(f"Successfully saved {len(characters_dict)} characters")
+        
     except Exception as e:
-        logging.error(f"Failed to save characters: {e}", exc_info=True)
+        logging.error(f"Failed to save characters: {e}")
+        raise
 
 
 # Point-Buy System Configuration
@@ -1859,6 +2046,92 @@ def resolve_area_connections_and_npcs(area_lookup, npc_lookup):
 #      UI Component Classes    #
 # ---------------------------- #
 
+def create_character_progress_embed(user_id: str, current_step: int) -> discord.Embed:
+    """
+    Creates a progress embed for character creation.
+    Args:
+        user_id (str): The user's ID
+        current_step (int): Current step in character creation (1-7)
+    Returns:
+        discord.Embed: The formatted embed
+    """
+    session = character_creation_sessions.get(user_id, {})
+    name = session.get('Name', 'Unknown')
+    
+    embed = discord.Embed(
+        title="Character Creation",
+        description=f"Creating character: **{name}**",
+        color=discord.Color.blue()
+    )
+    
+    # Add character info fields if they exist
+    if session.get('Gender'):
+        embed.add_field(name="Gender", value=session['Gender'], inline=True)
+    if session.get('Pronouns'):
+        embed.add_field(name="Pronouns", value=session['Pronouns'], inline=True)
+    if session.get('Species'):
+        embed.add_field(name="Species", value=session['Species'], inline=True)
+    if session.get('Char_Class'):
+        embed.add_field(name="Class", value=session['Char_Class'], inline=True)
+    
+    # Add description in a collapsible field if it exists
+    if session.get('Description'):
+        desc = session['Description']
+        if len(desc) > 100:
+            desc = desc[:97] + "..."
+        embed.add_field(name="Description", value=desc, inline=False)
+    
+    # Create progress indicator
+    steps = [
+        ("Name", True if current_step > 1 else False),
+        ("Gender", True if current_step > 2 else False),
+        ("Pronouns", True if current_step > 3 else False),
+        ("Description", True if current_step > 4 else False),
+        ("Species", True if current_step > 5 else False),
+        ("Class", True if current_step > 6 else False),
+        ("Abilities", True if current_step > 7 else False)
+    ]
+    
+    progress = "\n".join(
+        f"Step {i+1}/7: {step[0]} {'✓' if step[1] else '⏳' if i == current_step-1 else ''}"
+        for i, step in enumerate(steps)
+    )
+    
+    embed.add_field(name="Progress", value=progress, inline=False)
+    return embed
+
+def update_character_embed(session_data, current_step):
+    """Creates a consistent embed for character creation progress"""
+    embed = discord.Embed(
+        title="Character Creation",
+        description=f"Creating character: **{session_data.get('Name', 'Unknown')}**",
+        color=discord.Color.blue()
+    )
+    
+    # Basic info fields
+    if session_data.get('Gender'):
+        embed.add_field(name="Gender", value=session_data['Gender'], inline=True)
+    if session_data.get('Pronouns'):
+        embed.add_field(name="Pronouns", value=session_data['Pronouns'], inline=True)
+    if session_data.get('Species'):
+        embed.add_field(name="Species", value=session_data['Species'], inline=True)
+    if session_data.get('Char_Class'):
+        embed.add_field(name="Class", value=session_data['Char_Class'], inline=True)
+    
+    # Progress bar
+    steps = ["Name", "Gender", "Pronouns", "Description", "Species", "Class", "Abilities"]
+    progress = ""
+    for i, step in enumerate(steps):
+        if i < current_step:
+            progress += f"Step {i+1}/7: {step} ✓\n"
+        elif i == current_step:
+            progress += f"Step {i+1}/7: {step} ⏳\n"
+        else:
+            progress += f"Step {i+1}/7: {step}\n"
+    
+    embed.add_field(name="Progress", value=progress, inline=False)
+    return embed
+
 class GenericDropdown(discord.ui.Select):
     """
     A generic dropdown class that can be reused for various selections.
@@ -2041,56 +2314,91 @@ class CharacterNameModal(discord.ui.Modal):
     def __init__(self, user_id):
         super().__init__(title="Enter Character Name")
         self.user_id = user_id
-        self.character_name = discord.ui.TextInput(label="Character Name")
+        self.character_name = discord.ui.TextInput(
+            label="Character Name",
+            placeholder="Enter your character's name...",
+            min_length=2,
+            max_length=32
+        )
         self.add_item(self.character_name)
 
-
     async def on_submit(self, interaction: discord.Interaction):
-        global character_creation_sessions
         character_name = self.children[0].value
-        character_creation_sessions[self.user_id]['name'] = character_name
-        logging.info(f"User {self.user_id} entered name: {character_name}")
-
-        # Send or edit the message to proceed to gender selection
+        character_creation_sessions[self.user_id]['Name'] = character_name
+        
+        # Create progress embed using the new function
+        embed = create_character_progress_embed(self.user_id, 1)
+        
         await interaction.response.send_message(
-            content="Character name set! Please select your gender:",
+            content="Please select your gender:",
+            embed=embed,
             view=GenderSelectionView(self.user_id),
             ephemeral=True
         )
-        # Store the message object in the session for later editing
-        character_creation_sessions[self.user_id]['message'] = await interaction.original_response()
+        
+        logging.info(f"User {self.user_id} entered name: {character_name}")
 
+# Example of updating a callback function to use the progress embed
+async def gender_callback(dropdown, interaction, user_id):
+    try:
+        selected_gender = dropdown.values[0]
+        character_creation_sessions[user_id]['Gender'] = selected_gender
+        
+        # Create progress embed using the new function
+        embed = create_character_progress_embed(user_id, 2)
+        
+        await interaction.response.edit_message(
+            content=f"Please select your pronouns:",
+            embed=embed,
+            view=PronounsSelectionView(user_id)
+        )
+        
+        logging.info(f"User {user_id} selected gender: {selected_gender}")
+    except Exception as e:
+        logging.error(f"Error in gender_callback for user {user_id}: {e}")
+        await interaction.response.send_message(
+            "An error occurred. Please try again.",
+            ephemeral=True
+        )
 class DescriptionModal(discord.ui.Modal):
     def __init__(self, user_id):
         super().__init__(title="Enter Character Description")
         self.user_id = user_id
         self.description = discord.ui.TextInput(
             label="Character Description",
-            style=discord.TextStyle.long,
-            max_length=1000  # Optional: Limit input length
+            placeholder="Describe your character's appearance, personality, and background...",
+            style=discord.TextStyle.paragraph,
+            max_length=1000,
+            min_length=20
         )
         self.add_item(self.description)
 
     async def on_submit(self, interaction: discord.Interaction):
-        global character_creation_sessions
         description = self.children[0].value
         word_count = len(description.split())
+        
         if word_count > 200:
             await interaction.response.send_message(
                 f"Description is too long ({word_count} words). Please limit it to 200 words.",
                 ephemeral=True
             )
-            # Re-show the modal for input
-            await interaction.response.send_modal(DescriptionModal(self.user_id))
-        else:
-            character_creation_sessions[self.user_id]['description'] = description
-            logging.info(f"User {self.user_id} provided description with {word_count} words.")
+            await interaction.followup.send_modal(DescriptionModal(self.user_id))
+            return
+            
+        # Save description using capitalized key
+        character_creation_sessions[self.user_id]['Description'] = description
+        
+        # Create progress embed using the new function
+        embed = create_character_progress_embed(self.user_id, 4)
+        
+        # Proceed to species selection
+        await interaction.response.edit_message(
+            content="Description set! Please select a species:",
+            embed=embed,
+            view=SpeciesSelectionView(self.user_id)
+        )
+        logging.info(f"User {self.user_id} provided description with {word_count} words.")
 
-            # Proceed to species selection
-            await interaction.response.edit_message(
-                content="Description set! Please select a species:",
-                view=SpeciesSelectionView(self.user_id)
-            )
 
 class GenderSelectionView(discord.ui.View):
     """
@@ -2363,6 +2671,32 @@ class BackPhysicalAbilitiesButton(discord.ui.Button):
             await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
             logging.error(f"Error in BackPhysicalAbilitiesButton callback for user {self.user_id}: {e}")
 
+class ConfirmationView(discord.ui.View):
+    def __init__(self, user_id, area_lookup):
+        super().__init__()
+        self.user_id = user_id
+        self.area_lookup = area_lookup
+        self.add_item(discord.ui.Button(
+            label="Confirm", 
+            style=discord.ButtonStyle.green,
+            custom_id="confirm"
+        ))
+        self.add_item(discord.ui.Button(
+            label="Cancel", 
+            style=discord.ButtonStyle.red,
+            custom_id="cancel"
+        ))
+
+    async def callback(self, interaction: discord.Interaction):
+        if interaction.custom_id == "confirm":
+            # Proceed with character creation
+            await finalize_character(interaction, self.user_id, self.area_lookup)
+        else:
+            # Return to ability scores
+            await interaction.response.edit_message(
+                content="Returning to ability scores...",
+                view=MentalAbilitiesView(self.user_id, self.area_lookup)
+            )
 
 class FinishAssignmentButton(discord.ui.Button):
     def __init__(self, user_id, area_lookup):
@@ -2728,11 +3062,13 @@ async def create_character(interaction: discord.Interaction):
 @app_commands.describe(npc_name="The name of the NPC to attack.")
 async def attack(interaction: discord.Interaction, npc_name: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     area = character.current_area
     for npc in area.npcs:
@@ -2750,11 +3086,13 @@ async def attack(interaction: discord.Interaction, npc_name: str):
 @bot.tree.command(name="npc_list", description="List all NPCs in your current area.")
 async def npc_list(interaction: discord.Interaction):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     area = character.current_area
     if area.npcs:
@@ -2767,11 +3105,13 @@ async def npc_list(interaction: discord.Interaction):
 @app_commands.describe(npc_name="The name of the NPC to talk to.")
 async def talk(interaction: discord.Interaction, npc_name: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     area = character.current_area
     for npc in area.npcs:
@@ -2789,7 +3129,7 @@ async def talk(interaction: discord.Interaction, npc_name: str):
 )
 async def inventory_command(interaction: discord.Interaction):
     user_id = str(interaction.user.id)
-    character = characters.get(user_id)
+    character = load_or_get_character(user_id)
     
     if not character:
         await interaction.response.send_message(
@@ -2811,12 +3151,14 @@ async def inventory_command(interaction: discord.Interaction):
 async def pickup(interaction: discord.Interaction, item_name: str):
     user_id = str(interaction.user.id)
     channel_id = str(interaction.channel_id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet. Use `/create_character` to get started.", ephemeral=True)
-        return
-
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
+   
     area_inventory = get_area_inventory(channel_id)
     # Find the item in the area inventory
     for item in area_inventory:
@@ -2839,11 +3181,13 @@ async def pickup(interaction: discord.Interaction, item_name: str):
 async def drop(interaction: discord.Interaction, item_name: str):
     user_id = str(interaction.user.id)
     channel_id = str(interaction.channel_id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     # Find the item in the character's inventory
     for item in character.inventory:
@@ -2861,11 +3205,13 @@ async def drop(interaction: discord.Interaction, item_name: str):
 @app_commands.describe(item_name="The name of the item to destroy.")
 async def destroy(interaction: discord.Interaction, item_name: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     # Find the item in the character's inventory
     for item in character.inventory:
@@ -2881,11 +3227,13 @@ async def destroy(interaction: discord.Interaction, item_name: str):
 @app_commands.describe(item_name="The name of the item to equip.", slot="The equipment slot.")
 async def equip(interaction: discord.Interaction, item_name: str, slot: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     slot = slot.lower()
     valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
@@ -2912,11 +3260,13 @@ async def equip(interaction: discord.Interaction, item_name: str, slot: str):
 @app_commands.describe(slot="The equipment slot to unequip.")
 async def unequip(interaction: discord.Interaction, slot: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     slot = slot.lower()
     valid_slots = ['armor', 'left_hand', 'right_hand', 'back'] + [f'belt_slot_{i+1}' for i in range(4)] + [f'magic_slot_{i+1}' for i in range(3)]
@@ -2936,7 +3286,7 @@ async def unequip(interaction: discord.Interaction, slot: str):
 @app_commands.describe(item_name="The name of the item to use.")
 async def use_item(interaction: discord.Interaction, item_name: str):
     user_id = str(interaction.user.id)
-    character = characters.ge(user_id)
+    character = load_or_get_character(user_id)
 
     if not character:
         await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
@@ -2961,11 +3311,13 @@ async def use_item(interaction: discord.Interaction, item_name: str):
 @app_commands.describe(item_name="The name of the item to examine.")
 async def examine(interaction: discord.Interaction, item_name: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     # Search in inventory
     for item in character.inventory:
@@ -2990,11 +3342,13 @@ async def examine(interaction: discord.Interaction, item_name: str):
 @app_commands.describe(item_name="The name of the item to identify.")
 async def identify(interaction: discord.Interaction, item_name: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+    
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
 
     # Find the item in the character's inventory
     for item in character.inventory:
@@ -3020,18 +3374,20 @@ async def identify(interaction: discord.Interaction, item_name: str):
 
 @bot.tree.command(name="travel", description="Move to a connected area.")
 @app_commands.describe(destination="The name of the area to move to.")
-async def travel(ctx, destination: str):
-    user_id = str(ctx.author.id)
-    character = characters[user_id]
-    
+async def travel(interaction: discord.Interaction, destination: str):
+    user_id = str(interaction.author.id)
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await ctx.send("You don't have a character yet. Please create one first.")
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
     
     # Validate destination
     destination_area = area_lookup.get(destination)
     if not destination_area:
-        await ctx.send(f"Destination '{destination}' does not exist.")
+        await interaction.send(f"Destination '{destination}' does not exist.")
         return
     
     # Set travel details
@@ -3045,7 +3401,7 @@ async def travel(ctx, destination: str):
     characters[user_id] = character
     save_characters(characters)
     
-    await ctx.send(f"Traveling to **{destination}**. You will arrive in {traveltime}.")
+    await interaction.send(f"Traveling to **{destination}**. You will arrive in {traveltime}.")
     logging.info(f"User '{user_id}' started traveling to '{destination}'.")
     
     # Start the travel task
@@ -3055,7 +3411,7 @@ async def travel(ctx, destination: str):
 @travel.autocomplete('destination')
 async def travel_autocomplete(interaction: discord.Interaction, current: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
+    character = load_or_get_character(user_id)
 
     if not character:
         return []  # No suggestions if user has no character
@@ -3082,12 +3438,14 @@ async def travel_autocomplete(interaction: discord.Interaction, current: str):
 @app_commands.describe(location_name="The name of the location to travel to.")
 async def travel_location(interaction: discord.Interaction, location_name: str):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-    
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
-    
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
+
     # Find the location in the current region
     for location in character.current_region.locations:
         if location.name.lower() == location_name.lower():
@@ -3105,11 +3463,14 @@ async def travel_location(interaction: discord.Interaction, location_name: str):
 @bot.tree.command(name="rest", description="Rest to regain health and spell slots.")
 async def rest(interaction: discord.Interaction):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
-
+    character = load_or_get_character(user_id)
+        
     if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        await interaction.response.send_message(
+            "You don't have a character yet. Use `/create_character` to get started.",
+            ephemeral=True
+        )
+
 
     character.rest()
     save_characters(characters)
@@ -3118,7 +3479,7 @@ async def rest(interaction: discord.Interaction):
 @bot.tree.command(name="location", description="View your current location.")
 async def location(interaction: discord.Interaction):
     user_id = str(interaction.user.id)
-    character = characters[user_id]
+    character = load_or_get_character(user_id)
 
     if not character:
         await interaction.response.send_message(
@@ -3159,62 +3520,270 @@ async def location(interaction: discord.Interaction):
 
 @bot.tree.command(name="scene", description="View the description of your current area.")
 async def scene(interaction: discord.Interaction):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
+    try:
+        user_id = str(interaction.user.id)
+        character = load_or_get_character(user_id)
+        
+        if not character:
+            await interaction.response.send_message(
+                "You don't have a character yet. Use `/create_character` to get started.",
+                ephemeral=True
+            )
+            return
 
-    if not character:
+        area = character.current_area
+        if not area:
+            await interaction.response.send_message(
+                "Your current area could not be found. Please contact the administrator.",
+                ephemeral=True
+            )
+            return
+
+        # Create the main embed
+        embed = discord.Embed(
+            title=area.name,
+            description=area.description,
+            color=discord.Color.green()
+        )
+
+        # Add location context
+        embed.add_field(
+            name="Location",
+            value=f"**{area.name}** in {character.current_location}\n"
+                  f"Region: {character.current_region}\n"
+                  f"Continent: {character.current_continent}",
+            inline=False
+        )
+
+        # Connected Areas
+        if hasattr(area, 'connected_areas') and area.connected_areas:
+            connected_names = []
+            for connected_area in area.connected_areas:
+                if hasattr(connected_area, 'name'):
+                    connected_names.append(connected_area.name)
+                elif isinstance(connected_area, str):
+                    connected_names.append(connected_area)
+            
+            if connected_names:
+                embed.add_field(
+                    name="Connected Areas",
+                    value=", ".join(connected_names),
+                    inline=False
+                )
+            else:
+                embed.add_field(name="Connected Areas", value="None", inline=False)
+        else:
+            embed.add_field(name="Connected Areas", value="None", inline=False)
+
+        # NPCs
+        if hasattr(area, 'npcs') and area.npcs:
+            npc_names = []
+            for npc in area.npcs:
+                if hasattr(npc, 'name'):
+                    npc_names.append(npc.name)
+                elif isinstance(npc, str):
+                    npc_names.append(npc)
+            
+            if npc_names:
+                embed.add_field(
+                    name="NPCs Present",
+                    value=", ".join(npc_names),
+                    inline=False
+                )
+            else:
+                embed.add_field(name="NPCs Present", value="None", inline=False)
+        else:
+            embed.add_field(name="NPCs Present", value="None", inline=False)
+
+        # Items
+        if hasattr(area, 'inventory') and area.inventory:
+            item_names = []
+            for item in area.inventory:
+                if isinstance(item, dict):
+                    item_names.append(item.get('Name', 'Unknown Item'))
+                elif hasattr(item, 'name'):
+                    item_names.append(item.name)
+                elif hasattr(item, 'Name'):
+                    item_names.append(item.Name)
+                elif isinstance(item, str):
+                    item_names.append(item)
+                else:
+                    logging.warning(f"Unknown item type in area inventory: {type(item)}")
+            
+            if item_names:
+                embed.add_field(
+                    name="Items Available",
+                    value=", ".join(item_names),
+                    inline=False
+                )
+            else:
+                embed.add_field(name="Items Available", value="None", inline=False)
+        else:
+            embed.add_field(name="Items Available", value="None", inline=False)
+
+        # Add time of day or environmental conditions if implemented
+        if hasattr(area, 'conditions'):
+            embed.add_field(
+                name="Conditions",
+                value=area.conditions,
+                inline=False
+            )
+
+        # Send the embed
+        await interaction.response.send_message(embed=embed, ephemeral=False)
+        logging.info(f"Scene information sent for user {user_id} in area {area.name}")
+
+    except Exception as e:
+        logging.error(f"Error in scene command: {e}", exc_info=True)
         await interaction.response.send_message(
-            "You don't have a character yet. Use `/create_character` to get started.",
+            "An error occurred while displaying the scene. Please try again later.",
             ephemeral=True
         )
-        return
 
-    area = character.current_area
-    if not area:
-        await interaction.response.send_message(
-            "Your current area could not be found. Please contact the administrator.",
-            ephemeral=True
-        )
-        return
-
-    # Create an embed
-    embed = discord.Embed(title=area.name, description=area.description, color=0x00ff00)
-
-    # Connected Areas
-    if area.connected_areas:
-        connected_area_names = ', '.join(connected_area.name for connected_area in area.connected_areas)
-        embed.add_field(name="Connected Areas", value=connected_area_names, inline=False)
-    else:
-        embed.add_field(name="Connected Areas", value="None", inline=False)
-
-    # NPCs
-    if area.npcs:
-        npc_names = ', '.join(npc.name for npc in area.npcs)
-        embed.add_field(name="NPCs Present", value=npc_names, inline=False)
-    else:
-        embed.add_field(name="NPCs Present", value="None", inline=False)
-
-    # Items
-    if area.inventory:
-        item_names = ', '.join(item.name for item in area.inventory)
-        embed.add_field(name="Items Available", value=item_names, inline=False)
-    else:
-        embed.add_field(name="Items Available", value="None", inline=False)
-
-    # Send the embed
-    await interaction.response.send_message(embed=embed, ephemeral=False)
-
-@bot.tree.command(name="stats", description="View your character's stats.")
+@bot.tree.command(name="stats", description="View your character's complete stats and abilities")
 async def stats(interaction: discord.Interaction):
-    user_id = str(interaction.user.id)
-    character = characters[user_id]
+    try:
+        user_id = str(interaction.user.id)
+        debug_cache_state()
+        character = load_or_get_character(user_id)
+        debug_cache_state()
+        
+        if not character:
+            await interaction.response.send_message(
+                "You don't have a character yet. Use `/create_character` to get started.",
+                ephemeral=True
+            )
+            return
 
-    if not character:
-        await interaction.response.send_message("You don't have a character yet.", ephemeral=True)
-        return
+        # Create the main character sheet embed
+        embed = discord.Embed(
+            title=f"{character.name}'s Character Sheet",
+            description=f"Level {character.level} {character.species} {character.char_class}",
+            color=discord.Color.blue()
+        )
 
-    stats_str = '\n'.join(f"{stat}: {value}" for stat, value in character.stats.items())
-    await interaction.response.send_message(f"**{character.name}'s Stats:**\n{stats_str}", ephemeral=False)
+        # Add character thumbnail if implemented
+        # embed.set_thumbnail(url="character_avatar_url")
+
+        # Basic Info Field
+        basic_info = (
+            f"**Gender:** {character.gender}\n"
+            f"**Pronouns:** {character.pronouns}\n"
+            f"**XP:** {character.xp}"
+        )
+        embed.add_field(name="Basic Info", value=basic_info, inline=False)
+
+        # Health and Defense
+        hp_bar = create_progress_bar(character.curr_hp, character.max_hp)
+        defense_info = (
+            f"**HP:** {character.curr_hp}/{character.max_hp} {hp_bar}\n"
+            f"**AC:** {character.ac}\n"
+            f"**Movement Speed:** {character.movement_speed} ft"
+        )
+        embed.add_field(name="Health & Defense", value=defense_info, inline=False)
+
+        # Core Stats with Modifiers
+        stats_info = ""
+        for stat, value in character.stats.items():
+            modifier = character.get_stat_modifier(stat)
+            sign = "+" if modifier >= 0 else ""
+            stats_info += f"**{stat}:** {value} ({sign}{modifier})\n"
+        embed.add_field(name="Ability Scores", value=stats_info, inline=True)
+
+        # Skills
+        if character.skills:
+            skills_info = "\n".join(f"**{skill}:** {value}" for skill, value in character.skills.items())
+            embed.add_field(name="Skills", value=skills_info or "None", inline=True)
+
+        # Equipment
+        equipment_info = ""
+        if character.equipment:
+            for slot, item in character.equipment.items():
+                if isinstance(item, list):  # For slots like Belt_Slots
+                    items = [i.name if hasattr(i, 'name') else str(i) for i in item if i is not None]
+                    if items:
+                        equipment_info += f"**{slot}:** {', '.join(items)}\n"
+                elif item is not None:
+                    item_name = item.name if hasattr(item, 'name') else str(item)
+                    equipment_info += f"**{slot}:** {item_name}\n"
+        embed.add_field(name="Equipment", value=equipment_info or "No equipment", inline=False)
+
+        # Spells and Spell Slots
+        if character.spells or character.spellslots:
+            spells_info = "**Spell Slots:**\n"
+            if character.spellslots:
+                for level, slots in character.spellslots.items():
+                    if isinstance(slots, dict):
+                        available = slots.get('available', 0)
+                        maximum = slots.get('max', 0)
+                        slot_bar = create_progress_bar(available, maximum)
+                        spells_info += f"Level {level}: {available}/{maximum} {slot_bar}\n"
+            
+            if character.spells:
+                spells_info += "\n**Known Spells:**\n"
+                for level, spells in character.spells.items():
+                    spell_list = ", ".join(spells) if isinstance(spells, list) else spells
+                    spells_info += f"Level {level}: {spell_list}\n"
+            
+            embed.add_field(name="Spellcasting", value=spells_info or "No spells", inline=False)
+
+        # Abilities
+        if character.abilities:
+            abilities_info = "\n".join(f"**{ability}:** {desc}" 
+                                     for ability, desc in character.abilities.items())
+            embed.add_field(name="Abilities", value=abilities_info or "No abilities", inline=False)
+
+        # Currency
+        if character.currency:
+            currency_info = "\n".join(f"**{currency}:** {amount}" 
+                                    for currency, amount in character.currency.items())
+            embed.add_field(name="Currency", value=currency_info or "No currency", inline=True)
+
+        # Add footer with character creation date or last updated
+        embed.set_footer(text="Use /scene to view your surroundings")
+
+        # Send the embed
+        await interaction.response.send_message(embed=embed, ephemeral=False)
+        logging.info(f"Character sheet displayed for user {user_id}")
+
+    except Exception as e:
+        logging.error(f"Error displaying character sheet: {e}", exc_info=True)
+        await interaction.response.send_message(
+            "An error occurred while displaying your character sheet. Please try again.",
+            ephemeral=True
+        )
+
+def create_progress_bar(current: int, maximum: int, length: int = 10) -> str:
+    """
+    Creates a visual progress bar using block characters.
+    Args:
+        current (int): Current value
+        maximum (int): Maximum value
+        length (int): Length of the progress bar in characters
+    Returns:
+        str: A string representing a progress bar
+    """
+    try:
+        if maximum <= 0:
+            return "⬜" * length
+        
+        filled = int((current / maximum) * length)
+        if filled > length:
+            filled = length
+        elif filled < 0:
+            filled = 0
+            
+        empty = length - filled
+        
+        # Using different Unicode block characters for better visualization
+        bar = "⬛" * filled + "⬜" * empty
+        
+        # Add percentage
+        percentage = int((current / maximum) * 100)
+        return f"{bar} {percentage}%"
+    except Exception as e:
+        logging.error(f"Error creating progress bar: {e}")
+        return "Error"
 
 # ---------------------------- #
 #           Events             #
@@ -3334,7 +3903,7 @@ async def sync_commands():
 async def on_ready():
     try:
         logging.info(f'Logged in as {bot.user.name}')
-        
+        verify_character_data()
         # Start the scheduler
         if not hasattr(bot, 'scheduler_running'):
             scheduler = AsyncIOScheduler()
@@ -3378,7 +3947,8 @@ async def on_message(message: discord.Message):
         await message.channel.send(f'Character created for {message.author.name}.')
         logging.info(f"Character created for user {user_id} with name {message.author.name}.")
 
-    character = characters[user_id]
+    character = load_or_get_character(user_id)
+   
     action, stat = await parse_action(message)
     if action and stat:
         logging.info(f"Processing action '{action}' for user {user_id} associated with stat '{stat}'.")
