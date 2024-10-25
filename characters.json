@@ -6,14 +6,14 @@
         "Char_Class": "Warrior",
         "Gender": "Female",
         "Pronouns": "She/Her",
-        "Description": "She is awesome possums",
+        "Description": "Aaaaaaaaaaaaaaaaaaaaaa",
         "Stats": {
             "Strength": 12,
             "Dexterity": 15,
             "Constitution": 15,
             "Intelligence": 12,
-            "Wisdom": 15,
-            "Charisma": 12
+            "Wisdom": 12,
+            "Charisma": 15
         },
         "Skills": {},
         "Inventory": {},
@@ -48,7 +48,7 @@
         "XP": 0,
         "Reputation": {},
         "Is_Traveling": false,
-        "Current_Area": "Marketplace Square",
+        "Current_Area": "Crystalline Chamber",
         "Current_Location": "Stonehaven",
         "Current_Region": "Northern Kingdoms",
         "Current_Continent": "Aetheria",

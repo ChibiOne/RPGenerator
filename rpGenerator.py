@@ -12,6 +12,7 @@ import re
 import logging
 import random
 import math
+import time
 from datetime import datetime, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -23,6 +24,7 @@ load_dotenv()
 # Discord and OpenAI API keys
 DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+CHANNEL_ID = 1183315622558433342
 
 ACTIONS_FILE = 'actions.json'
 CHARACTERS_FILE = 'characters.json'
@@ -326,21 +328,18 @@ def load_game_data():
         return {}
 
 def load_or_get_character(user_id: str, force_reload: bool = False):
-    """
-    Gets a character from cache or loads it from file if needed.
-    """
     global character_cache, last_cache_update, characters
     
     # Clean the input user_id
     user_id = clean_user_id(user_id)
     logging.info(f"Looking for cleaned user_id: {user_id}")
-    
-    current_time = datetime.today()
+    current_time = time.time()  # Use Unix timestamp
     
     try:
+        # Fix the cache duration check
         if (force_reload or 
             not character_cache or 
-            (current_time - last_cache_update) >= CACHE_DURATION):
+            (current_time - last_cache_update) >= CACHE_DURATION):  # Convert to float for comparison
             
             logging.info("Reloading character cache from file")
             
@@ -417,41 +416,6 @@ def load_or_get_character(user_id: str, force_reload: bool = False):
 #          Utilities           #
 # ---------------------------- #
 
-def clean_user_id(user_id: str) -> str:
-    """
-    Cleans a user ID string to ensure consistent format.
-    Removes brackets, quotes, and whitespace.
-    """
-    if user_id is None:
-        return ""
-    
-    # Convert to string if not already
-    user_id = str(user_id)
-    
-    # Remove common wrapping characters
-    chars_to_remove = "[]'\"\ "
-    for char in chars_to_remove:
-        user_id = user_id.replace(char, '')
-    
-    return user_id
-
-def verify_character(char_obj, user_id: str) -> bool:
-    """Verify that a character object is valid"""
-    if char_obj is None:
-        logging.error(f"Character object is None for user {user_id}")
-        return False
-        
-    if not hasattr(char_obj, 'name'):
-        logging.error(f"Character object has no 'name' attribute for user {user_id}")
-        return False
-        
-    if not hasattr(char_obj, 'user_id'):
-        logging.error(f"Character object has no 'user_id' attribute for user {user_id}")
-        return False
-        
-    logging.info(f"Verified character object for {user_id}: {char_obj.name}")
-    return True
-
 def debug_cache_state():
     """Debug helper to examine current cache state"""
     logging.info("=== Cache Debug Information ===")
@@ -463,6 +427,24 @@ def debug_cache_state():
             logging.info(f"Cache entry: {k!r} -> {type(v).__name__}")
     logging.info("===========================")
 
+def clean_user_id(user_id: str) -> str:
+    """
+    Cleans a user ID string to ensure consistent format.
+    Removes brackets, quotes, and whitespace.
+    """
+    if user_id is None:
+        return ""
+    
+    # Convert to string if not already
+    user_id = str(user_id)
+    
+    # Fix the escape sequence - use a set of characters instead
+    chars_to_remove = set("[]'\" ")  # Remove the escape sequence and use a set
+    
+    for char in chars_to_remove:
+        user_id = user_id.replace(char, '')
+    
+    return user_id
 
 #Verify a file is writable
 def verify_file_permissions(filename):
@@ -549,62 +531,177 @@ def calculate_distance(coord1, coord2):
     #  Output: The distance between Area 1 and Area 2 is 5.0 units.
 
 def get_travel_time(character, destination_area):
-    current_area = character.current_area
-    distance = calculate_distance(current_area.coordinates, destination_area.coordinates)
-    speed = character.movement_speed
-    if speed == 0:
-        return float('inf')  # Avoid division by zero
-    travel_time = distance / speed
-    return travel_time
+    """Calculate travel time in seconds"""
+    try:
+        if not character.current_area or not destination_area:
+            return 0
+            
+        distance = calculate_distance(character.current_area.coordinates, destination_area.coordinates)
+        speed = character.movement_speed
+        
+        if speed == 0:
+            return float('inf')
+            
+        # Convert distance and speed to determine seconds of travel
+        travel_time = (distance / speed) * 60  # Convert to seconds
+        
+        return travel_time
+        
+    except Exception as e:
+        logging.error(f"Error calculating travel time: {e}")
+        return 0
+    
+# Helper function to create scene embed
+def create_scene_embed(area):
+    """Creates an embed for scene description"""
+    try:
+        embed = discord.Embed(
+            title=area.name,
+            description=area.description,
+            color=discord.Color.green()
+        )
+
+        # Connected Areas
+        if hasattr(area, 'connected_areas') and area.connected_areas:
+            connected_area_names = ', '.join(f"**{connected_area.name}**" 
+                                           for connected_area in area.connected_areas)
+            embed.add_field(
+                name="Connected Areas",
+                value=connected_area_names,
+                inline=False
+            )
+        else:
+            embed.add_field(name="Connected Areas", value="None", inline=False)
+
+        # NPCs
+        if hasattr(area, 'npcs') and area.npcs:
+            npc_names = ', '.join(f"**{npc.name}**" for npc in area.npcs)
+            embed.add_field(name="NPCs Present", value=npc_names, inline=False)
+        else:
+            embed.add_field(name="NPCs Present", value="None", inline=False)
+
+        # Items
+        if hasattr(area, 'inventory') and area.inventory:
+            item_names = ', '.join(f"**{item.name}**" 
+                                 for item in area.inventory if hasattr(item, 'name'))
+            embed.add_field(
+                name="Items Available",
+                value=item_names if item_names else "None",
+                inline=False
+            )
+        else:
+            embed.add_field(name="Items Available", value="None", inline=False)
+
+        return embed
+    except Exception as e:
+        logging.error(f"Error creating scene embed: {e}", exc_info=True)
+        return None
 
 async def travel_task(bot, character, user_id, characters, save_characters):
+    """Handle the travel process and arrival"""
     try:
-        dt = datetime.today()  # Get timezone naive now
-        seconds = dt.timestamp()
-        travel_duration = character.travel_end_time - seconds
-
-        # Ensure travel_duration is non-negative
-        if travel_duration > 0:
-            await asyncio.sleep(travel_duration)
-        else:
-            logging.warning(f"Negative or zero travel duration for user '{user_id}'. Skipping sleep.")
+        current_time = time.time()
+        if character.travel_end_time > current_time:
+            wait_time = character.travel_end_time - current_time
+            await asyncio.sleep(wait_time)
 
         # Update character's status
         character.is_traveling = False
+        previous_area = character.current_area
         character.move_to_area(character.travel_destination)
+        destination_area = character.travel_destination
         character.travel_destination = None
         character.travel_end_time = None
 
-        # Update the global 'characters' dictionary
-        characters[user_id] = character
+        # Create arrival embed
+        arrival_embed = discord.Embed(
+            title="🏁 Arrival Notice",
+            description=f"You have arrived at **{character.current_area.name}**!",
+            color=discord.Color.green()
+        )
+        
+        # Add area description
+        if character.current_area.description:
+            arrival_embed.add_field(
+                name="Area Description",
+                value=character.current_area.description,
+                inline=False
+            )
 
-        # Save the updated 'characters' dictionary
+        # Add connected areas
+        if character.current_area.connected_areas:
+            connected = ", ".join(f"**{area.name}**" for area in character.current_area.connected_areas)
+            arrival_embed.add_field(
+                name="Connected Areas",
+                value=f"You can travel to: {connected}",
+                inline=False
+            )
+
+        # Send arrival notice in DM
+        try:
+            if hasattr(character, 'last_travel_message') and character.last_travel_message:
+                try:
+                    await character.last_travel_message.edit(embed=arrival_embed)
+                    character.last_travel_message = None
+                except Exception:
+                    user = await bot.fetch_user(int(user_id))
+                    if user:
+                        await user.send(embed=arrival_embed)
+            else:
+                user = await bot.fetch_user(int(user_id))
+                if user:
+                    await user.send(embed=arrival_embed)
+        except Exception as e:
+            logging.error(f"Error sending arrival notice: {e}")
+
+        # Create and send scene embed
+        try:
+            logging.info(f"Creating scene embed for {character.current_area.name}")
+            scene_embed = create_scene_embed(character.current_area)
+            
+            # Verify bot is connected
+            if not bot.is_ready():
+                logging.error("Bot is not ready")
+                return
+
+            # Get channel
+            channel = bot.get_channel(CHANNEL_ID)
+            if not channel:
+                channel = await bot.fetch_channel(CHANNEL_ID)
+            
+            if channel:
+                logging.info(f"Sending scene embed to channel {CHANNEL_ID}")
+                # Check permissions
+                permissions = channel.permissions_for(channel.guild.me)
+                if not permissions.send_messages:
+                    logging.error("Bot doesn't have permission to send messages in this channel")
+                    return
+                    
+                # Try sending the message
+                message = await channel.send(
+                    content=f"**{character.name}** has arrived in **{character.current_area.name}**",
+                    embed=scene_embed
+                )
+                if message:
+                    logging.info("Scene embed sent successfully")
+                else:
+                    logging.error("Failed to send scene embed - no message returned")
+            else:
+                logging.error(f"Could not find channel with ID {CHANNEL_ID}")
+                
+        except discord.Forbidden as e:
+            logging.error(f"Bot lacks permissions to send messages: {e}")
+        except discord.HTTPException as e:
+            logging.error(f"HTTP error sending scene embed: {e}")
+        except Exception as e:
+            logging.error(f"Error sending scene description: {e}", exc_info=True)
+
+        # Update character data
+        characters[user_id] = character
         save_characters(characters)
 
-        # Notify the user of arrival
-        try:
-            user = await bot.fetch_user(int(user_id))
-        except discord.NotFound:
-            logging.error(f"User with ID '{user_id}' not found.")
-            user = None
-        except discord.HTTPException as e:
-            logging.error(f"HTTPException while fetching user '{user_id}': {e}")
-            user = None
-
-        if user:
-            try:
-                await user.send(f"You have arrived at **{character.current_area.name}**.")
-                logging.info(f"Sent arrival notification to user '{user_id}'.")
-            except discord.Forbidden:
-                logging.error(f"Cannot send DM to user '{user_id}'. They may have DMs disabled.")
-            except discord.HTTPException as e:
-                logging.error(f"Failed to send DM to user '{user_id}': {e}")
-
-        logging.info(f"User '{user_id}' has arrived at '{character.current_area.name}'.")
-    
     except Exception as e:
-        logging.error(f"Error in travel_task for user '{user_id}': {e}")
-
+        logging.error(f"Error in travel_task for user '{user_id}': {e}", exc_info=True)
 
 def load_actions():
     """
@@ -1344,6 +1441,7 @@ class Character(Entity):
     Represents a player's character with various attributes.
     """
     def __init__(self, user_id, name=None, species=None, char_class=None, gender=None, pronouns=None, description=None, stats=None, skills=None, inventory=None, equipment=None, currency=None, spells=None, abilities=None, ac=None, max_hp=1, curr_hp=1, movement_speed=None, travel_end_time=None, spellslots=None, level=None, xp=None, reputation=None, is_traveling=False, current_area=None, current_location=None, current_region=None, current_continent=None, current_world=None, area_lookup=None, capacity=None, **kwargs):
+        self.last_travel_message = None
         self.user_id = user_id
         self.area_lookup = area_lookup
         self.name = name
@@ -1391,14 +1489,38 @@ class Character(Entity):
         self.current_continent = current_continent if current_continent else "Aerilon"
         self.current_world = current_world if current_world else "Eldoria"
     
-    def to_dict(self):
+    def convert_equipment_item(item_data):
         """
-        Convert Character instance to a dictionary with capitalized keys.
+        Converts equipment item data into an Item object.
+        Args:
+            item_data: Can be None, dict, or Item object
         Returns:
-            dict: Dictionary representation of the Character
+            Item or None: Converted item or None if invalid data
         """
         try:
-            return {
+            if not item_data:
+                return None
+                
+            if isinstance(item_data, dict):
+                # If we have valid item data as a dictionary
+                return Item.from_dict(item_data)
+            
+            if hasattr(item_data, 'to_dict'):  # If it's already an Item object
+                return item_data
+                
+            logging.warning(f"Unknown item data type: {type(item_data)}")
+            return None
+            
+        except Exception as e:
+            logging.error(f"Error converting equipment item: {e}")
+            return None
+
+    def to_dict(self):
+        """
+        Convert Character instance to a dictionary without Message objects
+        """
+        try:
+            base_dict = {
                 'User_ID': self.user_id,
                 'Name': self.name,
                 'Species': self.species,
@@ -1426,7 +1548,7 @@ class Character(Entity):
                 'Max_HP': self.max_hp,
                 'Curr_HP': self.curr_hp,
                 'Movement_Speed': self.movement_speed,
-                'Travel_End_Time': self.travel_end_time.timestamp() if self.travel_end_time else None,
+                'Travel_End_Time': self.travel_end_time,
                 'Spellslots': self.spellslots,
                 'Level': self.level,
                 'XP': self.xp,
@@ -1438,6 +1560,11 @@ class Character(Entity):
                 'Current_Continent': self.current_continent,
                 'Current_World': self.current_world
             }
+            
+            # Skip discord.Message objects and other non-serializable types
+            return {k: v for k, v in base_dict.items() 
+                    if not isinstance(v, discord.Message)}
+                    
         except Exception as e:
             logging.error(f"Error in Character.to_dict: {e}")
             raise
@@ -1446,133 +1573,90 @@ class Character(Entity):
     def from_dict(cls, data, user_id, area_lookup=None, item_lookup=None):
         """
         Create a Character instance from a dictionary with capitalized keys.
-        Args:
-            data (dict): Dictionary containing character data
-            user_id (str): User ID for the character
-            area_lookup (dict): Dictionary mapping area names to Area instances
-            item_lookup (dict): Dictionary mapping item names to Item instances
-        Returns:
-            Character: New Character instance
         """
         try:
-            
-            # Helper function to convert equipment data
-            def convert_equipment_item(item_data):
-                if not item_data:
-                    return None
-                if isinstance(item_data, dict):
-                    item_name = item_data.get('Name')
-                    if item_lookup and item_name in item_lookup:
-                        return item_lookup[item_name]
-                    return Item.from_dict(item_data)
-                return None
-
             # Convert equipment data
             equipment_data = data.get('Equipment', {})
             equipment = {
-                'Armor': convert_equipment_item(equipment_data.get('Armor')),
-                'Left_Hand': convert_equipment_item(equipment_data.get('Left_Hand')),
-                'Right_Hand': convert_equipment_item(equipment_data.get('Right_Hand')),
-                'Belt_Slots': [convert_equipment_item(item) 
+                'Armor': cls.convert_equipment_item(equipment_data.get('Armor')),
+                'Left_Hand': cls.convert_equipment_item(equipment_data.get('Left_Hand')),
+                'Right_Hand': cls.convert_equipment_item(equipment_data.get('Right_Hand')),
+                'Belt_Slots': [cls.convert_equipment_item(item) 
                             for item in equipment_data.get('Belt_Slots', [None] * 4)],
-                'Back': convert_equipment_item(equipment_data.get('Back')),
-                'Magic_Slots': [convert_equipment_item(item) 
+                'Back': cls.convert_equipment_item(equipment_data.get('Back')),
+                'Magic_Slots': [cls.convert_equipment_item(item) 
                             for item in equipment_data.get('Magic_Slots', [None] * 3)]
             }
 
             # Convert inventory data
             inventory_data = data.get('Inventory', {})
-            inventory = {}
-            for k, v in inventory_data.items():
-                if isinstance(v, dict):
-                    item_name = v.get('Name')
-                    if item_lookup and item_name in item_lookup:
-                        inventory[k] = item_lookup[item_name]
-                    else:
-                        inventory[k] = Item.from_dict(v)
-                else:
-                    inventory[k] = v
+            inventory = {k: Item.from_dict(v) if isinstance(v, dict) else v 
+                        for k, v in inventory_data.items()}
 
-                # Convert travel_end_time
-                travel_end_time = None
-                if data.get('Travel_End_Time'):
-                    try:
-                        # If it's stored as a timestamp
-                        if isinstance(data['Travel_End_Time'], (int, float)):
-                            travel_end_time = datetime.fromtimestamp(data['Travel_End_Time'])
-                        # If it's stored as an ISO format string
-                        elif isinstance(data['Travel_End_Time'], str):
-                            travel_end_time = datetime.fromisoformat(data['Travel_End_Time'])
-                    except (TypeError, ValueError) as e:
-                        logging.warning(f"Could not parse Travel_End_Time: {e}")
+            # Convert travel_end_time
+            travel_end_time = data.get('Travel_End_Time')
 
-                        # Get current area from area_lookup
-                        current_area_name = data.get('Current_Area')
-                        current_area = None
-                        if area_lookup and current_area_name:
-                            current_area = area_lookup.get(current_area_name)
-                            if not current_area:
-                                logging.warning(f"Could not find area '{current_area_name}' in area_lookup")
+            # Get current area from area_lookup
+            current_area_name = data.get('Current_Area')
+            current_area = None
+            if area_lookup and current_area_name:
+                current_area = area_lookup.get(current_area_name)
+                if not current_area:
+                    logging.warning(f"Could not find area '{current_area_name}' in area_lookup")
 
-                # Create and return new Character instance
-                char = cls(
-                    user_id=user_id,
-                    name=data.get('Name'),
-                    species=data.get('Species'),
-                    char_class=data.get('Char_Class'),
-                    gender=data.get('Gender'),
-                    pronouns=data.get('Pronouns'),
-                    description=data.get('Description'),
-                    stats=data.get('Stats', {
-                        'Strength': 10,
-                        'Dexterity': 10,
-                        'Constitution': 10,
-                        'Intelligence': 10,
-                        'Wisdom': 10,
-                        'Charisma': 10
-                    }),
-                    skills=data.get('Skills', {}),
-                    inventory=inventory,
-                    equipment=equipment,
-                    currency=data.get('Currency', {}),
-                    spells=data.get('Spells', {}),
-                    abilities=data.get('Abilities', {}),
-                    ac=data.get('AC', 5),
-                    max_hp=data.get('Max_HP', 1),
-                    curr_hp=data.get('Curr_HP', 1),
-                    movement_speed=data.get('Movement_Speed', 30),
-                    travel_end_time=travel_end_time,
-                    spellslots=data.get('Spellslots'),
-                    level=data.get('Level', 1),
-                    xp=data.get('XP', 0),
-                    reputation=data.get('Reputation', {}),
-                    is_traveling=data.get('Is_Traveling', False),
-                    current_area=current_area,
-                    current_location=data.get('Current_Location', "Northhold"),
-                    current_region=data.get('Current_Region', "Northern Mountains"),
-                    current_continent=data.get('Current_Continent', "Aerilon"),
-                    current_world=data.get('Current_World', "Eldoria"),
-                    area_lookup=area_lookup,
-                    capacity=data.get('Capacity', 150)
-                )
-            # Structure verification before returning
-            if not hasattr(char, 'Name') or not char.name:
+            # Create the character object
+            char = cls(
+                user_id=user_id,
+                name=data.get('Name'),
+                species=data.get('Species'),
+                char_class=data.get('Char_Class'),
+                gender=data.get('Gender'),
+                pronouns=data.get('Pronouns'),
+                description=data.get('Description'),
+                stats=data.get('Stats', {
+                    'Strength': 10,
+                    'Dexterity': 10,
+                    'Constitution': 10,
+                    'Intelligence': 10,
+                    'Wisdom': 10,
+                    'Charisma': 10
+                }),
+                skills=data.get('Skills', {}),
+                inventory=inventory,
+                equipment=equipment,
+                currency=data.get('Currency', {}),
+                spells=data.get('Spells', {}),
+                abilities=data.get('Abilities', {}),
+                ac=data.get('AC', 5),
+                max_hp=data.get('Max_HP', 1),
+                curr_hp=data.get('Curr_HP', 1),
+                movement_speed=data.get('Movement_Speed', 30),
+                travel_end_time=travel_end_time,
+                spellslots=data.get('Spellslots'),
+                level=data.get('Level', 1),
+                xp=data.get('XP', 0),
+                reputation=data.get('Reputation', {}),
+                is_traveling=data.get('Is_Traveling', False),
+                current_area=current_area,
+                current_location=data.get('Current_Location', "Northhold"),
+                current_region=data.get('Current_Region', "Northern Mountains"),
+                current_continent=data.get('Current_Continent', "Aerilon"),
+                current_world=data.get('Current_World', "Eldoria"),
+                area_lookup=area_lookup,
+                capacity=data.get('Capacity', 150)
+            )
+
+            # Verify the created character
+            if not char.name:
                 logging.error(f"Created character has no name for user {user_id}")
                 return None
-                
-            if not hasattr(char, 'User_ID') or not char.user_id:
-                logging.error(f"Created character has no user_id for user {user_id}")
-                return None
-                
+
             logging.info(f"Successfully created character {char.name} for user {user_id}")
             return char
-            
+
         except Exception as e:
             logging.error(f"Error creating Character from dict: {e}")
             return None
-        except Exception as e:
-            logging.error(f"Error creating Character from dict: {e}")
-            raise
 
     def get_stat_modifier(self, stat):
         """
@@ -1689,79 +1773,219 @@ class Character(Entity):
             raise ValueError(f"Invalid equipment slot: {slot}.")
         
     def move_to_area(self, new_area):
-        """
-        Moves the character to a new area.
-        Args:
-            new_area (Area): The new Area instance.
-        """
-        if new_area:
-            self.current_area = new_area
-            logging.info(f"Character '{self.name}' moved to '{new_area.name}'.")
-        else:
-            logging.warning(f"Attempted to move character '{self.name}' to a non-existent area.")
+            """
+            Moves the character to a new area.
+            Args:
+                new_area (Area): The new Area instance.
+            Returns:
+                bool: True if move successful, False otherwise
+            """
+            try:
+                if not new_area:
+                    logging.warning(f"Attempted to move character '{self.name}' to a non-existent area.")
+                    return False
 
-    
-    def move_to_location(self, new_location):
-        # Check if new_location is adjacent or accessible from current location
-        # For simplicity, assume any location within the same region is accessible
-        if self.current_region and new_location in self.current_region.locations:
-            self.current_location = new_location
-            # Update current area to a default area in the new location
-            self.current_area = new_location.areas[0] if new_location.areas else None
-            return True
-        else:
-            return False
-        
-    def move_to_region(self, new_region):
-        # Check if new_region is adjacent or accessible from current region
-        # For simplicity, assume any region within the same continent is accessible
-        if new_region in self.current_continent.regions:
-            self.current_region = new_region
-            # Update current location and area
-            self.current_location = new_region.locations[0] if new_region.locations else None
-            self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
-            return True
-        else:
-            return False
-        
-    def move_to_continent(self, new_continent):
-        # Implement conditions for moving between continents (e.g., must be at a port)
-        if new_continent in self.current_world.continents:
-            # Check if the character is at a port area that allows intercontinental travel
-            if self.current_area and self.current_area.allows_intercontinental_travel:
-                self.current_continent = new_continent
-                # Update current region, location, and area
-                self.current_region = new_continent.regions[0] if new_continent.regions else "Avaloria"
-                self.current_location = self.current_region.locations[0] if self.current_region and self.current_region.locations else ""
-                self.current_area = self.current_location.areas[0] if self.current_location and self.current_location.areas else None
+                if self.is_traveling:
+                    logging.warning(f"Character '{self.name}' is currently traveling and cannot change areas.")
+                    return False
+
+                # Validate the move is allowed
+                if (self.current_area and 
+                    new_area not in self.current_area.connected_areas and 
+                    not self.is_traveling):
+                    logging.warning(f"Attempted to move character '{self.name}' to non-connected area '{new_area.name}'.")
+                    return False
+
+                old_area = self.current_area
+                self.current_area = new_area
+                logging.info(f"Character '{self.name}' moved from '{old_area.name if old_area else 'None'}' to '{new_area.name}'.")
                 return True
-            else:
-                print("You must be at a port to travel between continents.")
+
+            except Exception as e:
+                logging.error(f"Error moving character '{self.name}' to new area: {e}")
                 return False
-        else:
+
+    def move_to_location(self, new_location):
+        """
+        Move to a new location within the current region.
+        """
+        try:
+            if not self.current_region:
+                logging.warning(f"Character '{self.name}' has no current region.")
+                return False
+
+            if self.is_traveling:
+                logging.warning(f"Character '{self.name}' is currently traveling.")
+                return False
+
+            if new_location not in self.current_region.locations:
+                logging.warning(f"Location '{new_location}' not found in region '{self.current_region}'.")
+                return False
+
+            self.current_location = new_location
+            
+            # Find best default area in new location
+            if new_location.areas:
+                # Try to find a "central" or "main" area first
+                default_area = next(
+                    (area for area in new_location.areas if 
+                    any(keyword in area.name.lower() for keyword in ['central', 'main', 'plaza', 'square'])),
+                    new_location.areas[0]
+                )
+                self.current_area = default_area
+            else:
+                self.current_area = None
+                logging.warning(f"No areas found in location '{new_location.name}'.")
+
+            logging.info(f"Character '{self.name}' moved to location '{new_location.name}'.")
+            return True
+
+        except Exception as e:
+            logging.error(f"Error moving character '{self.name}' to new location: {e}")
+            return False
+
+    def move_to_region(self, new_region):
+        """
+        Move to a new region within the current continent.
+        """
+        try:
+            if not self.current_continent:
+                logging.warning(f"Character '{self.name}' has no current continent.")
+                return False
+
+            if self.is_traveling:
+                logging.warning(f"Character '{self.name}' is currently traveling.")
+                return False
+
+            if new_region not in self.current_continent.regions:
+                logging.warning(f"Region '{new_region}' not found in continent '{self.current_continent}'.")
+                return False
+
+            self.current_region = new_region
+            
+            # Find best default location in new region
+            if new_region.locations:
+                # Try to find a "capital" or "main" location first
+                default_location = next(
+                    (loc for loc in new_region.locations if 
+                     any(keyword in loc.name.lower() for keyword in ['capital', 'main', 'city', 'town'])),
+                    new_region.locations[0]
+                )
+                self.move_to_location(default_location)
+            else:
+                logging.warning(f"No locations found in region '{new_region.name}'.")
+                self.current_location = None
+                self.current_area = None
+
+            logging.info(f"Character '{self.name}' moved to region '{new_region.name}'.")
+            return True
+
+        except Exception as e:
+            logging.error(f"Error moving character '{self.name}' to new region: {e}")
+            return False
+
+    def move_to_continent(self, new_continent):
+        """
+        Move to a new continent if at a valid port.
+        """
+        try:
+            if not self.current_world or new_continent not in self.current_world.continents:
+                logging.warning(f"Continent '{new_continent}' not found in world '{self.current_world}'.")
+                return False
+
+            if self.is_traveling:
+                logging.warning(f"Character '{self.name}' is currently traveling.")
+                return False
+
+            if not (self.current_area and self.current_area.allows_intercontinental_travel):
+                logging.warning(f"Character '{self.name}' must be at a port to travel between continents.")
+                return False
+
+            self.current_continent = new_continent
+
+            # Find best default region in new continent
+            if new_continent.regions:
+                # Try to find a "starting" or "port" region first
+                default_region = next(
+                    (reg for reg in new_continent.regions if 
+                     any(keyword in reg.name.lower() for keyword in ['port', 'harbor', 'coast', 'starting'])),
+                    new_continent.regions[0]
+                )
+                self.move_to_region(default_region)
+            else:
+                logging.warning(f"No regions found in continent '{new_continent.name}'.")
+                self.current_region = None
+                self.current_location = None
+                self.current_area = None
+
+            logging.info(f"Character '{self.name}' moved to continent '{new_continent.name}'.")
+            return True
+
+        except Exception as e:
+            logging.error(f"Error moving character '{self.name}' to new continent: {e}")
             return False
 
     async def start_travel(self, destination_area, travel_time):
-        self.is_traveling = True
-        self.travel_destination = destination_area
-        user_id = str(self.user_id)
-        dt = datetime.today()  # Get timezone naive now
-        seconds = dt.timestamp()
-        self.travel_end_time = seconds + (timedelta(hours=travel_time).total_seconds())
-        # Start the travel task
-        await asyncio.create_task(travel_task(self, user_id, characters, save_characters()))
+        """
+        Start traveling to a destination area.
+        Args:
+            destination_area (Area): The destination area
+            travel_time (float): Travel time in seconds
+        """
+        try:
+            if self.is_traveling:
+                logging.warning(f"Character '{self.name}' is already traveling.")
+                return False
+
+            self.is_traveling = True
+            self.travel_destination = destination_area
+            current_time = time.time()
+            self.travel_end_time = current_time + travel_time
+            
+            logging.info(f"Character '{self.name}' started traveling to '{destination_area.name}'.")
+            
+            # Start the travel task
+            asyncio.create_task(
+                travel_task(self, str(self.user_id), characters, save_characters)
+            )
+            return True
+
+        except Exception as e:
+            logging.error(f"Error starting travel for character '{self.name}': {e}")
+            self.is_traveling = False
+            self.travel_destination = None
+            self.travel_end_time = None
+            return False
 
 def check_travel_completion(character):
-    if character.is_traveling:
-        dt = datetime.today()  # Get timezone naive now
-        seconds = dt.timestamp()
-        if seconds >= character.travel_end_time:
-            character.is_traveling = False
-            character.move_to_area(character.travel_destination)
-            character.travel_destination = None
-            character.travel_end_time = None
-            return True  # Travel completed
-    return False  # Still traveling
+    """
+    Check if a character has completed their travel.
+    Args:
+        character (Character): The character to check
+    Returns:
+        bool: True if travel completed, False otherwise
+    """
+    try:
+        if not character.is_traveling:
+            return False
+
+        current_time = time.time()
+        if current_time >= character.travel_end_time:
+            # Complete the travel
+            if character.move_to_area(character.travel_destination):
+                character.is_traveling = False
+                character.travel_destination = None
+                character.travel_end_time = None
+                logging.info(f"Character '{character.name}' completed travel.")
+                return True
+            else:
+                logging.error(f"Failed to complete travel for character '{character.name}'.")
+                
+        return False
+
+    except Exception as e:
+        logging.error(f"Error checking travel completion for character '{character.name}': {e}")
+        return False
 
 def save_characters(characters_dict: dict[str, Character], filename='characters.json'):
     try:
@@ -2893,6 +3117,25 @@ async def finalize_character(interaction: discord.Interaction, user_id, area_loo
 #          Helper Functions    #
 # ---------------------------- #
 
+def format_duration(seconds):
+    """Format seconds into a readable string"""
+    # Convert to int if it's a float
+    seconds = int(seconds)
+    
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
+    
+    parts = []
+    if hours > 0:
+        parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
+    if minutes > 0:
+        parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
+    if seconds > 0 and not hours:  # Only show seconds if less than an hour
+        parts.append(f"{seconds} second{'s' if seconds != 1 else ''}")
+    
+    return " ".join(parts)
+
 def perform_ability_check(character, stat):
     """
     Performs an ability check by rolling a die and adding the stat modifier.
@@ -3375,63 +3618,187 @@ async def identify(interaction: discord.Interaction, item_name: str):
 @bot.tree.command(name="travel", description="Move to a connected area.")
 @app_commands.describe(destination="The name of the area to move to.")
 async def travel(interaction: discord.Interaction, destination: str):
-    user_id = str(interaction.author.id)
-    character = load_or_get_character(user_id)
+    try:
+        user_id = str(interaction.user.id)
+        character = load_or_get_character(user_id)
+           
+        if not character:
+            await interaction.response.send_message(
+                "You don't have a character yet. Use `/create_character` to get started.",
+                ephemeral=True
+            )
+            return
+
+        # Check if already traveling
+        current_time = time.time()
+        if character.is_traveling and character.travel_end_time:
+            remaining_time = character.travel_end_time - current_time
+            if remaining_time > 0:
+                await interaction.response.send_message(
+                    f"You are already traveling! You will arrive at your destination in {format_duration(remaining_time)}.",
+                    ephemeral=True
+                )
+                return
+
+        # Validate destination
+        destination_area = area_lookup.get(destination)
+        if not destination_area:
+            await interaction.response.send_message(
+                f"Destination '{destination}' does not exist.",
+                ephemeral=True
+            )
+            return
+
+        # Check if destination is current location
+        if character.current_area and character.current_area.name == destination:
+            await interaction.response.send_message(
+                "You are already at that location!",
+                ephemeral=True
+            )
+            return
+
+        # Check if destination is connected to current area
+        if character.current_area and destination_area not in character.current_area.connected_areas:
+            await interaction.response.send_message(
+                f"You cannot travel directly to {destination}. You must travel through connected areas.",
+                ephemeral=True
+            )
+            return
+
+        # Calculate travel details
+        travel_duration = get_travel_time(character, destination_area)
+        current_time = time.time()
+        character.travel_end_time = current_time + travel_duration
+
+        #create embed
+        embed = discord.Embed(
+        title="🚶 Travel Initiated",
+        description=f"Traveling from **{character.current_area.name}** to **{destination}**",
+        color=discord.Color.blue()
+        )
         
-    if not character:
+        embed.add_field(
+            name="Estimated Travel Time",
+            value=format_duration(travel_duration),
+            inline=True
+        )
+        embed.add_field(
+
+            name="Expected Arrival",
+            value=f"<t:{int(character.travel_end_time)}:R>",  # Discord timestamp format
+            inline=True
+        )
+        
+        # Add distance if available
+        if hasattr(character.current_area, 'coordinates') and hasattr(destination_area, 'coordinates'):
+            distance = calculate_distance(character.current_area.coordinates, destination_area.coordinates)
+            embed.add_field(
+                name="Distance",
+                value=f"{distance:.1f} units",
+                inline=True
+            )
+
+        # Add route information if available
+        if hasattr(destination_area, 'description'):
+            embed.add_field(
+                name="Destination Description",
+                value=destination_area.description[:200] + "..." if len(destination_area.description) > 200 else destination_area.description,
+                inline=False
+            )
+
+        # Add warnings or notes
+        if hasattr(destination_area, 'danger_level'):
+            embed.add_field(
+                name="⚠️ Warning",
+                value=f"This area has a danger level of {destination_area.danger_level}",
+                inline=False
+            )
+
+        # Set travel state
+        character.is_traveling = True
+        character.travel_destination = destination_area
+        
+        characters[user_id] = character
+        save_characters(characters)
+
+        # Acknowledge the command in the channel
         await interaction.response.send_message(
-            "You don't have a character yet. Use `/create_character` to get started.",
+            "Travel initiated! Check your DMs for travel details.",
             ephemeral=True
         )
-    
-    # Validate destination
-    destination_area = area_lookup.get(destination)
-    if not destination_area:
-        await interaction.send(f"Destination '{destination}' does not exist.")
-        return
-    
-    # Set travel details
-    character.is_traveling = True
-    character.travel_destination = destination_area
-    traveltime = get_travel_time(character, destination_area)
-    dt = datetime.today()  # Get timezone naive now
-    seconds = dt.timestamp()
-    character.travel_end_time = dt + traveltime # Set the travel end time
-    
-    characters[user_id] = character
-    save_characters(characters)
-    
-    await interaction.send(f"Traveling to **{destination}**. You will arrive in {traveltime}.")
-    logging.info(f"User '{user_id}' started traveling to '{destination}'.")
-    
-    # Start the travel task
-    asyncio.create_task(travel_task(bot, character, user_id, characters, save_characters))
 
-# Implement the autocomplete callback
+        # Send the travel embed as DM and store the message reference
+        try:
+            travel_message = await interaction.user.send(embed=embed)
+            # Store the message reference in character data
+            character.last_travel_message = travel_message
+            characters[user_id] = character
+            save_characters(characters)
+            
+            logging.info(f"Travel details sent to user {user_id} via DM")
+        except discord.Forbidden:
+            await interaction.followup.send(
+                "Couldn't send travel details via DM. Here are your travel details:",
+                embed=embed,
+                ephemeral=True
+            )
+            logging.warning(f"Couldn't send DM to user {user_id}, sent travel details in channel instead")
+        except Exception as e:
+            logging.error(f"Error sending travel details to user {user_id}: {e}")
+            await interaction.followup.send(
+                "An error occurred while sending travel details.",
+                ephemeral=True
+            )
+
+        logging.info(f"User '{user_id}' started traveling to '{destination}'.")
+       
+        # Start the travel task
+        asyncio.create_task(travel_task(bot, character, user_id, characters, save_characters))
+        
+    except Exception as e:
+        logging.error(f"Error in travel command: {e}")
+        await interaction.response.send_message(
+            "An error occurred while processing your travel request.",
+            ephemeral=True
+        )
+
+# Travel command autocomplete
 @travel.autocomplete('destination')
 async def travel_autocomplete(interaction: discord.Interaction, current: str):
-    user_id = str(interaction.user.id)
-    character = load_or_get_character(user_id)
+    try:
+        user_id = str(interaction.user.id)
+        character = load_or_get_character(user_id)
 
-    if not character:
-        return []  # No suggestions if user has no character
+        if not character or not character.current_area:
+            return []
 
-    current_area = character.current_area
-    if not current_area:
-        return []  # No suggestions if current area is undefined
+        connected_areas = character.current_area.connected_areas
+        
+        # If user hasn't typed anything yet, show all connected areas
+        if not current:
+            suggestions = [
+                app_commands.Choice(
+                    name=f"{area.name} - {area.description[:50]}..." if area.description else area.name,
+                    value=area.name
+                )
+                for area in connected_areas
+            ]
+        else:
+            # Filter based on current input (case-insensitive)
+            suggestions = [
+                app_commands.Choice(
+                    name=f"{area.name} - {area.description[:50]}..." if area.description else area.name,
+                    value=area.name
+                )
+                for area in connected_areas
+                if current.lower() in area.name.lower()
+            ]
 
-    # Fetch connected areas
-    connected_areas = current_area.connected_areas
-
-    # Filter based on the current input (case-insensitive)
-    suggestions = [
-        app_commands.Choice(name=area.name, value=area.name)
-        for area in connected_areas
-        if current.lower() in area.name.lower()
-    ]
-
-    # Discord limits to 25 choices
-    return suggestions[:25]
+        # Discord limits to 25 choices
+        return suggestions[:25]
+    except Exception as e:
+        logging.error(f"Error in travel autocomplete: {e}")
+        return []
 
 
 @bot.tree.command(name="travel_location", description="Travel to a different location within your current region.")
@@ -3458,7 +3825,6 @@ async def travel_location(interaction: discord.Interaction, location_name: str):
                 return
     
     await interaction.response.send_message(f"Location **{location_name}** not found in your current region.", ephemeral=True)
-
 
 @bot.tree.command(name="rest", description="Rest to regain health and spell slots.")
 async def rest(interaction: discord.Interaction):
@@ -3523,7 +3889,7 @@ async def scene(interaction: discord.Interaction):
     try:
         user_id = str(interaction.user.id)
         character = load_or_get_character(user_id)
-        
+
         if not character:
             await interaction.response.send_message(
                 "You don't have a character yet. Use `/create_character` to get started.",
@@ -3539,106 +3905,62 @@ async def scene(interaction: discord.Interaction):
             )
             return
 
-        # Create the main embed
-        embed = discord.Embed(
-            title=area.name,
-            description=area.description,
-            color=discord.Color.green()
-        )
-
-        # Add location context
-        embed.add_field(
-            name="Location",
-            value=f"**{area.name}** in {character.current_location}\n"
-                  f"Region: {character.current_region}\n"
-                  f"Continent: {character.current_continent}",
-            inline=False
-        )
+        # Create an embed
+        embed = discord.Embed(title=area.name, description=area.description, color=0x00ff00)
 
         # Connected Areas
-        if hasattr(area, 'connected_areas') and area.connected_areas:
-            connected_names = []
-            for connected_area in area.connected_areas:
-                if hasattr(connected_area, 'name'):
-                    connected_names.append(connected_area.name)
-                elif isinstance(connected_area, str):
-                    connected_names.append(connected_area)
-            
-            if connected_names:
-                embed.add_field(
-                    name="Connected Areas",
-                    value=", ".join(connected_names),
-                    inline=False
-                )
-            else:
-                embed.add_field(name="Connected Areas", value="None", inline=False)
+        if area.connected_areas:
+            connected_area_names = ', '.join(connected_area.name for connected_area in area.connected_areas)
+            embed.add_field(name="Connected Areas", value=connected_area_names, inline=False)
         else:
             embed.add_field(name="Connected Areas", value="None", inline=False)
 
         # NPCs
-        if hasattr(area, 'npcs') and area.npcs:
-            npc_names = []
-            for npc in area.npcs:
-                if hasattr(npc, 'name'):
-                    npc_names.append(npc.name)
-                elif isinstance(npc, str):
-                    npc_names.append(npc)
-            
-            if npc_names:
-                embed.add_field(
-                    name="NPCs Present",
-                    value=", ".join(npc_names),
-                    inline=False
-                )
-            else:
-                embed.add_field(name="NPCs Present", value="None", inline=False)
+        if area.npcs:
+            npc_names = ', '.join(npc.name for npc in area.npcs)
+            embed.add_field(name="NPCs Present", value=npc_names, inline=False)
         else:
             embed.add_field(name="NPCs Present", value="None", inline=False)
 
         # Items
-        if hasattr(area, 'inventory') and area.inventory:
-            item_names = []
-            for item in area.inventory:
-                if isinstance(item, dict):
-                    item_names.append(item.get('Name', 'Unknown Item'))
-                elif hasattr(item, 'name'):
-                    item_names.append(item.name)
-                elif hasattr(item, 'Name'):
-                    item_names.append(item.Name)
-                elif isinstance(item, str):
-                    item_names.append(item)
-                else:
-                    logging.warning(f"Unknown item type in area inventory: {type(item)}")
-            
-            if item_names:
-                embed.add_field(
-                    name="Items Available",
-                    value=", ".join(item_names),
-                    inline=False
-                )
-            else:
-                embed.add_field(name="Items Available", value="None", inline=False)
+        if area.inventory:
+            item_names = ', '.join(item.name for item in area.inventory if hasattr(item, 'name'))
+            embed.add_field(name="Items Available", value=item_names if item_names else "None", inline=False)
         else:
             embed.add_field(name="Items Available", value="None", inline=False)
 
-        # Add time of day or environmental conditions if implemented
-        if hasattr(area, 'conditions'):
-            embed.add_field(
-                name="Conditions",
-                value=area.conditions,
-                inline=False
-            )
-
-        # Send the embed
-        await interaction.response.send_message(embed=embed, ephemeral=False)
-        logging.info(f"Scene information sent for user {user_id} in area {area.name}")
-
+        try:
+            # Try to respond to the interaction first
+            await interaction.response.send_message(embed=embed, ephemeral=False)
+            logging.info(f"Scene information sent for user {user_id} in area {area.name}")
+        except discord.NotFound:  # Interaction expired
+            try:
+                # Try to send as a follow-up
+                await interaction.followup.send(embed=embed, ephemeral=False)
+            except discord.NotFound:
+                # If that fails too, try to send directly to the channel
+                if interaction.channel:
+                    await interaction.channel.send(embed=embed)
+                else:
+                    logging.error(f"Failed to send scene information for user {user_id}")
+        except discord.HTTPException as e:
+            logging.error(f"HTTP error sending scene information: {e}")
+            if not interaction.response.is_done():
+                await interaction.response.send_message(
+                    "An error occurred while displaying the scene. Please try again.",
+                    ephemeral=True
+                )
+        
     except Exception as e:
-        logging.error(f"Error in scene command: {e}", exc_info=True)
-        await interaction.response.send_message(
-            "An error occurred while displaying the scene. Please try again later.",
-            ephemeral=True
-        )
+        logging.error(f"Error in scene command: {e}")
+        try:
+            if not interaction.response.is_done():
+                await interaction.response.send_message(
+                    "An error occurred while displaying the scene. Please try again.",
+                    ephemeral=True
+                )
+        except discord.NotFound:
+            pass  # Interaction already expired
 
 @bot.tree.command(name="stats", description="View your character's complete stats and abilities")
 async def stats(interaction: discord.Interaction):
@@ -3788,7 +4110,6 @@ def create_progress_bar(current: int, maximum: int, length: int = 10) -> str:
 # ---------------------------- #
 #           Events             #
 # ---------------------------- #
-CHANNEL_ID = 1297795778131136562
 
 async def update_world_state():
     """Update dynamic aspects of the world periodically"""
@@ -3894,7 +4215,7 @@ async def sync_commands():
         # # Sync commands
         bot.tree.copy_global_to(guild=guild)
         synced = await bot.tree.sync(guild=guild)
-        logging.info(f"Commands synced successfully.: {synced}", exc_info=True)
+        logging.info(f"Commands synced successfully.")
         
     except Exception as e:
         logging.error(f"Error syncing commands: {e}", exc_info=True)
