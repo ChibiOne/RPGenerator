@@ -6,21 +6,122 @@
         "Char_Class": "Warrior",
         "Gender": "Female",
         "Pronouns": "She/Her",
-        "Description": "Aaaaaaaaaaaaaaaaaaaaaa",
+        "Description": "Tall, about 5'10'. Short, tousled sandy-blonde hair. Blousy shirt white with long-sleeves, blue jacket and tight blue leather pants. A brown belt with a rapier scabbarded. A sly grin and a mischievous glint in her eye, that can turn to an angry snarl when challenged.'",
         "Stats": {
-            "Strength": 12,
+            "Strength": 10,
             "Dexterity": 15,
-            "Constitution": 15,
-            "Intelligence": 12,
-            "Wisdom": 12,
-            "Charisma": 15
+            "Constitution": 14,
+            "Intelligence": 10,
+            "Charisma": 12,
+            "Wisdom": 11
         },
         "Skills": {},
-        "Inventory": {},
+        "Inventory": {
+            "0": {
+                "Name": "Healing Potion",
+                "Weight": 0.5,
+                "Type": "Consumable",
+                "Description": "A red liquid that restores health when drunk.",
+                "Effect": {
+                    "Heal": 10
+                },
+                "Proficiency_Needed": null,
+                "Average_Cost": 50,
+                "Is_Magical": true,
+                "Rarity": "Common"
+            },
+            "1": {
+                "Name": "Bedroll",
+                "Weight": 7,
+                "Type": "Equipment",
+                "Description": "A comfortable sleeping roll for camping.",
+                "Effect": null,
+                "Proficiency_Needed": null,
+                "Average_Cost": 1,
+                "Is_Magical": false,
+                "Rarity": "Common"
+            },
+            "2": {
+                "Name": "Tinderbox",
+                "Weight": 1,
+                "Type": "Gear",
+                "Description": "Steel, flint, and tinder for starting fires.",
+                "Effect": "Light fire in 1 action",
+                "Proficiency_Needed": null,
+                "Average_Cost": 0.5,
+                "Is_Magical": false,
+                "Rarity": "Common"
+            },
+            "3": {
+                "Name": "Torch",
+                "Weight": 1,
+                "Type": "Gear",
+                "Description": "A wooden torch that provides light for 1 hour.",
+                "Effect": {
+                    "Light": "Bright light 20 ft., dim light 20 ft.",
+                    "Duration": "1 hour"
+                },
+                "Proficiency_Needed": null,
+                "Average_Cost": 0.1,
+                "Is_Magical": false,
+                "Rarity": "Common"
+            },
+            "4": {
+                "Name": "Torch",
+                "Weight": 1,
+                "Type": "Gear",
+                "Description": "A wooden torch that provides light for 1 hour.",
+                "Effect": {
+                    "Light": "Bright light 20 ft., dim light 20 ft.",
+                    "Duration": "1 hour"
+                },
+                "Proficiency_Needed": null,
+                "Average_Cost": 0.1,
+                "Is_Magical": false,
+                "Rarity": "Common"
+            }
+        },
         "Equipment": {
-            "Armor": null,
-            "Left_Hand": null,
-            "Right_Hand": null,
+            "Armor": {
+                "Name": "Ringmail Armor",
+                "Weight": 40,
+                "Type": "Armor",
+                "Description": "Heavy armor made of interlocking metal rings.",
+                "Effect": {
+                    "AC": 14
+                },
+                "Proficiency_Needed": "Heavy Armor",
+                "Average_Cost": 30,
+                "Is_Magical": false,
+                "Rarity": "Common"
+            },
+            "Left_Hand": {
+                "Name": "Wooden Shield",
+                "Weight": 6,
+                "Type": "Shield",
+                "Description": "A sturdy wooden shield reinforced with metal bands.",
+                "Effect": {
+                    "AC": 2
+                },
+                "Proficiency_Needed": "Shields",
+                "Average_Cost": 10,
+                "Is_Magical": false,
+                "Rarity": "Common"
+            },
+            "Right_Hand": {
+                "Name": "Longsword",
+                "Weight": 3,
+                "Type": "Weapon",
+                "Description": "A versatile blade favored by warriors and knights.",
+                "Effect": {
+                    "Damage": "1d8",
+                    "Damage_Type": "Slashing"
+                },
+                "Proficiency_Needed": "Martial Weapons",
+                "Average_Cost": 15,
+                "Is_Magical": false,
+                "Rarity": "Common"
+            },
             "Belt_Slots": [
                 null,
                 null,
@@ -48,10 +149,11 @@
         "XP": 0,
         "Reputation": {},
         "Is_Traveling": false,
-        "Current_Area": "Crystalline Chamber",
-        "Current_Location": "Stonehaven",
-        "Current_Region": "Northern Kingdoms",
+        "Current_Area": "Marketplace Square",
+        "Current_Location": "Northhold",
+        "Current_Region": "Northern Mountains",
         "Current_Continent": "Aetheria",
-        "Current_World": "Eldoria"
+        "Current_World": "Eldoria",
+        "Last_Interaction_Guild": null
     }
 }

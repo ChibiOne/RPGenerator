@@ -1,5 +1,168 @@
 {
-
+    "Longsword": {
+        "Name": "Longsword",
+        "Weight": 3,
+        "Type": "Weapon",
+        "Description": "A versatile blade favored by warriors and knights.",
+        "Effect": {
+            "Damage": "1d8",
+            "Damage_Type": "Slashing"
+        },
+        "Proficiency_Needed": "Martial Weapons",
+        "Average_Cost": 15,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Wooden Shield": {
+        "Name": "Wooden Shield",
+        "Weight": 6,
+        "Type": "Shield",
+        "Description": "A sturdy wooden shield reinforced with metal bands.",
+        "Effect": {
+            "AC": 2
+        },
+        "Proficiency_Needed": "Shields",
+        "Average_Cost": 10,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Healing Potion": {
+        "Name": "Healing Potion",
+        "Weight": 0.5,
+        "Type": "Consumable",
+        "Description": "A red liquid that restores health when drunk.",
+        "Effect": {
+            "Heal": 10
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 50,
+        "Is_Magical": true,
+        "Rarity": "Common"
+    },
+    "Bedroll": {
+        "Name": "Bedroll",
+        "Weight": 7,
+        "Type": "Equipment",
+        "Description": "A comfortable sleeping roll for camping.",
+        "Effect": null,
+        "Proficiency_Needed": null,
+        "Average_Cost": 1,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Component Pouch": {
+        "Name": "Component Pouch",
+        "Weight": 2,
+        "Type": "Equipment",
+        "Description": "A small pouch containing spell components.",
+        "Effect": null,
+        "Proficiency_Needed": null,
+        "Average_Cost": 25,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Thieves Tools": {
+        "Name": "Thieves Tools",
+        "Weight": 1,
+        "Type": "Equipment",
+        "Description": "Tools for picking locks and disarming traps.",
+        "Effect": null,
+        "Proficiency_Needed": "Thieves Tools",
+        "Average_Cost": 25,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Holy Symbol": {
+        "Name": "Holy Symbol",
+        "Weight": 1,
+        "Type": "Equipment",
+        "Description": "A divine focus for casting spells.",
+        "Effect": null,
+        "Proficiency_Needed": null,
+        "Average_Cost": 5,
+        "Is_Magical": true,
+        "Rarity": "Common"
+    },
+    "Dagger": {
+        "Name": "Dagger",
+        "Weight": 1,
+        "Type": "Weapon",
+        "Description": "A small but deadly blade, easily concealed.",
+        "Effect": {
+            "Damage": "1d4",
+            "Damage_Type": "Piercing"
+        },
+        "Proficiency_Needed": "Simple Weapons",
+        "Average_Cost": 2,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Mace": {
+        "Name": "Mace",
+        "Weight": 4,
+        "Type": "Weapon",
+        "Description": "A heavy metal head on a reinforced handle.",
+        "Effect": {
+            "Damage": "1d6",
+            "Damage_Type": "Bludgeoning"
+        },
+        "Proficiency_Needed": "Simple Weapons",
+        "Average_Cost": 5,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Ringmail Armor": {
+        "Name": "Ringmail Armor",
+        "Weight": 40,
+        "Type": "Armor",
+        "Description": "Heavy armor made of interlocking metal rings.",
+        "Effect": {
+            "AC": 14
+        },
+        "Proficiency_Needed": "Heavy Armor",
+        "Average_Cost": 30,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Leather Armor": {
+        "Name": "Leather Armor",
+        "Weight": 10,
+        "Type": "Armor",
+        "Description": "Light armor made of treated leather.",
+        "Effect": {
+            "AC": 11
+        },
+        "Proficiency_Needed": "Light Armor",
+        "Average_Cost": 10,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Robes": {
+        "Name": "Robes",
+        "Weight": 4,
+        "Type": "Armor",
+        "Description": "Comfortable robes with subtle magical enhancements.",
+        "Effect": {
+            "AC": 10
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 5,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Studded Leather Armor": {
+        "Name": "Studded Leather Armor",
+        "Weight": 13,
+        "Type": "Armor",
+        "Description": "Leather armor reinforced with metal studs.",
+        "Effect": {
+            "AC": 12
+        },
+        "Proficiency_Needed": "Light Armor",
+        "Average_Cost": 45,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
     "Shortsword": {
         "Name": "Shortsword",
         "Weight": 2,
@@ -59,20 +222,6 @@
         "Is_Magical": false,
         "Rarity": "Common"
     },
-    "Leather Armor": {
-        "Name": "Leather Armor",
-        "Weight": 10,
-        "Type": "Armor",
-        "Description": "Sturdy but flexible leather armor providing basic protection.",
-        "Effect": {
-            "AC": 11,
-            "Type": "Light"
-        },
-        "Proficiency_Needed": "Light Armor",
-        "Average_Cost": 10,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
     "Merchant's Scale": {
         "Name": "Merchant's Scale",
         "Weight": 1,
@@ -94,20 +243,6 @@
         "Average_Cost": 100,
         "Is_Magical": true,
         "Rarity": "Uncommon"
-    },
-    "Healing Potion": {
-        "Name": "Healing Potion",
-        "Weight": 0.5,
-        "Type": "Consumable",
-        "Description": "A red liquid that heals wounds when consumed.",
-        "Effect": {
-            "Healing": "2d4+2",
-            "Usage": "Instant"
-        },
-        "Proficiency_Needed": null,
-        "Average_Cost": 50,
-        "Is_Magical": true,
-        "Rarity": "Common"
     },
     "Backpack": {
         "Name": "Backpack",
@@ -159,16 +294,60 @@
         "Is_Magical": false,
         "Rarity": "Common"
     },
-    "Bedroll": {
-        "Name": "Bedroll",
-        "Weight": 7,
+    "Climber's Kit": {
+        "Name": "Climber's Kit",
+        "Weight": 12,
         "Type": "Gear",
-        "Description": "A padded sleeping mat and blanket.",
-        "Effect": "Comfortable rest outdoors",
+        "Description": "A set of tools for climbing and rappelling.",
+        "Effect": "Advantage on checks to climb or rappel",
         "Proficiency_Needed": null,
-        "Average_Cost": 1,
+        "Average_Cost": 25,
         "Is_Magical": false,
         "Rarity": "Common"
+    },
+    "Cooking Pot": {
+        "Name": "Cooking Pot",
+        "Weight": 2,
+        "Type": "Gear",
+        "Description": "A sturdy metal pot for cooking meals.",
+        "Effect": "Can cook meals for up to 4 people",
+        "Proficiency_Needed": null,
+        "Average_Cost": 0.5,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Mess Kit": {
+        "Name": "Mess Kit",
+        "Weight": 1,
+        "Type": "Gear",
+        "Description": "A set of utensils for eating meals on the go.",
+        "Effect": "Contains plate, bowl, cup, utensils",
+        "Proficiency_Needed": null,
+        "Average_Cost": 0.2,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Potion of Invisibility": {
+        "Name": "Potion of Invisibility",
+        "Weight": 0.5,
+        "Type": "Consumable",
+        "Description": "A clear liquid that renders the drinker invisible for 1 hour.",
+        "Effect": "Invisibility for 1 hour",
+        "Proficiency_Needed": null,
+        "Average_Cost": 150,
+        "Is_Magical": true,
+        "Rarity": "Rare"
+    },
+    "Potion of Fire Breath": {
+        "Name": "Potion of Fire Breath",
+        "Weight": 0.5,
+        "Type": "Consumable",
+        "Description": "A fiery liquid that allows the drinker to breathe fire for 1 minute.",
+        "Effect": "Breathe fire for 1 minute",
+        "Proficiency_Needed": null,
+        "Average_Cost": 100,
+        "Is_Magical": true,
+        "Rarity": "Uncommon"
     },
     "Tinderbox": {
         "Name": "Tinderbox",
@@ -189,17 +368,6 @@
         "Effect": "Holds 4 pints of liquid",
         "Proficiency_Needed": null,
         "Average_Cost": 0.2,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Thieves' Tools": {
-        "Name": "Thieves' Tools",
-        "Weight": 1,
-        "Type": "Tool",
-        "Description": "A set of picks and tools for opening locks.",
-        "Effect": "Required for picking locks",
-        "Proficiency_Needed": "Thieves' Tools",
-        "Average_Cost": 25,
         "Is_Magical": false,
         "Rarity": "Common"
     },
