@@ -682,102 +682,64 @@ def create_scene_embed(area):
 async def travel_task(bot, character, user_id, characters, save_characters):
     """Handle the travel process and arrival"""
     try:
-        current_time = time.time()
-        if character.travel_end_time > current_time:
-            wait_time = character.travel_end_time - current_time
-            await asyncio.sleep(wait_time)
-
-        # Update character's status
-        character.is_traveling = False
-        previous_area = character.current_area
-        character.move_to_area(character.travel_destination)
-        destination_area = character.travel_destination
-        character.travel_destination = None
-        character.travel_end_time = None
-
-        # Create arrival embed
-        arrival_embed = discord.Embed(
-            title="🏁 Arrival Notice",
-            description=f"You have arrived at **{character.current_area.name}**!",
-            color=discord.Color.green()
-        )
+        # Calculate travel details
+        travel_time = get_travel_time(character, character.travel_destination)
         
-        # Add area description
-        if character.current_area.description:
-            arrival_embed.add_field(
-                name="Area Description",
-                value=character.current_area.description,
-                inline=False
-            )
+        # Create and send travel view
+        view = TravelView(character, character.travel_destination, travel_time)
+        message = await bot.get_user(int(user_id)).send(embed=view.get_embed(), view=view)
 
-        # Add connected areas
-        if character.current_area.connected_areas:
-            connected = ", ".join(f"**{area.name}**" for area in character.current_area.connected_areas)
-            arrival_embed.add_field(
-                name="Connected Areas",
-                value=f"You can travel to: {connected}",
-                inline=False
-            )
+        # Update travel progress periodically
+        update_interval = min(5, travel_time / 10)  # Update every 5 seconds or 10% of travel time
+        end_time = time.time() + travel_time
 
-        # Send arrival notice in DM
-        try:
-            if hasattr(character, 'last_travel_message') and character.last_travel_message:
+        while time.time() < end_time and not view.cancelled:
+            await asyncio.sleep(update_interval)
+            
+            if not view.cancelled:
                 try:
-                    await character.last_travel_message.edit(embed=arrival_embed)
-                    character.last_travel_message = None
-                except Exception:
-                    user = await bot.fetch_user(int(user_id))
-                    if user:
-                        await user.send(embed=arrival_embed)
-            else:
-                user = await bot.fetch_user(int(user_id))
-                if user:
-                    await user.send(embed=arrival_embed)
-        except Exception as e:
-            logging.error(f"Error sending arrival notice: {e}")
+                    await message.edit(embed=view.get_embed())
+                except discord.NotFound:
+                    break  # Message was deleted
 
-        # Create and send scene embed
-        try:
-            logging.info(f"Creating scene embed for {character.current_area.name}")
-            scene_embed = create_scene_embed(character.current_area)
-            
-            # Verify bot is connected
-            if not bot.is_ready():
-                logging.error("Bot is not ready")
-                return
+        if not view.cancelled:
+            # Complete the journey
+            character.is_traveling = False
+            previous_area = character.current_area
+            character.move_to_area(character.travel_destination)
+            character.travel_destination = None
+            character.travel_end_time = None
 
-            # Get channel
-            channel_id = get_guild_game_channel(character.last_interaction_guild)
-            channel = bot.get_channel(channel_id)
-            if not channel:
-                channel = await bot.fetch_channel(channel_id)
+            # Update the travel message one last time
+            final_embed = view.get_embed()
+            final_embed.title = "🏁 Journey Complete!"
+            final_embed.color = discord.Color.green()
             
-            if channel:
-                logging.info(f"Sending scene embed to channel {channel_id}")
-                # Check permissions
-                permissions = channel.permissions_for(channel.guild.me)
-                if not permissions.send_messages:
-                    logging.error("Bot doesn't have permission to send messages in this channel")
-                    return
-                    
-                # Try sending the message
-                message = await channel.send(
-                    content=f"**{character.name}** has arrived in **{character.current_area.name}**",
-                    embed=scene_embed
-                )
-                if message:
-                    logging.info("Scene embed sent successfully")
-                else:
-                    logging.error("Failed to send scene embed - no message returned")
-            else:
-                logging.error(f"Could not find channel with ID {channel_id}")
+            # Disable the cancel button
+            for child in view.children:
+                child.disabled = True
                 
-        except discord.Forbidden as e:
-            logging.error(f"Bot lacks permissions to send messages: {e}")
-        except discord.HTTPException as e:
-            logging.error(f"HTTP error sending scene embed: {e}")
-        except Exception as e:
-            logging.error(f"Error sending scene description: {e}", exc_info=True)
+            await message.edit(embed=final_embed, view=view)
+
+            # Create and send arrival scene
+            scene_embed = create_scene_embed(character.current_area)
+            await bot.get_user(int(user_id)).send(
+                f"You have arrived at **{character.current_area.name}**!",
+                embed=scene_embed
+            )
+
+            # Send arrival notice to appropriate guild channel
+            if hasattr(character, 'last_interaction_guild'):
+                guild_id = character.last_interaction_guild
+                if guild_id in GUILD_CONFIGS:
+                    channel_id = GUILD_CONFIGS[guild_id]['channels'].get('game')
+                    if channel:
+                        channel = bot.get_channel(channel_id)
+                        if channel:
+                            await channel.send(
+                                f"**{character.name}** has arrived in **{character.current_area.name}**",
+                                embed=scene_embed
+                            )
 
         # Update character data
         characters[user_id] = character
@@ -3053,8 +3015,6 @@ class NextMentalAbilitiesButton(discord.ui.Button):
             await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
             logging.error(f"Error in NextMentalAbilitiesButton callback for user {self.user_id}: {e}")
 
-
-
 class BackPhysicalAbilitiesButton(discord.ui.Button):
     def __init__(self, user_id):
         super().__init__(label="Back", style=discord.ButtonStyle.gray)
@@ -3320,7 +3280,196 @@ async def finalize_character(interaction: discord.Interaction, user_id, area_loo
 
     return character
 
+class ExamineView(discord.ui.View):
+    def __init__(self, item, character):
+        super().__init__(timeout=180)  # 3 minute timeout
+        self.item = item
+        self.character = character
+        self.current_view = "general"
+        
+        # Add view selection buttons based on item type
+        self.add_item(ViewButton("General", "general", "📜", discord.ButtonStyle.blurple))
+        
+        if hasattr(item, 'Effect') and item.Effect:
+            self.add_item(ViewButton("Effects", "effects", "✨", discord.ButtonStyle.blurple))
+            
+        if item.Type in ["Weapon", "Armor", "Shield"]:
+            self.add_item(ViewButton("Combat", "combat", "⚔️", discord.ButtonStyle.blurple))
+            
+        if item.Is_Magical:
+            self.add_item(ViewButton("Magical", "magic", "🔮", discord.ButtonStyle.blurple))
 
+    def get_embed(self):
+        """Generate the appropriate embed based on current view"""
+        if self.current_view == "general":
+            embed = discord.Embed(
+                title=f"{self.item.Name}",
+                description=self.item.Description,
+                color=self._get_rarity_color()
+            )
+            
+            # Basic item information
+            basic_info = []
+            basic_info.append(f"**Type:** {self.item.Type}")
+            basic_info.append(f"**Weight:** {self.item.Weight} lbs")
+            basic_info.append(f"**Rarity:** {self.item.Rarity}")
+            if self.item.Proficiency_Needed:
+                basic_info.append(f"**Requires Proficiency:** {self.item.Proficiency_Needed}")
+            if self.item.Average_Cost:
+                basic_info.append(f"**Value:** {self.item.Average_Cost} gold")
+                
+            embed.add_field(
+                name="Item Details",
+                value="\n".join(basic_info),
+                inline=False
+            )
+
+        elif self.current_view == "effects":
+            embed = discord.Embed(
+                title=f"{self.item.Name} - Effects",
+                color=self._get_rarity_color()
+            )
+            
+            if isinstance(self.item.Effect, dict):
+                for effect_type, value in self.item.Effect.items():
+                    effect_desc = self._format_effect(effect_type, value)
+                    embed.add_field(
+                        name=effect_type.replace('_', ' ').title(),
+                        value=effect_desc,
+                        inline=False
+                    )
+            else:
+                embed.description = str(self.item.Effect)
+
+        elif self.current_view == "combat":
+            embed = discord.Embed(
+                title=f"{self.item.Name} - Combat Statistics",
+                color=self._get_rarity_color()
+            )
+            
+            if self.item.Type == "Weapon":
+                damage_info = self.item.Effect.get('Damage', 'None')
+                damage_type = self.item.Effect.get('Damage_Type', 'Unknown')
+                embed.add_field(
+                    name="Damage",
+                    value=f"**Base Damage:** {damage_info}\n**Damage Type:** {damage_type}",
+                    inline=False
+                )
+                
+            elif self.item.Type in ["Armor", "Shield"]:
+                ac_bonus = self.item.Effect.get('AC', 0)
+                embed.add_field(
+                    name="Defense",
+                    value=f"**AC Bonus:** +{ac_bonus}",
+                    inline=False
+                )
+                
+            # Add comparison with currently equipped items
+            if self.character:
+                embed.add_field(
+                    name="Comparison",
+                    value=self._get_comparison_text(),
+                    inline=False
+                )
+
+        elif self.current_view == "magic":
+            embed = discord.Embed(
+                title=f"{self.item.Name} - Magical Properties",
+                color=self._get_rarity_color()
+            )
+            
+            if isinstance(self.item.Effect, dict):
+                magical_effects = []
+                for effect_type, value in self.item.Effect.items():
+                    if effect_type not in ['Damage', 'Damage_Type', 'AC']:  # Skip basic combat effects
+                        magical_effects.append(self._format_effect(effect_type, value))
+                
+                if magical_effects:
+                    embed.add_field(
+                        name="Magical Effects",
+                        value="\n".join(magical_effects),
+                        inline=False
+                    )
+            
+            # Add any magical lore or special properties
+            if hasattr(self.item, 'magical_lore'):
+                embed.add_field(
+                    name="Magical Lore",
+                    value=self.item.magical_lore,
+                    inline=False
+                )
+
+        # Add footer based on context
+        self._add_contextual_footer(embed)
+        return embed
+
+    def _get_rarity_color(self):
+        """Return color based on item rarity"""
+        rarity_colors = {
+            'Common': discord.Color.light_grey(),
+            'Uncommon': discord.Color.green(),
+            'Rare': discord.Color.blue(),
+            'Very Rare': discord.Color.purple(),
+            'Legendary': discord.Color.gold(),
+            'Artifact': discord.Color.red()
+        }
+        return rarity_colors.get(self.item.Rarity, discord.Color.default())
+
+    def _format_effect(self, effect_type, value):
+        """Format effect description based on type"""
+        if effect_type == 'Heal':
+            return f"Restores {value} hit points"
+        elif effect_type == 'Damage':
+            return f"Deals {value} damage"
+        elif effect_type == 'AC':
+            return f"Provides +{value} to Armor Class"
+        elif effect_type == 'Buff':
+            return f"Grants {value}"
+        return f"{effect_type}: {value}"
+
+    def _get_comparison_text(self):
+        """Generate comparison text with equipped items"""
+        if not self.character:
+            return "No comparison available"
+            
+        comparison_text = []
+        if self.item.Type == "Weapon":
+            equipped_weapon = None
+            if self.character.equipment.get('Right_Hand') and hasattr(self.character.equipment['Right_Hand'], 'Type'):
+                if self.character.equipment['Right_Hand'].Type == "Weapon":
+                    equipped_weapon = self.character.equipment['Right_Hand']
+            
+            if equipped_weapon:
+                comparison_text.append(f"Currently equipped: {equipped_weapon.Name}")
+                if hasattr(equipped_weapon, 'Effect') and hasattr(self.item, 'Effect'):
+                    current_damage = equipped_weapon.Effect.get('Damage', '0')
+                    new_damage = self.item.Effect.get('Damage', '0')
+                    comparison_text.append(f"Damage comparison: {current_damage} → {new_damage}")
+                    
+        elif self.item.Type in ["Armor", "Shield"]:
+            equipped_item = self.character.equipment.get(self.item.Type)
+            if equipped_item:
+                comparison_text.append(f"Currently equipped: {equipped_item.Name}")
+                if hasattr(equipped_item, 'Effect') and hasattr(self.item, 'Effect'):
+                    current_ac = equipped_item.Effect.get('AC', 0)
+                    new_ac = self.item.Effect.get('AC', 0)
+                    comparison_text.append(f"AC comparison: +{current_ac} → +{new_ac}")
+                    
+        return "\n".join(comparison_text) if comparison_text else "No similar item equipped"
+
+    def _add_contextual_footer(self, embed):
+        """Add contextual footer text based on item type and view"""
+        footer_text = []
+        
+        if self.item.Type == "Consumable":
+            footer_text.append("Use /use <item> to consume this item")
+        elif self.item.Type in ["Weapon", "Armor", "Shield"]:
+            footer_text.append("Use /equip <item> to equip this item")
+            
+        if self.item.Is_Magical and self.current_view != "magic":
+            footer_text.append("Click the 🔮 button to view magical properties")
+            
+        embed.set_footer(text=" • ".join(footer_text) if footer_text else "")
 class InventoryView(discord.ui.View):
     def __init__(self, character):
         super().__init__(timeout=180)  # 3 minute timeout
@@ -3626,7 +3775,7 @@ class SceneView(discord.ui.View):
         elif self.current_view == "exits":
             embed.set_footer(text="Use /travel <location> to move to a new area")
         else:
-            embed.set_footer(text="Click the buttons above to focus on specific aspects of the area")
+            embed.set_footer(text="Click the buttons below to focus on specific aspects of the area")
             
         return embed
 
@@ -3652,6 +3801,165 @@ class ViewButton(discord.ui.Button):
             embed=view.get_embed(),
             view=view
         )
+
+class TravelView(discord.ui.View):
+    def __init__(self, character, destination_area, travel_time):
+        super().__init__(timeout=None)  # No timeout since this needs to last for travel duration
+        self.character = character
+        self.destination = destination_area
+        self.total_time = travel_time
+        self.start_time = time.time()
+        self.last_update = self.start_time
+        self.cancelled = False
+        
+        # Add cancel button
+        self.add_item(CancelTravelButton())
+
+    def get_embed(self):
+        """Generate the travel status embed"""
+        current_time = time.time()
+        elapsed = current_time - self.start_time
+        progress = min(elapsed / self.total_time, 1.0)
+        
+        # Create the main embed
+        embed = discord.Embed(
+            title="🚶 Journey in Progress",
+            color=discord.Color.blue()
+        )
+
+        # Show route
+        route_display = (
+            f"**From:** {self.character.current_area.name}\n"
+            f"**To:** {self.destination.name}\n"
+            f"**Distance:** {calculate_distance(self.character.current_area.coordinates, self.destination.coordinates):.1f} units"
+        )
+        embed.add_field(name="Route", value=route_display, inline=False)
+
+        # Create progress bar
+        progress_length = 20
+        filled = int(progress * progress_length)
+        
+        # Use different emojis based on character location in journey
+        if filled == 0:
+            progress_bar = "🚶" + "▱" * (progress_length - 1)
+        elif filled >= progress_length:
+            progress_bar = "▰" * (progress_length - 1) + "🏁"
+        else:
+            progress_bar = "▰" * (filled - 1) + "🚶" + "▱" * (progress_length - filled)
+
+        # Calculate time remaining
+        time_remaining = self.total_time - elapsed
+        if time_remaining > 0:
+            minutes = int(time_remaining // 60)
+            seconds = int(time_remaining % 60)
+            time_display = f"{minutes}m {seconds}s remaining"
+        else:
+            time_display = "Arriving..."
+
+        embed.add_field(
+            name="Progress",
+            value=f"`{progress_bar}` ({time_display})",
+            inline=False
+        )
+
+        # Add travel conditions (could be based on time of day, weather, etc.)
+        conditions = self._get_travel_conditions()
+        if conditions:
+            embed.add_field(name="Conditions", value=conditions, inline=False)
+
+        # Add any points of interest along the way
+        points_of_interest = self._get_points_of_interest(progress)
+        if points_of_interest:
+            embed.add_field(name="Points of Interest", value=points_of_interest, inline=False)
+
+        # Show current status
+        status = self._get_travel_status(progress)
+        embed.add_field(name="Status", value=status, inline=False)
+
+        return embed
+
+    def _get_travel_conditions(self):
+        """Get current travel conditions - could be expanded based on time, weather, etc."""
+        conditions = []
+        
+        # Time of day
+        hour = datetime.now().hour
+        if 6 <= hour < 12:
+            conditions.append("🌅 Morning - The road is quiet and clear")
+        elif 12 <= hour < 17:
+            conditions.append("☀️ Afternoon - Good traveling weather")
+        elif 17 <= hour < 20:
+            conditions.append("🌅 Evening - Light is fading")
+        else:
+            conditions.append("🌙 Night - Traveling under starlight")
+
+        # Add random conditions occasionally
+        if random.random() < 0.3:
+            conditions.append(random.choice([
+                "💨 A gentle breeze aids your journey",
+                "🌿 The path is well-maintained",
+                "🍂 Fallen leaves crunch underfoot",
+                "🌤️ Perfect weather for traveling",
+                "🎶 Birds sing in the distance"
+            ]))
+
+        return "\n".join(conditions)
+
+    def _get_points_of_interest(self, progress):
+        """Generate points of interest based on progress"""
+        if 0.2 < progress <= 0.4:
+            return "🌳 You pass through a small grove of ancient trees"
+        elif 0.4 < progress <= 0.6:
+            return "💧 You come across a clear stream crossing your path"
+        elif 0.6 < progress <= 0.8:
+            return "🪨 You navigate around impressive rock formations"
+        return None
+
+    def _get_travel_status(self, progress):
+        """Generate status message based on progress"""
+        if progress < 0.25:
+            return "You've just begun your journey, feeling fresh and ready for adventure."
+        elif progress < 0.5:
+            return "You've found your rhythm, making steady progress toward your destination."
+        elif progress < 0.75:
+            return "More than halfway there, you can almost make out your destination."
+        elif progress < 1:
+            return "The end of your journey is in sight!"
+        else:
+            return "You've arrived at your destination!"
+
+class CancelTravelButton(discord.ui.Button):
+    def __init__(self):
+        super().__init__(
+            style=discord.ButtonStyle.danger,
+            label="Cancel Travel",
+            emoji="✖️"
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        view: TravelView = self.view
+        if str(interaction.user.id) != view.character.user_id:
+            await interaction.response.send_message(
+                "You cannot cancel someone else's journey!",
+                ephemeral=True
+            )
+            return
+
+        view.cancelled = True
+        for child in view.children:
+            child.disabled = True  # Disable all buttons
+
+        embed = view.get_embed()
+        embed.title = "🛑 Journey Cancelled"
+        embed.color = discord.Color.red()
+        embed.set_field_at(
+            -1,  # Update last field (status)
+            name="Status",
+            value="Journey cancelled. You have stopped at a safe point along the way.",
+            inline=False
+        )
+
+        await interaction.response.edit_message(embed=embed, view=view)
 
 # ---------------------------- #
 #          Helper Functions    #
@@ -4311,36 +4619,84 @@ async def use_item(interaction: discord.Interaction, item_name: str):
 
     await interaction.response.send_message(f"You don't have an item named **{item_name}**.", ephemeral=True)
 
-@bot.tree.command(name="examine", description="Examine an item in your inventory or equipment.")
-@app_commands.describe(item_name="The name of the item to examine.")
+@bot.tree.command(
+    name="examine",
+    description="Examine an item in detail"
+)
+@app_commands.describe(item_name="The name of the item to examine")
 async def examine(interaction: discord.Interaction, item_name: str):
-    user_id = str(interaction.user.id)
-    character = load_or_get_character(user_id)
+    try:
+        user_id = str(interaction.user.id)
+        character = load_or_get_character(user_id)
         
-    if not character:
+        if not character:
+            await interaction.response.send_message(
+                "You don't have a character yet. Use `/create_character` to get started.",
+                ephemeral=True
+            )
+            return
+
+        # Find item in inventory, equipment, or current area
+        item = None
+        location = None
+        
+        # Check inventory
+        if character.inventory:
+            for inv_key, inv_item in character.inventory.items():
+                if (hasattr(inv_item, 'Name') and inv_item.Name.lower() == item_name.lower()) or \
+                   (isinstance(inv_item, dict) and inv_item.get('Name', '').lower() == item_name.lower()):
+                    item = inv_item
+                    location = "inventory"
+                    break
+        
+        # Check equipment if not found
+        if not item and character.equipment:
+            for slot, equip_item in character.equipment.items():
+                if isinstance(equip_item, list):  # Handle belt/magic slots
+                    for slot_item in equip_item:
+                        if slot_item and \
+                           ((hasattr(slot_item, 'Name') and slot_item.Name.lower() == item_name.lower()) or \
+                            (isinstance(slot_item, dict) and slot_item.get('Name', '').lower() == item_name.lower())):
+                            item = slot_item
+                            location = f"equipped ({slot})"
+                            break
+                elif equip_item and \
+                     ((hasattr(equip_item, 'Name') and equip_item.Name.lower() == item_name.lower()) or \
+                      (isinstance(equip_item, dict) and equip_item.get('Name', '').lower() == item_name.lower())):
+                    item = equip_item
+                    location = f"equipped ({slot})"
+                    break
+        
+        # Check current area if not found
+        if not item and character.current_area and character.current_area.inventory:
+            for area_item in character.current_area.inventory:
+                if (hasattr(area_item, 'Name') and area_item.Name.lower() == item_name.lower()) or \
+                   (isinstance(area_item, dict) and area_item.get('Name', '').lower() == item_name.lower()):
+                    item = area_item
+                    location = "in the area"
+                    break
+
+        if not item:
+            await interaction.response.send_message(
+                f"Could not find an item named '{item_name}'.",
+                ephemeral=True
+            )
+            return
+
+        # Convert dictionary to Item object if necessary
+        if isinstance(item, dict):
+            item = Item.from_dict(item)
+
+        # Create the view and initial embed
+        view = ExamineView(item, character)
+        embed = view.get_embed()
+    except Exception as e:
+        logging.error(f"Error in examine command: {e}", exc_info=True)
         await interaction.response.send_message(
-            "You don't have a character yet. Use `/create_character` to get started.",
+            "An error occurred while examining the item.",
             ephemeral=True
         )
-
-    # Search in inventory
-    for item in character.inventory:
-        if item.name.lower() == item_name.lower():
-            await interaction.response.send_message(f"**{item.name}**: {item.description}", ephemeral=True)
-            return
-
-    # Search in equipment
-    for slot, equipped_item in character.equipment.items():
-        if isinstance(equipped_item, list):  # For slots like 'belt_slots' or 'magic_slots'
-            for sub_item in equipped_item:
-                if sub_item and sub_item.name.lower() == item_name.lower():
-                    await interaction.response.send_message(f"**{sub_item.name}**: {sub_item.description}", ephemeral=True)
-                    return
-        elif equipped_item and equipped_item.name.lower() == item_name.lower():
-            await interaction.response.send_message(f"**{equipped_item.name}**: {equipped_item.description}", ephemeral=True)
-            return
-
-    await interaction.response.send_message(f"You don't have an item named **{item_name}** in your inventory or equipment.", ephemeral=True)
+        return
 
 @bot.tree.command(name="identify", description="Identify a magical item in your inventory.")
 @app_commands.describe(item_name="The name of the item to identify.")
