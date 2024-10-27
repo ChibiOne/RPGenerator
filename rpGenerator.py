@@ -3783,12 +3783,38 @@ class ExamineView(discord.ui.View):
         return f"{effect_type}: {value}"
 
     def get_embed(self):
-        if self.current_view == "effects":
+        if self.current_view == "general":
             embed = discord.Embed(
-                title=f"{self.item.Name} - Effects",
+                title=self.item.Name,
+                description=self.item.Description,
                 color=self._get_rarity_color()
             )
             
+            # Basic info
+            embed.add_field(
+                name="Basic Information",
+                value=f"**Type:** {self.item.Type}\n"
+                    f"**Weight:** {self.item.Weight} lbs\n"
+                    f"**Value:** {self.item.Average_Cost} gold\n"
+                    f"**Rarity:** {self.item.Rarity}",
+                inline=False
+            )
+            
+            if self.item.Proficiency_Needed:
+                embed.add_field(
+                    name="Required Proficiency",
+                    value=self.item.Proficiency_Needed,
+                    inline=False
+                )
+            self._add_contextual_footer(embed)
+            return embed
+            
+        elif self.current_view == "effects":
+            embed = discord.Embed(
+                title=f"{self.item.Name} - Effects",
+                color=self._get_rarity_color()
+                )
+                
             if isinstance(self.item.Effect, dict):
                 for effect_name, effect in self.item.Effect.items():
                     if isinstance(effect, dict):
@@ -3816,22 +3842,40 @@ class ExamineView(discord.ui.View):
             )
             
             if self.item.Type == "Weapon":
-                damage_info = self.item.Effect.get('Damage', 'None')
-                damage_type = self.item.Effect.get('Damage_Type', 'Unknown')
+                # Extract the actual values from the effect dictionaries
+                damage_info = self.item.Effect.get('Damage', {})
+                damage_type = self.item.Effect.get('Damage_Type', {})
+                
+                # Get the actual values, handling both direct values and dict formats
+                if isinstance(damage_info, dict):
+                    damage_value = damage_info.get('value', 'None')
+                else:
+                    damage_value = damage_info
+
+                if isinstance(damage_type, dict):
+                    damage_type_value = damage_type.get('value', 'Unknown')
+                else:
+                    damage_type_value = damage_type
+
                 embed.add_field(
                     name="Damage",
-                    value=f"**Base Damage:** {damage_info}\n**Damage Type:** {damage_type}",
+                    value=f"**Base Damage:** {damage_value}\n**Damage Type:** {damage_type_value}",
                     inline=False
                 )
-                
+                    
             elif self.item.Type in ["Armor", "Shield"]:
-                ac_bonus = self.item.Effect.get('AC', 0)
+                ac_bonus = self.item.Effect.get('AC', {})
+                if isinstance(ac_bonus, dict):
+                    ac_value = ac_bonus.get('value', 0)
+                else:
+                    ac_value = ac_bonus
+
                 embed.add_field(
                     name="Defense",
-                    value=f"**AC Bonus:** +{ac_bonus}",
+                    value=f"**AC Bonus:** +{ac_value}",
                     inline=False
                 )
-                
+                    
             # Add comparison with currently equipped items
             if self.character:
                 embed.add_field(
@@ -3839,6 +3883,7 @@ class ExamineView(discord.ui.View):
                     value=self._get_comparison_text(),
                     inline=False
                 )
+
 
         elif self.current_view == "magic":
             embed = discord.Embed(
@@ -3850,14 +3895,21 @@ class ExamineView(discord.ui.View):
                 magical_effects = []
                 for effect_type, value in self.item.Effect.items():
                     if effect_type not in ['Damage', 'Damage_Type', 'AC']:  # Skip basic combat effects
-                        magical_effects.append(self._format_effect(effect_type, value))
-                
+                        # Extract the actual value if it's in a dictionary
+                        if isinstance(value, dict):
+                            effect_value = value.get('value', value)
+                        else:
+                            effect_value = value
+                        
+                        magical_effects.append(self._format_effect(effect_type, effect_value))
+                    
                 if magical_effects:
                     embed.add_field(
                         name="Magical Effects",
                         value="\n".join(magical_effects),
                         inline=False
                     )
+                    
             # Add any magical lore or special properties
             if hasattr(self.item, 'magical_lore'):
                 embed.add_field(
@@ -3909,8 +3961,15 @@ class ExamineView(discord.ui.View):
             if equipped_weapon:
                 comparison_text.append(f"Currently equipped: {equipped_weapon.Name}")
                 if hasattr(equipped_weapon, 'Effect') and hasattr(self.item, 'Effect'):
-                    current_damage = equipped_weapon.Effect.get('Damage', '0')
-                    new_damage = self.item.Effect.get('Damage', '0')
+                    current_damage = equipped_weapon.Effect.get('Damage', {})
+                    new_damage = self.item.Effect.get('Damage', {})
+                    
+                    # Extract actual values
+                    if isinstance(current_damage, dict):
+                        current_damage = current_damage.get('value', '0')
+                    if isinstance(new_damage, dict):
+                        new_damage = new_damage.get('value', '0')
+                    
                     comparison_text.append(f"Damage comparison: {current_damage} → {new_damage}")
                     
         elif self.item.Type in ["Armor", "Shield"]:
@@ -3918,8 +3977,15 @@ class ExamineView(discord.ui.View):
             if equipped_item:
                 comparison_text.append(f"Currently equipped: {equipped_item.Name}")
                 if hasattr(equipped_item, 'Effect') and hasattr(self.item, 'Effect'):
-                    current_ac = equipped_item.Effect.get('AC', 0)
-                    new_ac = self.item.Effect.get('AC', 0)
+                    current_ac = equipped_item.Effect.get('AC', {})
+                    new_ac = self.item.Effect.get('AC', {})
+                    
+                    # Extract actual values
+                    if isinstance(current_ac, dict):
+                        current_ac = current_ac.get('value', 0)
+                    if isinstance(new_ac, dict):
+                        new_ac = new_ac.get('value', 0)
+                    
                     comparison_text.append(f"AC comparison: +{current_ac} → +{new_ac}")      
         return "\n".join(comparison_text) if comparison_text else "No similar item equipped"
 
@@ -3951,24 +4017,7 @@ class InventoryView(discord.ui.View):
         # Add category select menu
         self.add_item(CategorySelect(self.categories))
 
-        # Add navigation buttons
-        self.prev_button = discord.ui.Button(
-            label="◀", 
-            custom_id="prev", 
-            style=discord.ButtonStyle.grey,
-            disabled=True  # Start with prev disabled on first page
-        )
-        self.next_button = discord.ui.Button(
-            label="▶", 
-            custom_id="next", 
-            style=discord.ButtonStyle.grey,
-            disabled=True  # Will be enabled if there are more pages
-        )
-        
-        self.add_item(self.prev_button)
-        self.add_item(self.next_button)
-        
-        # Update button states based on initial content
+        # Initialize button states
         self.update_button_states()
 
     def update_button_states(self):
@@ -3976,23 +4025,20 @@ class InventoryView(discord.ui.View):
         items = self.get_filtered_items()
         total_pages = max(1, math.ceil(len(items) / self.items_per_page))
         
-        # Disable both buttons if there's only one page
-        if total_pages <= 1:
-            self.prev_button.disabled = True
-            self.next_button.disabled = True
-            return
+        # Update prev button state
+        if hasattr(self, 'prev_button'):
+            self.prev_button.disabled = (self.current_page <= 0 or total_pages <= 1)
+            
+        # Update next button state
+        if hasattr(self, 'next_button'):
+            self.next_button.disabled = (self.current_page >= total_pages - 1 or total_pages <= 1)
 
-        # Update button states based on current page
-        self.prev_button.disabled = (self.current_page <= 0)
-        self.next_button.disabled = (self.current_page >= total_pages - 1)
-
-    @discord.ui.button(label="◀", custom_id="prev", style=discord.ButtonStyle.grey)
-    async def prev_page(self, interaction: discord.Interaction, button: discord.ui.Button):
+    @discord.ui.button(label="◀", style=discord.ButtonStyle.grey)
+    async def prev_button(self, button: discord.ui.Button, interaction: discord.Interaction):
         items = self.get_filtered_items()
         total_pages = max(1, math.ceil(len(items) / self.items_per_page))
         
         if total_pages <= 1:
-            # If there's only one page, acknowledge the interaction but don't change anything
             await interaction.response.defer()
             return
             
@@ -4004,16 +4050,14 @@ class InventoryView(discord.ui.View):
                 view=self
             )
         else:
-            # If we're already on the first page, just acknowledge the interaction
             await interaction.response.defer()
 
-    @discord.ui.button(label="▶", custom_id="next", style=discord.ButtonStyle.grey)
-    async def next_page(self, interaction: discord.Interaction, button: discord.ui.Button):
+    @discord.ui.button(label="▶", style=discord.ButtonStyle.grey)
+    async def next_button(self, button: discord.ui.Button, interaction: discord.Interaction):
         items = self.get_filtered_items()
         total_pages = max(1, math.ceil(len(items) / self.items_per_page))
         
         if total_pages <= 1:
-            # If there's only one page, acknowledge the interaction but don't change anything
             await interaction.response.defer()
             return
             
@@ -4025,7 +4069,6 @@ class InventoryView(discord.ui.View):
                 view=self
             )
         else:
-            # If we're already on the last page, just acknowledge the interaction
             await interaction.response.defer()
 
     def get_filtered_items(self):
@@ -4791,7 +4834,7 @@ async def examine(interaction: discord.Interaction, item_name: str):
                 "You don't have a character yet. Use `/create_character` to get started.",
                 ephemeral=True
             )
-            return
+            return  
 
         # Find item in inventory, equipment, or current area
         item = None
@@ -4847,6 +4890,10 @@ async def examine(interaction: discord.Interaction, item_name: str):
         # Create the view and initial embed
         view = ExamineView(item, character)
         embed = view.get_embed()
+
+        # Send the response
+        await interaction.response.send_message(embed=embed, view=view)
+        
     except Exception as e:
         logging.error(f"Error in examine command: {e}")
         await interaction.response.send_message(
