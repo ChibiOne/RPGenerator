@@ -1,4 +1,4 @@
-{
+{   
     "Longsword": {
         "Name": "Longsword",
         "Weight": 3,
@@ -6,81 +6,28 @@
         "Description": "A versatile blade favored by warriors and knights.",
         "Effect": {
             "Damage": "1d8",
-            "Damage_Type": "Slashing"
+            "Damage_Type": "Slashing",
+            "Versatile": "1d10",
+            "Properties": ["Versatile"]
         },
         "Proficiency_Needed": "Martial Weapons",
         "Average_Cost": 15,
         "Is_Magical": false,
         "Rarity": "Common"
     },
-    "Wooden Shield": {
-        "Name": "Wooden Shield",
-        "Weight": 6,
-        "Type": "Shield",
-        "Description": "A sturdy wooden shield reinforced with metal bands.",
+    "Shortsword": {
+        "Name": "Shortsword",
+        "Weight": 2,
+        "Type": "Weapon",
+        "Description": "A light, easily handled sword favored by rogues and swashbucklers.",
         "Effect": {
-            "AC": 2
+            "Damage": "1d6",
+            "Damage_Type": "Piercing",
+            "Properties": ["Finesse", "Light"]
         },
-        "Proficiency_Needed": "Shields",
+        "Proficiency_Needed": "Martial Weapons",
         "Average_Cost": 10,
         "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Healing Potion": {
-        "Name": "Healing Potion",
-        "Weight": 0.5,
-        "Type": "Consumable",
-        "Description": "A red liquid that restores health when drunk.",
-        "Effect": {
-            "Heal": 10
-        },
-        "Proficiency_Needed": null,
-        "Average_Cost": 50,
-        "Is_Magical": true,
-        "Rarity": "Common"
-    },
-    "Bedroll": {
-        "Name": "Bedroll",
-        "Weight": 7,
-        "Type": "Equipment",
-        "Description": "A comfortable sleeping roll for camping.",
-        "Effect": null,
-        "Proficiency_Needed": null,
-        "Average_Cost": 1,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Component Pouch": {
-        "Name": "Component Pouch",
-        "Weight": 2,
-        "Type": "Equipment",
-        "Description": "A small pouch containing spell components.",
-        "Effect": null,
-        "Proficiency_Needed": null,
-        "Average_Cost": 25,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Thieves Tools": {
-        "Name": "Thieves Tools",
-        "Weight": 1,
-        "Type": "Equipment",
-        "Description": "Tools for picking locks and disarming traps.",
-        "Effect": null,
-        "Proficiency_Needed": "Thieves Tools",
-        "Average_Cost": 25,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Holy Symbol": {
-        "Name": "Holy Symbol",
-        "Weight": 1,
-        "Type": "Equipment",
-        "Description": "A divine focus for casting spells.",
-        "Effect": null,
-        "Proficiency_Needed": null,
-        "Average_Cost": 5,
-        "Is_Magical": true,
         "Rarity": "Common"
     },
     "Dagger": {
@@ -90,7 +37,9 @@
         "Description": "A small but deadly blade, easily concealed.",
         "Effect": {
             "Damage": "1d4",
-            "Damage_Type": "Piercing"
+            "Damage_Type": "Piercing",
+            "Properties": ["Finesse", "Light", "Thrown"],
+            "Range": "20/60"
         },
         "Proficiency_Needed": "Simple Weapons",
         "Average_Cost": 2,
@@ -111,16 +60,64 @@
         "Is_Magical": false,
         "Rarity": "Common"
     },
-    "Ringmail Armor": {
-        "Name": "Ringmail Armor",
-        "Weight": 40,
-        "Type": "Armor",
-        "Description": "Heavy armor made of interlocking metal rings.",
+    "Staff": {
+        "Name": "Staff",
+        "Weight": 4,
+        "Type": "Weapon",
+        "Description": "A wooden staff used by mages and mystics.",
         "Effect": {
-            "AC": 14
+            "Damage": "1d6",
+            "Damage_Type": "Bludgeoning",
+            "Versatile": "1d8",
+            "Properties": ["Versatile"],
+            "SpellFocus": true
         },
-        "Proficiency_Needed": "Heavy Armor",
-        "Average_Cost": 30,
+        "Proficiency_Needed": "Simple Weapons",
+        "Average_Cost": 2,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Hunter's Bow": {
+        "Name": "Hunter's Bow",
+        "Weight": 2,
+        "Type": "Weapon",
+        "Description": "A sturdy shortbow with carefully maintained string and grip.",
+        "Effect": {
+            "Damage": "1d6",
+            "Damage_Type": "Piercing",
+            "Properties": ["Ammunition", "Range"],
+            "Range": "80/320"
+        },
+        "Proficiency_Needed": "Simple Weapons",
+        "Average_Cost": 25,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Arrow (20)": {
+        "Name": "Arrow (20)",
+        "Weight": 1,
+        "Type": "Ammunition",
+        "Description": "A bundle of 20 arrows with steel heads.",
+        "Effect": {
+            "Quantity": 20,
+            "Recovery": "Half recoverable after battle"
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 1,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Wooden Shield": {
+        "Name": "Wooden Shield",
+        "Weight": 6,
+        "Type": "Shield",
+        "Description": "A sturdy wooden shield reinforced with metal bands.",
+        "Effect": {
+            "AC": 2,
+            "Properties": ["One-Handed"]
+        },
+        "Proficiency_Needed": "Shields",
+        "Average_Cost": 10,
         "Is_Magical": false,
         "Rarity": "Common"
     },
@@ -130,23 +127,12 @@
         "Type": "Armor",
         "Description": "Light armor made of treated leather.",
         "Effect": {
-            "AC": 11
+            "AC": 11,
+            "Max_Dex_Bonus": null,
+            "Properties": ["Light"]
         },
         "Proficiency_Needed": "Light Armor",
         "Average_Cost": 10,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Robes": {
-        "Name": "Robes",
-        "Weight": 4,
-        "Type": "Armor",
-        "Description": "Comfortable robes with subtle magical enhancements.",
-        "Effect": {
-            "AC": 10
-        },
-        "Proficiency_Needed": null,
-        "Average_Cost": 5,
         "Is_Magical": false,
         "Rarity": "Common"
     },
@@ -156,36 +142,260 @@
         "Type": "Armor",
         "Description": "Leather armor reinforced with metal studs.",
         "Effect": {
-            "AC": 12
+            "AC": 12,
+            "Max_Dex_Bonus": null,
+            "Properties": ["Light"]
         },
         "Proficiency_Needed": "Light Armor",
         "Average_Cost": 45,
         "Is_Magical": false,
         "Rarity": "Common"
     },
-    "Shortsword": {
-        "Name": "Shortsword",
-        "Weight": 2,
-        "Type": "Weapon",
-        "Description": "A light, easily handled sword favored by rogues and swashbucklers.",
+    "Ringmail Armor": {
+        "Name": "Ringmail Armor",
+        "Weight": 40,
+        "Type": "Armor",
+        "Description": "Heavy armor made of interlocking metal rings.",
         "Effect": {
-            "Damage": "1d6",
-            "Damage_Type": "Piercing"
+            "AC": 14,
+            "Max_Dex_Bonus": 0,
+            "Properties": ["Heavy", "Noisy"]
         },
-        "Proficiency_Needed": "Martial Weapons",
-        "Average_Cost": 10,
+        "Proficiency_Needed": "Heavy Armor",
+        "Average_Cost": 30,
         "Is_Magical": false,
         "Rarity": "Common"
+    },
+    "Robes": {
+        "Name": "Robes",
+        "Weight": 4,
+        "Type": "Armor",
+        "Description": "Comfortable robes with subtle magical enhancements.",
+        "Effect": {
+            "AC": 10,
+            "Max_Dex_Bonus": null,
+            "Properties": ["Unarmored"],
+            "SpellFocus": true
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 5,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Backpack": {
+        "Name": "Backpack",
+        "Weight": 2,
+        "Type": "Container",
+        "Description": "A sturdy backpack for carrying equipment.",
+        "Effect": {
+            "Capacity": 30,
+            "Properties": ["Container"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 2,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Bedroll": {
+        "Name": "Bedroll",
+        "Weight": 7,
+        "Type": "Equipment",
+        "Description": "A comfortable sleeping roll for camping.",
+        "Effect": {
+            "Rest": "Advantage on recovery during long rest",
+            "Properties": ["Comfort"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 1,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Tinderbox": {
+        "Name": "Tinderbox",
+        "Weight": 1,
+        "Type": "Gear",
+        "Description": "Steel, flint, and tinder for starting fires.",
+        "Effect": {
+            "Use": "Light fire in 1 action",
+            "Properties": ["Tool"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 0.5,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Rope (50 feet)": {
+        "Name": "Rope (50 feet)",
+        "Weight": 10,
+        "Type": "Gear",
+        "Description": "Strong hemp rope suitable for climbing or binding.",
+        "Effect": {
+            "Length": 50,
+            "Strength": "Can support up to 500 pounds",
+            "Properties": ["Tool"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 1,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Torch": {
+        "Name": "Torch",
+        "Weight": 1,
+        "Type": "Gear",
+        "Description": "A wooden torch that provides light for 1 hour.",
+        "Effect": {
+            "Light": "Bright light 20 ft., dim light 20 ft.",
+            "Duration": "1 hour",
+            "Properties": ["Light", "Fire"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 0.1,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Waterskin": {
+        "Name": "Waterskin",
+        "Weight": 5,
+        "Type": "Container",
+        "Description": "A leather container that holds water.",
+        "Effect": {
+            "Capacity": "4 pints",
+            "Properties": ["Container", "Liquid"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 0.2,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Component Pouch": {
+        "Name": "Component Pouch",
+        "Weight": 2,
+        "Type": "Equipment",
+        "Description": "A small pouch containing spell components.",
+        "Effect": {
+            "SpellFocus": true,
+            "Properties": ["Container", "Magical"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 25,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Thieves Tools": {
+        "Name": "Thieves Tools",
+        "Weight": 1,
+        "Type": "Tool",
+        "Description": "Tools for picking locks and disarming traps.",
+        "Effect": {
+            "EnableLockpicking": true,
+            "Properties": ["Tool", "Precision"]
+        },
+        "Proficiency_Needed": "Thieves Tools",
+        "Average_Cost": 25,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Holy Symbol": {
+        "Name": "Holy Symbol",
+        "Weight": 1,
+        "Type": "Equipment",
+        "Description": "A divine focus for casting spells.",
+        "Effect": {
+            "SpellFocus": true,
+            "DivineFocus": true,
+            "Properties": ["Magical", "Divine"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 5,
+        "Is_Magical": true,
+        "Rarity": "Common"
+    },
+    "Merchant's Scale": {
+        "Name": "Merchant's Scale",
+        "Weight": 1,
+        "Type": "Tool",
+        "Description": "A precise balance scale for weighing coins and valuable materials.",
+        "Effect": {
+            "Skill": "Advantage on checks to determine item value",
+            "Properties": ["Tool", "Precision"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 5,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Climber's Kit": {
+        "Name": "Climber's Kit",
+        "Weight": 12,
+        "Type": "Gear",
+        "Description": "A set of tools for climbing and rappelling.",
+        "Effect": {
+            "Skill": "Advantage on checks to climb or rappel",
+            "Properties": ["Tool", "Safety"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 25,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Cooking Pot": {
+        "Name": "Cooking Pot",
+        "Weight": 2,
+        "Type": "Gear",
+        "Description": "A sturdy metal pot for cooking meals.",
+        "Effect": {
+            "Capacity": "Meals for 4 people",
+            "Properties": ["Container", "Cooking"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 0.5,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Mess Kit": {
+        "Name": "Mess Kit",
+        "Weight": 1,
+        "Type": "Gear",
+        "Description": "A set of utensils for eating meals on the go.",
+        "Effect": {
+            "Contents": ["Plate", "Bowl", "Cup", "Utensils"],
+            "Properties": ["Tool", "Cooking"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 0.2,
+        "Is_Magical": false,
+        "Rarity": "Common"
+    },
+    "Crystal Heart Shard": {
+        "Name": "Crystal Heart Shard",
+        "Weight": 0.1,
+        "Type": "Magic Item",
+        "Description": "A fragment of the ancient Crystal Heart, pulsing with raw magical energy.",
+        "Effect": {
+            "SpellStorage": "Can store one spell level",
+            "Detection": "Resonates with nearby Crystal Heart pieces",
+            "Light": "Pulses with dim light when magic is nearby",
+            "Properties": ["Magical", "Unique", "Quest Item"],
+            "Lore": "Part of the shattered Crystal Heart of the ancient civilization"
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 500,
+        "Is_Magical": true,
+        "Rarity": "Rare"
     },
     "Captain's Sword": {
         "Name": "Captain's Sword",
         "Weight": 3,
         "Type": "Weapon",
-        "Description": "A finely crafted longsword with Northhold's crest on the pommel.",
+        "Description": "A masterwork longsword bearing Northhold's crest, marking its wielder as a person of authority.",
         "Effect": {
             "Damage": "1d8",
             "Damage_Type": "Slashing",
-            "Special": "Symbol of authority in Northhold"
+            "Versatile": "1d10",
+            "Authority": "Advantage on social checks with Northhold guards",
+            "Properties": ["Versatile", "Authority", "Unique"],
+            "Lore": "Traditional symbol of authority in Northhold's guard"
         },
         "Proficiency_Needed": "Martial Weapons",
         "Average_Cost": 50,
@@ -200,139 +410,119 @@
         "Effect": {
             "Damage": "1d6",
             "Damage_Type": "Bludgeoning",
-            "Magic": "+1 to spell attacks"
+            "SpellBonus": 1,
+            "SpellFocus": true,
+            "Resonance": "Can detect magical anomalies within 30 feet",
+            "Properties": ["Magical", "Focus", "Detection"],
+            "Lore": "Created by the crystal mystics of the underground caves"
         },
         "Proficiency_Needed": "Simple Weapons",
         "Average_Cost": 200,
         "Is_Magical": true,
         "Rarity": "Rare"
     },
-    "Hunter's Bow": {
-        "Name": "Hunter's Bow",
-        "Weight": 2,
-        "Type": "Weapon",
-        "Description": "A sturdy shortbow with carefully maintained string and grip.",
-        "Effect": {
-            "Damage": "1d6",
-            "Damage_Type": "Piercing",
-            "Range": "80/320"
-        },
-        "Proficiency_Needed": "Simple Weapons",
-        "Average_Cost": 25,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Merchant's Scale": {
-        "Name": "Merchant's Scale",
-        "Weight": 1,
-        "Type": "Tool",
-        "Description": "A precise balance scale for weighing coins and valuable materials.",
-        "Effect": "Advantage on checks to determine item value",
-        "Proficiency_Needed": null,
-        "Average_Cost": 5,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
     "Resonance Stone": {
         "Name": "Resonance Stone",
         "Weight": 0.5,
         "Type": "Magic Item",
         "Description": "A crystal that vibrates in harmony with nearby magical energies.",
-        "Effect": "Can detect magical auras within 30 feet",
+        "Effect": {
+            "Detection": "Detects magical auras within 30 feet",
+            "Attunement": "Can be attuned to specific magical signatures",
+            "Properties": ["Magical", "Detection", "Utility"],
+            "Lore": "Used by crystal mystics to navigate the magical currents"
+        },
         "Proficiency_Needed": null,
         "Average_Cost": 100,
         "Is_Magical": true,
         "Rarity": "Uncommon"
     },
-    "Backpack": {
-        "Name": "Backpack",
-        "Weight": 5,
-        "Type": "Gear",
-        "Description": "A sturdy backpack for carrying equipment.",
-        "Effect": "Can carry up to 30 pounds of gear",
-        "Proficiency_Needed": null,
-        "Average_Cost": 2,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Rope (50 feet)": {
-        "Name": "Rope (50 feet)",
-        "Weight": 10,
-        "Type": "Gear",
-        "Description": "Strong hemp rope suitable for climbing or binding.",
-        "Effect": "Can support up to 500 pounds",
-        "Proficiency_Needed": null,
-        "Average_Cost": 1,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Crystal Heart Shard": {
-        "Name": "Crystal Heart Shard",
+    "Crystal Pendant": {
+        "Name": "Crystal Pendant",
         "Weight": 0.1,
         "Type": "Magic Item",
-        "Description": "A fragment from the great crystal heart, pulsing with energy.",
+        "Description": "A crystal from the mystic caves, wrapped in intricate silver wire.",
         "Effect": {
-            "Magic": "Stores one spell level",
-            "Special": "Glows in presence of other crystal heart pieces"
+            "Light": "Creates dim light in 10ft radius",
+            "Empathy": "Glows warmer near friendly presences",
+            "Properties": ["Magical", "Light", "Detection"]
         },
         "Proficiency_Needed": null,
-        "Average_Cost": 500,
+        "Average_Cost": 75,
+        "Is_Magical": true,
+        "Rarity": "Uncommon"
+    },
+    "Shadowweave Cloak": {
+        "Name": "Shadowweave Cloak",
+        "Weight": 3,
+        "Type": "Armor",
+        "Description": "A cloak made from fabric that seems to drink in light, making its wearer harder to spot.",
+        "Effect": {
+            "Stealth": "Advantage on Stealth checks in dim light or darkness",
+            "Resistance": "Cold resistance while worn",
+            "Properties": ["Magical", "Stealth", "Protection"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 300,
         "Is_Magical": true,
         "Rarity": "Rare"
     },
-    "Torch": {
-        "Name": "Torch",
-        "Weight": 1,
-        "Type": "Gear",
-        "Description": "A wooden torch that provides light for 1 hour.",
+    "Runescribed Shield": {
+        "Name": "Runescribed Shield",
+        "Weight": 6,
+        "Type": "Shield",
+        "Description": "A wooden shield covered in glowing protective runes.",
         "Effect": {
-            "Light": "Bright light 20 ft., dim light 20 ft.",
-            "Duration": "1 hour"
+            "AC": 2,
+            "Reaction": "Once per day, can use reaction to add +2 AC against one attack",
+            "Light": "Sheds dim light in 5ft radius",
+            "Properties": ["Magical", "Protection", "Light"]
+        },
+        "Proficiency_Needed": "Shields",
+        "Average_Cost": 400,
+        "Is_Magical": true,
+        "Rarity": "Rare"
+    },
+    "Merchant's Fortune Ring": {
+        "Name": "Merchant's Fortune Ring",
+        "Weight": 0.1,
+        "Type": "Magic Item",
+        "Description": "A golden ring with a small emerald that helps in business dealings.",
+        "Effect": {
+            "Insight": "Advantage on Insight checks during trades",
+            "Persuasion": "Advantage on Persuasion checks for price negotiation",
+            "Properties": ["Magical", "Social", "Commerce"]
         },
         "Proficiency_Needed": null,
-        "Average_Cost": 0.1,
-        "Is_Magical": false,
-        "Rarity": "Common"
+        "Average_Cost": 250,
+        "Is_Magical": true,
+        "Rarity": "Uncommon"
     },
-    "Climber's Kit": {
-        "Name": "Climber's Kit",
-        "Weight": 12,
-        "Type": "Gear",
-        "Description": "A set of tools for climbing and rappelling.",
-        "Effect": "Advantage on checks to climb or rappel",
+    "Wanderer's Compass": {
+        "Name": "Wanderer's Compass",
+        "Weight": 0.5,
+        "Type": "Magic Item",
+        "Description": "A compass that points toward the holder's greatest desire rather than north.",
+        "Effect": {
+            "Navigation": "Points toward user's chosen destination once attuned",
+            "Detection": "Spins rapidly near magical portals",
+            "Properties": ["Magical", "Navigation", "Detection"]
+        },
         "Proficiency_Needed": null,
-        "Average_Cost": 25,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Cooking Pot": {
-        "Name": "Cooking Pot",
-        "Weight": 2,
-        "Type": "Gear",
-        "Description": "A sturdy metal pot for cooking meals.",
-        "Effect": "Can cook meals for up to 4 people",
-        "Proficiency_Needed": null,
-        "Average_Cost": 0.5,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Mess Kit": {
-        "Name": "Mess Kit",
-        "Weight": 1,
-        "Type": "Gear",
-        "Description": "A set of utensils for eating meals on the go.",
-        "Effect": "Contains plate, bowl, cup, utensils",
-        "Proficiency_Needed": null,
-        "Average_Cost": 0.2,
-        "Is_Magical": false,
-        "Rarity": "Common"
+        "Average_Cost": 200,
+        "Is_Magical": true,
+        "Rarity": "Uncommon"
     },
     "Potion of Invisibility": {
         "Name": "Potion of Invisibility",
         "Weight": 0.5,
         "Type": "Consumable",
-        "Description": "A clear liquid that renders the drinker invisible for 1 hour.",
-        "Effect": "Invisibility for 1 hour",
+        "Description": "A clear liquid that bends light around the drinker.",
+        "Effect": {
+            "Duration": "1 hour",
+            "Invisibility": "Become invisible until attacking or casting a spell",
+            "Properties": ["Magical", "Stealth", "Temporary"]
+        },
         "Proficiency_Needed": null,
         "Average_Cost": 150,
         "Is_Magical": true,
@@ -342,48 +532,127 @@
         "Name": "Potion of Fire Breath",
         "Weight": 0.5,
         "Type": "Consumable",
-        "Description": "A fiery liquid that allows the drinker to breathe fire for 1 minute.",
-        "Effect": "Breathe fire for 1 minute",
+        "Description": "A bubbling red liquid that grants the power to breathe fire.",
+        "Effect": {
+            "Duration": "1 minute",
+            "Action": "Can use action to breathe fire (15ft cone, 4d6 fire damage)",
+            "Save": "DC 13 Dexterity save for half damage",
+            "Properties": ["Magical", "Combat", "Temporary"]
+        },
         "Proficiency_Needed": null,
         "Average_Cost": 100,
         "Is_Magical": true,
         "Rarity": "Uncommon"
     },
-    "Tinderbox": {
-        "Name": "Tinderbox",
-        "Weight": 1,
-        "Type": "Gear",
-        "Description": "Steel, flint, and tinder for starting fires.",
-        "Effect": "Light fire in 1 action",
-        "Proficiency_Needed": null,
-        "Average_Cost": 0.5,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Waterskin": {
-        "Name": "Waterskin",
-        "Weight": 5,
-        "Type": "Gear",
-        "Description": "A leather container that holds water.",
-        "Effect": "Holds 4 pints of liquid",
-        "Proficiency_Needed": null,
-        "Average_Cost": 0.2,
-        "Is_Magical": false,
-        "Rarity": "Common"
-    },
-    "Crystal Pendant": {
-        "Name": "Crystal Pendant",
-        "Weight": 0.1,
-        "Type": "Magic Item",
-        "Description": "A crystal from the caves, wrapped in silver wire.",
+    "Greater Healing Potion": {
+        "Name": "Greater Healing Potion",
+        "Weight": 0.5,
+        "Type": "Consumable",
+        "Description": "A bright red potion with golden swirls that provides significant healing.",
         "Effect": {
-            "Magic": "Glows in darkness",
-            "Light": "Dim light 10 ft."
+            "Heal": "4d4 + 4 HP",
+            "Bonus": "Advantage on next Constitution save within 1 minute",
+            "Properties": ["Magical", "Healing", "Enhancement"]
         },
         "Proficiency_Needed": null,
-        "Average_Cost": 75,
+        "Average_Cost": 100,
+        "Is_Magical": true,
+        "Rarity": "Uncommon"
+    },
+    "Enchanted Quiver": {
+        "Name": "Enchanted Quiver",
+        "Weight": 1,
+        "Type": "Container",
+        "Description": "A quiver that magically produces basic arrows.",
+        "Effect": {
+            "Production": "Creates 1d4 normal arrows at dawn",
+            "Capacity": "Can hold up to 20 arrows",
+            "Properties": ["Magical", "Ammunition", "Renewable"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 300,
+        "Is_Magical": true,
+        "Rarity": "Uncommon"
+    },
+    "Mystic's Spellbook": {
+        "Name": "Mystic's Spellbook",
+        "Weight": 3,
+        "Type": "Magic Item",
+        "Description": "A spellbook with pages that rearrange themselves and crystalline bookmarks.",
+        "Effect": {
+            "Organization": "Can mentally reorganize contents",
+            "Protection": "Resistant to fire and water damage",
+            "Memory": "Advantage on checks to recall spells written within",
+            "Properties": ["Magical", "Knowledge", "Protection"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 250,
+        "Is_Magical": true,
+        "Rarity": "Rare"
+    },
+    "Frost Brand Dagger": {
+        "Name": "Frost Brand Dagger",
+        "Weight": 1,
+        "Type": "Weapon",
+        "Description": "A dagger with a blade of magical ice that never melts.",
+        "Effect": {
+            "Damage": "1d4",
+            "Damage_Type": "Piercing",
+            "Bonus_Damage": "1d4 Cold",
+            "Light": "Sheds dim light in 10ft radius when drawn",
+            "Properties": ["Magical", "Light", "Finesse", "Thrown"],
+            "Range": "20/60"
+        },
+        "Proficiency_Needed": "Simple Weapons",
+        "Average_Cost": 400,
+        "Is_Magical": true,
+        "Rarity": "Rare"
+    },
+    "Alchemist's Satchel": {
+        "Name": "Alchemist's Satchel",
+        "Weight": 2,
+        "Type": "Container",
+        "Description": "A leather satchel with numerous protective enchantments and specialized compartments.",
+        "Effect": {
+            "Protection": "Contents cannot break or spill",
+            "Organization": "Items stored are perfectly preserved",
+            "Capacity": "Can hold up to 20 potion-sized containers",
+            "Properties": ["Magical", "Storage", "Protection"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 200,
+        "Is_Magical": true,
+        "Rarity": "Uncommon"
+    },
+    "Ring of Lockpicking": {
+        "Name": "Ring of Lockpicking",
+        "Weight": 0.1,
+        "Type": "Magic Item",
+        "Description": "A silver ring that transforms into various lockpicking tools.",
+        "Effect": {
+            "Tools": "Functions as thieves' tools",
+            "Bonus": "+1 to lockpicking checks",
+            "Conceal": "Appears as normal ring when not in use",
+            "Properties": ["Magical", "Utility", "Stealth"]
+        },
+        "Proficiency_Needed": "Thieves Tools",
+        "Average_Cost": 350,
+        "Is_Magical": true,
+        "Rarity": "Rare"
+    },
+    "Echo Crystal": {
+        "Name": "Echo Crystal",
+        "Weight": 0.5,
+        "Type": "Magic Item",
+        "Description": "A crystal that can record and replay short sound sequences.",
+        "Effect": {
+            "Record": "Can record up to 1 minute of sound",
+            "Replay": "Can replay recorded sound at will",
+            "Properties": ["Magical", "Utility", "Sound"]
+        },
+        "Proficiency_Needed": null,
+        "Average_Cost": 150,
         "Is_Magical": true,
         "Rarity": "Uncommon"
     }
 }
-    

@@ -6,14 +6,14 @@
         "Char_Class": "Warrior",
         "Gender": "Female",
         "Pronouns": "She/Her",
-        "Description": "Tall, about 5'10'. Short, tousled sandy-blonde hair. Blousy shirt white with long-sleeves, blue jacket and tight blue leather pants. A brown belt with a rapier scabbarded. A sly grin and a mischievous glint in her eye, that can turn to an angry snarl when challenged.'",
+        "Description": "asfadfadfadfasdfasdf",
         "Stats": {
-            "Strength": 10,
+            "Strength": 8,
             "Dexterity": 15,
             "Constitution": 14,
-            "Intelligence": 10,
-            "Charisma": 12,
-            "Wisdom": 11
+            "Charisma": 13,
+            "Wisdom": 12,
+            "Intelligence": 10
         },
         "Skills": {},
         "Inventory": {
@@ -35,7 +35,7 @@
                 "Weight": 7,
                 "Type": "Equipment",
                 "Description": "A comfortable sleeping roll for camping.",
-                "Effect": null,
+                "Effect": {},
                 "Proficiency_Needed": null,
                 "Average_Cost": 1,
                 "Is_Magical": false,
@@ -46,7 +46,7 @@
                 "Weight": 1,
                 "Type": "Gear",
                 "Description": "Steel, flint, and tinder for starting fires.",
-                "Effect": "Light fire in 1 action",
+                "Effect": {},
                 "Proficiency_Needed": null,
                 "Average_Cost": 0.5,
                 "Is_Magical": false,
@@ -143,17 +143,17 @@
         "Max_HP": 1,
         "Curr_HP": 1,
         "Movement_Speed": 30,
-        "Travel_End_Time": 1729917482.5248697,
+        "Travel_End_Time": null,
         "Spellslots": {},
         "Level": 1,
         "XP": 0,
         "Reputation": {},
-        "Is_Traveling": true,
+        "Is_Traveling": false,
         "Current_Area": "Marketplace Square",
         "Current_Location": "Northhold",
         "Current_Region": "Northern Mountains",
         "Current_Continent": "Aetheria",
         "Current_World": "Eldoria",
-        "Last_Interaction_Guild": 1183315621690224640
+        "Last_Interaction_Guild": null
     }
 }
