@@ -143,17 +143,17 @@
         "Max_HP": 1,
         "Curr_HP": 1,
         "Movement_Speed": 30,
-        "Travel_End_Time": null,
+        "Travel_End_Time": 1730085262.84828,
         "Spellslots": {},
         "Level": 1,
         "XP": 0,
         "Reputation": {},
-        "Is_Traveling": false,
+        "Is_Traveling": true,
         "Current_Area": "Marketplace Square",
         "Current_Location": "Northhold",
         "Current_Region": "Northern Mountains",
         "Current_Continent": "Aetheria",
         "Current_World": "Eldoria",
-        "Last_Interaction_Guild": null
+        "Last_Interaction_Guild": 1183315621690224640
     }
 }

@@ -100,12 +100,160 @@ for file in [WORLD_FILE, CONTINENTS_FILE, REGIONS_FILE, LOCATIONS_FILE,
 # Initialize OpenAI Async Client
 openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
-# Define Discord intents and initialize bot
+# Define Discord intents and initialize bot with shard support
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='/', intents=intents)
+async def setup_sharding(bot):
+    """Set up sharding based on bot size and recommended shard count"""
+    try:
+        # Get recommended shard count from Discord
+        data = await bot.http.get_bot_gateway()
+        shard_count = data['shards']
+        max_concurrency = data['session_start_limit']['max_concurrency']
+        
+        logging.info(f"Recommended shards: {shard_count}")
+        logging.info(f"Max concurrency: {max_concurrency}")
+        
+        # Configure the bot for sharding
+        bot.shard_count = shard_count
+        
+        # Initialize shards in buckets based on max_concurrency
+        for i in range(0, shard_count, max_concurrency):
+            shard_ids = list(range(i, min(i + max_concurrency, shard_count)))
+            await bot.start_shards(shard_ids)
+            
+        logging.info(f"Successfully initialized {shard_count} shards")
+        
+    except Exception as e:
+        logging.error(f"Error setting up sharding: {e}")
+        raise
+
+class RateLimit:
+    def __init__(self):
+        self.rate_limits = {}
+        self.global_rate_limit = None
+        self.lock = asyncio.Lock()
+
+    async def check_rate_limit(self, bucket: str) -> float:
+        """Check if we need to wait for rate limit"""
+        async with self.lock:
+            now = time.time()
+            
+            # Check global rate limit
+            if self.global_rate_limit and now < self.global_rate_limit:
+                return self.global_rate_limit - now
+                
+            # Check bucket-specific rate limit
+            if bucket in self.rate_limits:
+                reset_time = self.rate_limits[bucket]
+                if now < reset_time:
+                    return reset_time - now
+                    
+            return 0
+
+    async def update_rate_limit(self, bucket: str, reset_after: float, is_global: bool = False):
+        """Update rate limit information"""
+        async with self.lock:
+            reset_time = time.time() + reset_after
+            if is_global:
+                self.global_rate_limit = reset_time
+            else:
+                self.rate_limits[bucket] = reset_time
+
+class ShardedBot(discord.Bot):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.rate_limiter = RateLimit()
+        self.synced_guilds = set()
+        
+    async def sync_guild_commands(self, guild_id: int, retry_count=0):
+        """Sync commands to a specific guild with rate limit handling"""
+        try:
+            bucket = f"guild_sync:{guild_id}"
+            wait_time = await self.rate_limiter.check_rate_limit(bucket)
+            
+            if wait_time > 0:
+                if retry_count < 3:  # Maximum retry attempts
+                    await asyncio.sleep(wait_time)
+                    return await self.sync_guild_commands(guild_id, retry_count + 1)
+                return False
+                
+            await self.sync_commands(guild_ids=[guild_id])
+            self.synced_guilds.add(guild_id)
+            return True
+            
+        except discord.HTTPException as e:
+            if e.code == 429:  # Rate limit error
+                reset_after = float(e.response.headers.get('X-RateLimit-Reset-After', 5))
+                is_global = e.response.headers.get('X-RateLimit-Global', False)
+                await self.rate_limiter.update_rate_limit(bucket, reset_after, is_global)
+                
+                if retry_count < 3:
+                    await asyncio.sleep(reset_after)
+                    return await self.sync_guild_commands(guild_id, retry_count + 1)
+            raise
+        
+    async def process_application_commands(self, interaction: discord.Interaction):
+        """Override to add rate limit handling"""
+        bucket = f"cmd:{interaction.application_command.name}"
+        wait_time = await self.rate_limiter.check_rate_limit(bucket)
+        
+        if wait_time > 0:
+            # If rate limited, inform the user
+            try:
+                await interaction.response.send_message(
+                    f"This command is rate limited. Please try again in {wait_time:.1f} seconds.",
+                    ephemeral=True
+                )
+                return
+            except discord.errors.InteractionResponded:
+                return
+                
+        try:
+            await super().process_application_commands(interaction)
+        except discord.HTTPException as e:
+            if e.code == 429:  # Rate limit error
+                reset_after = float(e.response.headers.get('X-RateLimit-Reset-After', 5))
+                is_global = e.response.headers.get('X-RateLimit-Global', False)
+                
+                await self.rate_limiter.update_rate_limit(bucket, reset_after, is_global)
+                
+                try:
+                    await interaction.response.send_message(
+                        "This command is currently rate limited. Please try again later.",
+                        ephemeral=True
+                    )
+                except discord.errors.InteractionResponded:
+                    pass
+
+# Initialize bot with sharding
+bot = ShardedBot()
 scheduler = AsyncIOScheduler()
 
+class ShardAwareStateManager:
+    def __init__(self, bot):
+        self.bot = bot
+        self.shard_states = {}
+        self.lock = asyncio.Lock()
 
+    async def get_shard_state(self, guild_id):
+        """Get state for the shard that handles this guild"""
+        shard_id = (guild_id >> 22) % self.bot.shard_count if self.bot.shard_count else None
+        async with self.lock:
+            if shard_id not in self.shard_states:
+                self.shard_states[shard_id] = {}
+            return self.shard_states[shard_id]
+
+    async def update_shard_state(self, guild_id, key, value):
+        """Update state for a specific shard"""
+        state = await self.get_shard_state(guild_id)
+        async with self.lock:
+            state[key] = value
+
+    async def clear_shard_state(self, guild_id):
+        """Clear state for a specific shard"""
+        shard_id = (guild_id >> 22) % self.bot.shard_count if self.bot.shard_count else None
+        async with self.lock:
+            self.shard_states[shard_id] = {}
 
 # ----------------------------
 #        Game Data Loading
@@ -415,6 +563,7 @@ def from_dict(cls, data, user_id, area_lookup=None, item_lookup=None):
 #          Utilities           #
 # ---------------------------- #
 
+
 def calculate_danger_chance(from_area, to_area, weather):
     """
     Calculate the chance of an encounter based on area danger levels and weather
@@ -483,23 +632,28 @@ async def generate_encounter(party, weather, from_area, to_area):
 
     return random.choice(weighted_encounters)
 
-def verify_guild_configs():
+def verify_guild_configs(bot):
     """
     Verify that all configured guilds are valid and accessible
     """
     for guild_id, config in GUILD_CONFIGS.items():
+        # Check if this guild belongs to the current shard
+        shard_id = (guild_id >> 22) % bot.shard_count if bot.shard_count else None
+        if shard_id is not None and shard_id not in bot.shards:
+            continue  # Skip if guild doesn't belong to this shard
+            
         guild = bot.get_guild(guild_id)
         if not guild:
-            logging.warning(f"Could not find guild {guild_id}")
+            logging.warning(f"Could not find guild {guild_id} (Shard: {shard_id})")
             continue
-           
+            
         # Verify channels
         for channel_type, channel_id in config['channels'].items():
             channel = bot.get_channel(channel_id)
             if not channel:
                 logging.warning(f"Could not find {channel_type} channel {channel_id} in guild {guild_id}")
                 continue
-               
+                
             # Verify permissions
             permissions = channel.permissions_for(guild.me)
             if not permissions.send_messages:
@@ -963,7 +1117,7 @@ class Item:
             return parsed_effect
             
         # If effect is a string or any other type, return empty dict
-        logging.debug(f"Unexpected effect type for item {self.Name}, defaulting to empty dict")
+        logging.info(f"Unexpected effect type for item {self.Name}, defaulting to empty dict")
         return {}
 
     def get_ac_bonus(self):
@@ -1840,18 +1994,18 @@ class Character:
     def to_dict(self):
         """Convert Character instance to a dictionary."""
         try:
-            logging.debug(f"Starting to_dict conversion for character {self.name}")
+            logging.info(f"Starting to_dict conversion for character {self.name}")
             
             # Handle inventory conversion
-            logging.debug("Converting inventory...")
+            logging.info("Converting inventory...")
             inventory_dict = {}
             if isinstance(self.inventory, dict):
                 for k, v in self.inventory.items():
-                    logging.debug(f"Converting inventory item {k} of type {type(v)}")
+                    logging.info(f"Converting inventory item {k} of type {type(v)}")
                     if hasattr(v, 'to_dict'):
                         try:
                             inventory_dict[k] = v.to_dict()
-                            logging.debug(f"Successfully converted inventory item {k}")
+                            logging.info(f"Successfully converted inventory item {k}")
                         except Exception as e:
                             logging.error(f"Error converting inventory item {k}: {e}")
                             inventory_dict[k] = str(v)
@@ -1859,11 +2013,11 @@ class Character:
                         inventory_dict[k] = str(v)
 
             # Handle equipment conversion
-            logging.debug("Converting equipment...")
+            logging.info("Converting equipment...")
             equipment_dict = {}
             if isinstance(self.equipment, dict):
                 for slot, item in self.equipment.items():
-                    logging.debug(f"Converting equipment slot {slot} of type {type(item)}")
+                    logging.info(f"Converting equipment slot {slot} of type {type(item)}")
                     try:
                         if isinstance(item, list):
                             equipment_dict[slot] = []
@@ -1871,7 +2025,7 @@ class Character:
                                 if hasattr(i, 'to_dict'):
                                     try:
                                         equipment_dict[slot].append(i.to_dict())
-                                        logging.debug(f"Converted list item {idx} in slot {slot}")
+                                        logging.info(f"Converted list item {idx} in slot {slot}")
                                     except Exception as e:
                                         logging.error(f"Error converting list item {idx} in slot {slot}: {e}")
                                         equipment_dict[slot].append(None)
@@ -1880,7 +2034,7 @@ class Character:
                         elif hasattr(item, 'to_dict'):
                             try:
                                 equipment_dict[slot] = item.to_dict()
-                                logging.debug(f"Converted item in slot {slot}")
+                                logging.info(f"Converted item in slot {slot}")
                             except Exception as e:
                                 logging.error(f"Error converting item in slot {slot}: {e}")
                                 equipment_dict[slot] = None
@@ -1890,7 +2044,7 @@ class Character:
                         logging.error(f"Error processing slot {slot}: {e}")
                         equipment_dict[slot] = None
 
-            logging.debug("Creating base dictionary...")
+            logging.info("Creating base dictionary...")
             base_dict = {
                 'User_ID': self.user_id,
                 'Name': self.name,
@@ -5423,40 +5577,72 @@ async def destination_autocomplete(ctx: discord.AutocompleteContext):
     try:
         user_id = str(ctx.interaction.user.id)
         character = load_or_get_character(user_id)
-
         if not character or not character.current_area:
             return []
-
         connected_areas = character.current_area.connected_areas
         current = ctx.value.lower() if ctx.value else ""
+
+        logging.info(f"Connected areas: {[f'{area.name} ({type(area)})' for area in connected_areas]}")
         
         def format_area_name(area):
             """Format area name with danger level and distance"""
+            if not area.name:  # Validate area name exists
+                logging.warning(f"Area without name found in connected areas")
+                return None
+                
+            # Start with the base name and validate
+            if len(area.name) > 80:  # Leave room for additional info
+                logging.warning(f"Area name too long: {area.name}")
+                return area.name[:80]
+            
             distance = calculate_distance(character.current_area.coordinates, area.coordinates)
             danger_emoji = "⚠️" if area.danger_level > character.current_area.danger_level else "✨" if area.danger_level < character.current_area.danger_level else "➡️"
             
+            # Build the name in parts to ensure we don't exceed length
             name_parts = [
-                f"{area.name}",
-                f"[{danger_emoji} Level {area.danger_level}]",
-                f"({distance:.1f} units)"
+                area.name,
+                f"[{danger_emoji} {area.danger_level}]",  # Simplified level display
+                f"({distance:.0f}u)"  # Shortened units display
             ]
             
             full_name = " ".join(name_parts)
-            if len(full_name) + 3 < 100 and area.description:
-                full_name += f" - {area.description[:max(0, 97-len(full_name))]}..."
+            
+            # Only add description if we have room (leaving margin for safety)
+            if len(full_name) < 80 and area.description:
+                desc_space = 95 - len(full_name)  # Leave 5 chars margin
+                if desc_space > 10:  # Only add description if we have meaningful space
+                    description_snippet = area.description[:desc_space].rstrip()
+                    full_name += f" - {description_snippet}"
+            
+            # Final length check
+            if len(full_name) > 100:
+                full_name = full_name[:97] + "..."
+            elif len(full_name) < 1:
+                full_name = area.name  # Fallback to just the area name
                 
             return full_name
 
         choices = []
         for area in connected_areas:
             if not current or current in area.name.lower():
-                choices.append(discord.OptionChoice(
-                    name=format_area_name(area),
-                    value=area.name
-                ))
-
+                formatted_name = format_area_name(area)
+                if formatted_name:  # Only add if we got a valid formatted name
+                    try:
+                        choice = discord.OptionChoice(
+                            name=formatted_name,
+                            value=area.name
+                        )
+                        choices.append(choice)
+                    except Exception as e:
+                        logging.error(f"Failed to create option choice for area {area.name}: {e}")
+                        continue
+        
+        # Log the choices being returned for debugging
+        logging.info(f"Returning {len(choices)} choices")
+        for choice in choices:
+            logging.info(f"Choice name length: {len(choice.name)}, name: {choice.name}")
+            
         return choices[:25]
-
     except Exception as e:
         logging.error(f"Error in travel autocomplete: {e}")
         return []
@@ -5648,58 +5834,109 @@ def save_world_state():
     except Exception as e:
         logging.error(f"Error saving world state: {e}")
 
-async def sync_commands():
+async def sync_commands(bot):
     """
-    Synchronize commands to all configured guilds
+    Synchronize commands to all configured guilds with rate limit awareness
     """
     try:
         successful_syncs = 0
         total_guilds = len(GUILD_CONFIGS)
-       
+        
+        # First sync globally with rate limit handling
+        try:
+            await bot.sync_commands()
+            logging.info("Synced commands globally")
+        except discord.HTTPException as e:
+            if e.code == 429:
+                logging.warning(f"Rate limited during global sync. Waiting {e.retry_after} seconds")
+                await asyncio.sleep(e.retry_after)
+                await bot.sync_commands()
+            else:
+                logging.error(f"Error syncing commands globally: {e}")
+        
+        # Sync to specific guilds with rate limiting
         for guild_id in GUILD_CONFIGS:
             try:
-                # Sync commands for this guild
-                await bot.sync_commands(guild_ids=[guild_id])
+                shard_id = (guild_id >> 22) % bot.shard_count if bot.shard_count else None
+                if shard_id is not None and shard_id not in bot.shards:
+                    continue  # Skip if guild doesn't belong to this shard
+                    
+                success = await bot.sync_guild_commands(guild_id)
+                if success:
+                    successful_syncs += 1
+                    logging.info(f"Successfully synced commands to guild {guild_id} (Shard: {shard_id})")
                 
-                successful_syncs += 1
-                logging.info(f"Successfully synced commands to guild {guild_id}")
-               
             except discord.Forbidden:
                 logging.error(f"Missing permissions to sync commands in guild {guild_id}")
             except discord.HTTPException as e:
                 logging.error(f"HTTP error syncing commands to guild {guild_id}: {e}")
             except Exception as e:
                 logging.error(f"Error syncing commands to guild {guild_id}: {e}")
-                
+        
         if successful_syncs == total_guilds:
             logging.info(f"Successfully synced commands to all {total_guilds} guilds")
         else:
             logging.warning(f"Synced commands to {successful_syncs}/{total_guilds} guilds")
+            
     except Exception as e:
         logging.error(f"Error in sync_commands: {e}", exc_info=True)
+
+# Check if the guild belongs to the current shard
+@bot.event
+async def on_guild_join(guild):
+    shard_id = (guild.id >> 22) % bot.shard_count if bot.shard_count else None
+    if shard_id is not None and shard_id not in bot.shards:
+        return
+
+
+@bot.event
+async def on_guild_remove(guild):
+    shard_id = (guild.id >> 22) % bot.shard_count if bot.shard_count else None
+    if shard_id is not None and shard_id not in bot.shards:
+        return
+
+
+async def main():
+    try:
+        # First set up sharding
+        await setup_sharding(bot)
+        
+        # Then start the bot with your token
+        async with bot:
+            await bot.start(DISCORD_BOT_TOKEN)
+            
+    except Exception as e:
+        logging.error(f"Failed to start bot: {e}")
+        return
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.info("Bot shutting down via keyboard interrupt...")
+    except Exception as e:
+        logging.error(f"Unexpected error during bot execution: {e}")
+    finally:
+        # Clean up any resources if needed
+        logging.info("Bot shutdown complete")
 
 @bot.event
 async def on_ready():
     try:
+        # Wait for all shards to be ready if sharding is enabled
+        if bot.shard_count and not bot.is_closed():
+            await bot.wait_until_ready()
+            
         logging.info(f'Logged in as {bot.user.name}')
+        logging.info(f'Shards: {bot.shard_count or 1}')
+        logging.info(f'Current shard IDs: {list(bot.shards.keys()) if bot.shard_count else "No sharding"}')
+        
         verify_character_data()
+        verify_guild_configs(bot)
+        await sync_commands(bot)
         
-        # Verify guild configurations
-        verify_guild_configs()
-       
-        # First sync globally
-        try:
-            await bot.sync_commands()
-            logging.info("Synced commands globally")
-        except Exception as e:
-            logging.error(f"Error syncing commands globally: {e}")
-        
-        # Then sync to specific guilds
-        await sync_commands()
-       
     except Exception as e:
         logging.error(f"Error in on_ready: {e}", exc_info=True)
-
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -5708,6 +5945,11 @@ async def on_message(message: discord.Message):
     """
     if message.author == bot.user:
         return
+
+    if message.guild:
+        shard_id = (message.guild.id >> 22) % bot.shard_count if bot.shard_count else None
+        if shard_id is not None and shard_id not in bot.shards:
+            return
 
     logging.info(f"on_message triggered for message from {message.author.id}: '{message.content}'")
 
@@ -5836,6 +6078,25 @@ async def on_message(message: discord.Message):
 
     await bot.process_commands(message)
 
+@bot.event
+async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
+    try:
+        if isinstance(error, discord.errors.CheckFailure):
+            await ctx.respond("You don't have permission to use this command.", ephemeral=True)
+        elif isinstance(error, discord.HTTPException) and error.code == 429:
+            # Handle rate limits
+            retry_after = error.retry_after
+            await ctx.respond(
+                f"This command is rate limited. Please try again in {retry_after:.1f} seconds.",
+                ephemeral=True
+            )
+        else:
+            # Log the error with shard information
+            shard_id = bot.get_shard(ctx.guild_id) if ctx.guild else None
+            logging.error(f"Command error in guild {ctx.guild_id} (Shard {shard_id}): {error}")
+            await ctx.respond("An error occurred while processing your command.", ephemeral=True)
+    except Exception as e:
+        logging.error(f"Error in error handler: {e}")
 
 @bot.event
 async def on_shutdown():
