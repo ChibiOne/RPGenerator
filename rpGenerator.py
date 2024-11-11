@@ -15,6 +15,11 @@ import time
 from datetime import datetime, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
+import aiofiles
+import aioredis
+from typing import Optional, Dict, Any
+import pickle
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -255,6 +260,177 @@ class ShardAwareStateManager:
         async with self.lock:
             self.shard_states[shard_id] = {}
 
+class ShardAwareDatabase:
+    def __init__(self, bot):
+        self.bot = bot
+        self.pool = {}  # Database connection pool
+
+    async def get_connection(self, guild_id):
+        """Get database connection for the appropriate shard"""
+        shard_id = (guild_id >> 22) % self.bot.shard_count if self.bot.shard_count else None
+        if shard_id not in self.pool:
+            self.pool[shard_id] = await create_db_connection()
+        return self.pool[shard_id]
+
+    async def execute_query(self, guild_id, query, *args):
+        """Execute query on the appropriate shard's database connection"""
+        conn = await self.get_connection(guild_id)
+        async with conn.cursor() as cur:
+            await cur.execute(query, *args)
+            return await cur.fetchall()
+            
+class ShardAwareRedisDB:
+    def __init__(self, bot):
+        self.bot = bot
+        self.redis_pools: Dict[int, aioredis.Redis] = {}
+        self.default_ttl = 3600  # 1 hour default TTL for cache entries
+        self.lock = asyncio.Lock()
+        
+    async def init_pools(self):
+        """Initialize Redis connection pools for each shard"""
+        try:
+            for shard_id in (self.bot.shards.keys() if self.bot.shard_count else [None]):
+                # You can configure different Redis instances per shard if needed
+                # For now, using same Redis instance with different key prefixes
+                pool = await aioredis.from_url(
+                    'redis://localhost',  # Configure your Redis URL
+                    encoding='utf-8',
+                    decode_responses=False,  # We'll handle decoding ourselves for flexibility
+                    max_connections=10,  # Adjust based on your needs
+                )
+                self.redis_pools[shard_id] = pool
+                
+            logging.info(f"Initialized Redis pools for {len(self.redis_pools)} shards")
+        except Exception as e:
+            logging.error(f"Failed to initialize Redis pools: {e}")
+            raise
+
+    def get_key(self, guild_id: Optional[int], key: str) -> str:
+        """Generate Redis key with shard-specific prefix"""
+        shard_id = (guild_id >> 22) % self.bot.shard_count if guild_id and self.bot.shard_count else 'global'
+        return f"shard:{shard_id}:{key}"
+
+    async def get_pool(self, guild_id: Optional[int] = None) -> aioredis.Redis:
+        """Get Redis pool for the appropriate shard"""
+        shard_id = (guild_id >> 22) % self.bot.shard_count if guild_id and self.bot.shard_count else None
+        return self.redis_pools.get(shard_id, self.redis_pools[None])
+
+    async def set(self, key: str, value: Any, guild_id: Optional[int] = None, 
+                  expire: Optional[int] = None) -> bool:
+        """Set a value in Redis with optional TTL"""
+        try:
+            redis = await self.get_pool(guild_id)
+            full_key = self.get_key(guild_id, key)
+            
+            # Serialize complex objects
+            if isinstance(value, (dict, list, Character, Area)):
+                value = pickle.dumps(value)
+            
+            if expire is None:
+                expire = self.default_ttl
+                
+            await redis.set(full_key, value, ex=expire)
+            return True
+        except Exception as e:
+            logging.error(f"Redis set error for key {key}: {e}")
+            return False
+
+    async def get(self, key: str, guild_id: Optional[int] = None) -> Any:
+        """Get a value from Redis with automatic deserialization"""
+        try:
+            redis = await self.get_pool(guild_id)
+            full_key = self.get_key(guild_id, key)
+            value = await redis.get(full_key)
+            
+            if value is None:
+                return None
+                
+            # Try to deserialize if it's a pickled object
+            try:
+                return pickle.loads(value)
+            except:
+                return value
+        except Exception as e:
+            logging.error(f"Redis get error for key {key}: {e}")
+            return None
+
+    async def delete(self, key: str, guild_id: Optional[int] = None) -> bool:
+        """Delete a key from Redis"""
+        try:
+            redis = await self.get_pool(guild_id)
+            full_key = self.get_key(guild_id, key)
+            await redis.delete(full_key)
+            return True
+        except Exception as e:
+            logging.error(f"Redis delete error for key {key}: {e}")
+            return False
+
+    # Character-specific methods
+    async def save_character(self, character: Character) -> bool:
+        """Save character data to Redis"""
+        try:
+            guild_id = character.last_interaction_guild
+            key = f"character:{character.user_id}"
+            return await self.set(key, character, guild_id)
+        except Exception as e:
+            logging.error(f"Error saving character {character.user_id}: {e}")
+            return False
+
+    async def load_character(self, user_id: str, guild_id: Optional[int] = None) -> Optional[Character]:
+        """Load character data from Redis"""
+        try:
+            key = f"character:{user_id}"
+            return await self.get(key, guild_id)
+        except Exception as e:
+            logging.error(f"Error loading character {user_id}: {e}")
+            return None
+
+    # Area-specific methods
+    async def save_area(self, area: Area) -> bool:
+        """Save area data to Redis"""
+        try:
+            key = f"area:{area.name}"
+            return await self.set(key, area)
+        except Exception as e:
+            logging.error(f"Error saving area {area.name}: {e}")
+            return False
+
+    async def load_area(self, area_name: str) -> Optional[Area]:
+        """Load area data from Redis"""
+        try:
+            key = f"area:{area_name}"
+            return await self.get(key)
+        except Exception as e:
+            logging.error(f"Error loading area {area_name}: {e}")
+            return None
+
+    # Batch operations
+    async def save_all_characters(self, characters: Dict[str, Character]) -> bool:
+        """Save multiple characters at once"""
+        try:
+            async with self.lock:
+                tasks = [
+                    self.save_character(character)
+                    for character in characters.values()
+                ]
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+                return all(not isinstance(r, Exception) for r in results)
+        except Exception as e:
+            logging.error(f"Error in batch character save: {e}")
+            return False
+
+    # Migration helpers
+    async def migrate_from_json(self, characters_file: str = CHARACTERS_FILE):
+        """Migrate data from JSON files to Redis"""
+        try:
+            characters = await load_all_shards(self.bot)
+            if characters:
+                await self.save_all_characters(characters)
+                logging.info(f"Successfully migrated {len(characters)} characters to Redis")
+        except Exception as e:
+            logging.error(f"Error migrating data to Redis: {e}")
+
+
 # ----------------------------
 #        Game Data Loading
 # ----------------------------
@@ -371,17 +547,37 @@ def load_areas(item_lookup, filename=AREAS_FILE):
         logging.error(f"Error loading areas from {filename}: {e}")
         return {}
     
-def load_characters(filename=CHARACTERS_FILE, area_lookup=None):
+async def load_characters(filename=CHARACTERS_FILE, area_lookup=None, shard_id=None):
     """
-    Loads character data from the characters.json file.
+    Loads character data from the characters file with shard awareness.
     """
     try:
-        with open(filename, 'r') as f:
-            data = json.load(f)
+        # If we're using sharding, modify filename
+        if shard_id is not None:
+            filename = f"{filename}.{shard_id}"
+
+        # Load character data
+        try:
+            async with aiofiles.open(filename, 'r') as f:
+                data = json.loads(await f.read())
+        except FileNotFoundError:
+            if shard_id is not None:
+                # If shard-specific file doesn't exist, try loading from main file
+                async with aiofiles.open(CHARACTERS_FILE, 'r') as f:
+                    data = json.loads(await f.read())
+            else:
+                raise
+
         characters = {}
         for user_id, char_data in data.items():
             try:
-                # Make sure to pass both the class and user_id
+                # If using sharding, check if character belongs to this shard
+                if shard_id is not None:
+                    guild_id = char_data.get('Last_Interaction_Guild')
+                    if guild_id and (guild_id >> 22) % bot.shard_count != shard_id:
+                        continue
+
+                # Create character object
                 character = Character.from_dict(
                     data=char_data,
                     user_id=user_id,
@@ -390,20 +586,32 @@ def load_characters(filename=CHARACTERS_FILE, area_lookup=None):
                 )
                 if character:
                     characters[user_id] = character
-                    logging.info(f"Loaded character for user ID '{user_id}'.")
+                    logging.info(f"Loaded character for user ID '{user_id}'" +
+                               (f" (Shard: {shard_id})" if shard_id is not None else ""))
+                    
             except Exception as e:
-                logging.error(f"Error loading character for user {user_id}: {e}")
+                logging.error(f"Error loading character for user {user_id}" +
+                            (f" (Shard: {shard_id})" if shard_id is not None else "") +
+                            f": {e}")
                 continue
-        logging.info(f"Successfully loaded {len(characters)} characters from '{filename}'.")
+
+        logging.info(f"Successfully loaded {len(characters)} characters from '{filename}'" +
+                    (f" for shard {shard_id}" if shard_id is not None else ""))
         return characters
+        
     except FileNotFoundError:
-        logging.error(f"Characters file '{filename}' not found.")
+        logging.error(f"Characters file '{filename}' not found" +
+                     (f" for shard {shard_id}" if shard_id is not None else ""))
         return {}
     except json.JSONDecodeError as e:
-        logging.error(f"Error decoding JSON from '{filename}': {e}")
+        logging.error(f"Error decoding JSON from '{filename}'" +
+                     (f" for shard {shard_id}" if shard_id is not None else "") +
+                     f": {e}")
         return {}
     except Exception as e:
-        logging.error(f"Unexpected error loading characters from '{filename}': {e}")
+        logging.error(f"Unexpected error loading characters from '{filename}'" +
+                     (f" for shard {shard_id}" if shard_id is not None else "") +
+                     f": {e}")
         return {}
 
 def load_game_data():
@@ -470,99 +678,57 @@ def load_game_data():
         logging.error(f"Error in load_game_data: {e}")
         return {}
 
-@classmethod
-def from_dict(cls, data, user_id, area_lookup=None, item_lookup=None):
-    try:
-        # Helper function to convert equipment data
-        def convert_equipment_item(item_data, item_lookup):
-            if not item_data:
-                return None
-            return Item.from_dict(item_data) if isinstance(item_data, dict) else None
-
-        # Convert equipment data
-        equipment_data = data.get('Equipment', {})
-        equipment = {
-            'Armor': convert_equipment_item(equipment_data.get('Armor'), item_lookup),
-            'Left_Hand': convert_equipment_item(equipment_data.get('Left_Hand'), item_lookup),
-            'Right_Hand': convert_equipment_item(equipment_data.get('Right_Hand'), item_lookup),
-            'Belt_Slots': [convert_equipment_item(item, item_lookup) 
-                        for item in equipment_data.get('Belt_Slots', [None] * 4)],
-            'Back': convert_equipment_item(equipment_data.get('Back'), item_lookup),
-            'Magic_Slots': [convert_equipment_item(item, item_lookup) 
-                        for item in equipment_data.get('Magic_Slots', [None] * 3)]
-        }
-
-        # Convert inventory data
-        inventory_data = data.get('Inventory', {})
-        inventory = {k: Item.from_dict(v) if isinstance(v, dict) else v 
-                    for k, v in inventory_data.items()}
-
-        # Convert travel_end_time
-        travel_end_time = data.get('Travel_End_Time')
-
-        # Get current area from area_lookup
-        current_area_name = data.get('Current_Area')
-        current_area = None
-        if area_lookup and current_area_name:
-            current_area = area_lookup.get(current_area_name)
-            if not current_area:
-                logging.warning(f"Could not find area '{current_area_name}' in area_lookup")
-
-        # Create and return new Character instance
-        character = cls(
-            user_id=user_id,
-            name=data.get('Name'),
-            species=data.get('Species'),
-            char_class=data.get('Char_Class'),
-            gender=data.get('Gender'),
-            pronouns=data.get('Pronouns'),
-            description=data.get('Description'),
-            stats=data.get('Stats', {
-                'Strength': 10,
-                'Dexterity': 10,
-                'Constitution': 10,
-                'Intelligence': 10,
-                'Wisdom': 10,
-                'Charisma': 10
-            }),
-            skills=data.get('Skills', {}),
-            inventory=inventory,
-            equipment=equipment,
-            currency=data.get('Currency', {}),
-            spells=data.get('Spells', {}),
-            abilities=data.get('Abilities', {}),
-            ac=data.get('AC', 5),
-            max_hp=data.get('Max_HP', 1),
-            curr_hp=data.get('Curr_HP', 1),
-            movement_speed=data.get('Movement_Speed', 30),
-            travel_end_time=travel_end_time,
-            spellslots=data.get('Spellslots'),
-            level=data.get('Level', 1),
-            xp=data.get('XP', 0),
-            reputation=data.get('Reputation', {}),
-            is_traveling=data.get('Is_Traveling', False),
-            current_area=current_area,
-            current_location=data.get('Current_Location', "Northhold"),
-            current_region=data.get('Current_Region', "Northern Mountains"),
-            current_continent=data.get('Current_Continent', "Aerilon"),
-            current_world=data.get('Current_World', "Eldoria"),
-            area_lookup=area_lookup,
-            capacity=data.get('Capacity', 150)
-        )
-        
-        # Add the guild ID after creation
-        character.last_interaction_guild = data.get('Last_Interaction_Guild')
-        
-        return character
-            
-    except Exception as e:
-        logging.error(f"Error creating Character from dict: {e}")
-        return None
 
 # ---------------------------- #
 #          Utilities           #
 # ---------------------------- #
 
+async def update_bot_status(bot):
+    """Update bot status with shard awareness"""
+    try:
+        total_guilds = sum(len(shard.guilds) for shard in bot.shards.values()) if bot.shard_count else len(bot.guilds)
+        
+        activity = discord.Activity(
+            type=discord.ActivityType.watching,
+            name=f"{total_guilds} guilds across {bot.shard_count or 1} shards"
+        )
+        
+        await bot.change_presence(activity=activity)
+        
+    except Exception as e:
+        logging.error(f"Error updating bot status: {e}")
+
+# Helper function to manage character saves across shards
+async def save_all_shards(characters_dict, bot):
+    """Save characters across all shards"""
+    try:
+        if bot.shard_count:
+            for shard_id in bot.shards:
+                await save_characters(characters_dict, shard_id)
+        else:
+            await save_characters(characters_dict)
+    except Exception as e:
+        logging.error(f"Error saving characters across shards: {e}")
+        raise
+
+# Helper function to load characters from all shards
+async def load_all_shards(bot, area_lookup=None):
+    """Load and combine characters from all shards"""
+    try:
+        all_characters = {}
+        if bot.shard_count:
+            for shard_id in bot.shards:
+                shard_characters = await load_characters(
+                    area_lookup=area_lookup,
+                    shard_id=shard_id
+                )
+                all_characters.update(shard_characters)
+        else:
+            all_characters = await load_characters(area_lookup=area_lookup)
+        return all_characters
+    except Exception as e:
+        logging.error(f"Error loading characters from all shards: {e}")
+        return {}
 
 def calculate_danger_chance(from_area, to_area, weather):
     """
@@ -870,8 +1036,17 @@ def create_scene_embed(area):
         return None
 
 async def travel_task(bot, character, user_id, characters, save_characters):
-    """Handle the travel process and arrival"""
+    """Handle the travel process with shard awareness"""
     try:
+        # Check if destination is on same shard
+        if character.travel_destination:
+            current_shard = (character.last_interaction_guild >> 22) % bot.shard_count
+            dest_guild_id = character.travel_destination.channel_id  # Assuming channel_id exists
+            dest_shard = (dest_guild_id >> 22) % bot.shard_count
+            
+            if current_shard != dest_shard:
+                logging.info(f"Cross-shard travel detected: {current_shard} -> {dest_shard}")
+
         # Initialize travel parameters
         travel_mode = TravelMode.WALKING  # Default to walking
         if hasattr(character, 'mount') and character.mount:
@@ -2529,36 +2704,49 @@ class Character:
         success, message = item.use_consumable(self)
         return success, message
     
-def save_characters(characters_dict):
-    """Save characters to file with better error handling"""
+async def save_characters(characters_dict, shard_id=None):
+    """Save characters to file with shard awareness and error handling"""
     try:
         # Validate characters_dict is actually a dict
         if not isinstance(characters_dict, dict):
             raise TypeError(f"Expected dict, got {type(characters_dict)}")
 
+        # If shard_id is provided, filter characters for this shard
+        if shard_id is not None:
+            characters_to_process = {
+                user_id: char for user_id, char in characters_dict.items()
+                if char.last_interaction_guild and 
+                (char.last_interaction_guild >> 22) % bot.shard_count == shard_id
+            }
+        else:
+            characters_to_process = characters_dict
+
         # Convert characters to dict format
         characters_to_save = {}
-        for user_id, character in characters_dict.items():
+        for user_id, character in characters_to_process.items():
             try:
                 if isinstance(character, Character):
                     characters_to_save[user_id] = character.to_dict()
                 else:
-                    logging.warning(f"Skipping invalid character for user {user_id}: {type(character)}")
+                    logging.warning(f"Skipping invalid character for user {user_id}: {type(character)} (Shard: {shard_id})")
             except Exception as e:
-                logging.error(f"Error converting character for user {user_id}: {e}")
+                logging.error(f"Error converting character for user {user_id} (Shard: {shard_id}): {e}")
                 continue
 
+        # If we're using sharding, append shard info to filename
+        filename = f"{CHARACTERS_FILE}.{shard_id}" if shard_id is not None else CHARACTERS_FILE
+
         # Save to file
-        with open(CHARACTERS_FILE, 'w') as f:
-            json.dump(characters_to_save, f, indent=4)
-        logging.info(f"Successfully saved {len(characters_to_save)} characters")
+        async with aiofiles.open(filename, 'w') as f:
+            await f.write(json.dumps(characters_to_save, indent=4))
+        
+        logging.info(f"Successfully saved {len(characters_to_save)} characters" + 
+                    (f" for shard {shard_id}" if shard_id is not None else ""))
         
     except Exception as e:
-        logging.error(f"Failed to save characters: {e}")
-        raise
-        return base_dict            
-    except Exception as e:
-        logging.error(f"Error in Character.to_dict: {e}")
+        logging.error(f"Failed to save characters" + 
+                     (f" for shard {shard_id}" if shard_id is not None else "") + 
+                     f": {e}")
         raise
 
 def check_travel_completion(character):
