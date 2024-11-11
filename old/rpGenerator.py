@@ -20,6 +20,8 @@ import aioredis
 from typing import Optional, Dict, Any
 import pickle
 
+import redis.asyncio as redis
+from pathlib import Path
 
 # Load environment variables from .env file
 load_dotenv()
@@ -28,6 +30,10 @@ load_dotenv()
 DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 DISCORD_APP_ID = os.getenv('DISCORD_APP_ID')
+
+REDIS_URL = 'redis://localhost'  # or 'redis://:password@localhost' if using password
+REDIS_PLAYER_DB = 0
+REDIS_GAME_DB = 1
 
 # Global configuration
 GUILD_CONFIGS = {
@@ -107,6 +113,7 @@ openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
 # Define Discord intents and initialize bot with shard support
 intents = discord.Intents.all()
+
 async def setup_sharding(bot):
     """Set up sharding based on bot size and recommended shard count"""
     try:
@@ -168,7 +175,106 @@ class ShardedBot(discord.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.rate_limiter = RateLimit()
+        self.redis_game = None  # Global game data (areas, items)
+        self.redis_player = None  # Player data (characters)
+        self.redis_server = None  # Server-specific data
         self.synced_guilds = set()
+        
+
+    async def setup_hook(self):
+        """Initialize bot connections and data"""
+        try:
+            # Initialize Redis connections
+            self.redis_game = await redis.from_url(
+                'redis://localhost',
+                db=0,  # Global game data DB
+                decode_responses=False
+            )
+            self.redis_player = await redis.from_url(
+                'redis://localhost',
+                db=1,  # Player data DB
+                decode_responses=False
+            )
+            self.redis_server = await redis.from_url(
+                'redis://localhost',
+                db=2,  # Server-specific data DB
+                decode_responses=False
+            )
+            self.actions = await load_actions_redis(self)
+            # Set up sharding
+            await setup_sharding(self)
+            
+            logging.info("Bot initialization complete")
+
+        except Exception as e:
+            logging.error(f"Error in bot setup: {e}")
+            raise
+
+    async def get_character(self, user_id: str, guild_id: str) -> Optional[Character]:
+        """Get character from Redis with guild context"""
+        try:
+            # Key format: character:{guild_id}:{user_id}
+            key = f"character:{guild_id}:{user_id}"
+            data = await self.redis_player.get(key)
+            if data:
+                char_data = pickle.loads(data)
+                return Character.from_dict(char_data, user_id, self.get_area_lookup(guild_id))
+            return None
+        except Exception as e:
+            logging.error(f"Error getting character for user {user_id} in guild {guild_id}: {e}")
+            return None
+
+    async def save_character(self, character: Character, guild_id: str) -> bool:
+        """Save character to Redis with guild context"""
+        try:
+            key = f"character:{guild_id}:{character.user_id}"
+            await self.redis_player.set(key, pickle.dumps(character.to_dict()))
+            
+            # Update server's active characters list
+            await self.redis_server.sadd(f"server:{guild_id}:characters", character.user_id)
+            return True
+        except Exception as e:
+            logging.error(f"Error saving character {character.user_id} in guild {guild_id}: {e}")
+            return False
+
+    async def get_area(self, area_name: str, guild_id: str) -> Optional[Area]:
+        """Get area from Redis, checking for server-specific overrides"""
+        try:
+            # Check for server-specific area override first
+            server_key = f"server:{guild_id}:area:{area_name}"
+            data = await self.redis_server.get(server_key)
+            
+            if not data:
+                # Fall back to global area data
+                data = await self.redis_game.hget("areas", area_name)
+                
+            if data:
+                return Area.from_dict(pickle.loads(data))
+            return None
+        except Exception as e:
+            logging.error(f"Error getting area {area_name} for guild {guild_id}: {e}")
+            return None
+
+    def get_area_lookup(self, guild_id: str):
+        """Return a callable for area lookups in this guild"""
+        return lambda area_name: self.get_area(area_name, guild_id)
+
+    async def get_guild_config(self, guild_id: str) -> dict:
+        """Get server-specific configuration"""
+        try:
+            data = await self.redis_server.get(f"server:{guild_id}:config")
+            return pickle.loads(data) if data else {}
+        except Exception as e:
+            logging.error(f"Error getting config for guild {guild_id}: {e}")
+            return {}
+
+    async def get_active_characters(self, guild_id: str) -> List[str]:
+        """Get list of active character IDs in a guild"""
+        try:
+            return await self.redis_server.smembers(f"server:{guild_id}:characters")
+        except Exception as e:
+            logging.error(f"Error getting active characters for guild {guild_id}: {e}")
+            return []
         
     async def sync_guild_commands(self, guild_id: int, retry_count=0):
         """Sync commands to a specific guild with rate limit handling"""
@@ -939,26 +1045,17 @@ def calculate_distance(coord1, coord2):
     #  print(f"The distance between {area_1.name} and {area_2.name} is {distance} units.")
     #  Output: The distance between Area 1 and Area 2 is 5.0 units.
 
-def get_travel_time(character, destination_area):
-    """Calculate travel time in seconds"""
-    try:
-        if not character.current_area or not destination_area:
-            return 0
-            
-        distance = calculate_distance(character.current_area.coordinates, destination_area.coordinates)
-        speed = character.movement_speed
-        
-        if speed == 0:
-            return float('inf')
-            
-        # Convert distance and speed to determine seconds of travel
-        travel_time = (distance / speed) * 60  # Convert to seconds
-        
-        return travel_time
-        
-    except Exception as e:
-        logging.error(f"Error calculating travel time: {e}")
-        return 0
+def get_travel_time(character: Character, destination: Area) -> float:
+    """Calculate travel time accounting for character's speed and distance"""
+    base_time = max(2, int(calculate_distance(
+        character.current_area.coordinates,
+        destination.coordinates
+    )))
+    
+    # Adjust for character's movement speed
+    speed_modifier = character.movement_speed / 30.0  # Assuming 30 is base speed
+    
+    return base_time / speed_modifier
 
 # Helper function to get the correct channel for a guild
 async def get_guild_game_channel(guild_id: int, channel_type: str = 'game'):
@@ -1035,89 +1132,210 @@ def create_scene_embed(area):
         logging.error(f"Error creating scene embed: {e}", exc_info=True)
         return None
 
-async def travel_task(bot, character, user_id, characters, save_characters):
-    """Handle the travel process with shard awareness"""
+# async def travel_task(bot, character, user_id, characters, save_characters):
+#     """Handle the travel process with shard awareness"""
+#     try:
+#         # Check if destination is on same shard
+#         if character.travel_destination:
+#             current_shard = (character.last_interaction_guild >> 22) % bot.shard_count
+#             dest_guild_id = character.travel_destination.channel_id  # Assuming channel_id exists
+#             dest_shard = (dest_guild_id >> 22) % bot.shard_count
+            
+#             if current_shard != dest_shard:
+#                 logging.info(f"Cross-shard travel detected: {current_shard} -> {dest_shard}")
+
+#         # Initialize travel parameters
+#         travel_mode = TravelMode.WALKING  # Default to walking
+#         if hasattr(character, 'mount') and character.mount:
+#             travel_mode = TravelMode.RIDING
+        
+#         # Get current weather
+#         weather = random.choice(list(WEATHER_EFFECTS.values()))
+        
+#         # Set up travel party (for now, just the character)
+#         party = TravelParty(character)
+        
+#         # Calculate base travel time
+#         travel_time = get_travel_time(character, character.travel_destination)
+        
+#         # Create and send travel view
+#         view = TravelView(party, character.travel_destination, travel_time, travel_mode, weather)
+#         message = await bot.get_user(int(user_id)).send(embed=view.get_embed(), view=view)
+
+#         # Update travel progress periodically
+#         update_interval = min(5, travel_time / 10)
+#         end_time = time.time() + travel_time
+#         last_encounter_time = time.time()
+#         encounter_cooldown = 30  # Minimum seconds between encounters
+
+#         while time.time() < end_time and not view.cancelled:
+#             await asyncio.sleep(update_interval)
+            
+#             if view.cancelled:
+#                 break
+
+#             # Check for encounters
+#             current_time = time.time()
+#             if current_time - last_encounter_time >= encounter_cooldown:
+#                 encounter = await generate_encounter(
+#                     party, 
+#                     weather, 
+#                     character.current_area,  # from_area
+#                     character.travel_destination  # to_area
+#                 )
+#                 if encounter:
+#                     view.encounters.append(encounter)
+                    
+#                     # Create encounter embed with danger level info
+#                     encounter_embed = discord.Embed(
+#                         title=f"⚠️ Level {encounter.danger_level} Encounter: {encounter.name}",
+#                         description=encounter.description,
+#                         color=discord.Color.orange()
+#                     )
+#                     encounter_embed.add_field(
+#                         name="Area Danger",
+#                         value=f"Traveling from level {character.current_area.danger_level} to level {character.travel_destination.danger_level} area",
+#                         inline=False
+#                     )
+#                     await bot.get_user(int(user_id)).send(embed=encounter_embed)
+                    
+#                     last_encounter_time = current_time
+
+#             # Update travel progress
+#             try:
+#                 await message.edit(embed=view.get_embed())
+#             except discord.NotFound:
+#                 break
+
+#         if not view.cancelled:
+#             # Complete the journey
+#             character.is_traveling = False
+#             previous_area = character.current_area
+#             # Explicitly move the character to the destination
+#             character.current_area = character.travel_destination
+#             character.travel_destination = None
+#             character.travel_end_time = None
+
+#             # Update the travel message one last time
+#             final_embed = view.get_embed()
+#             final_embed.title = "🏁 Journey Complete!"
+#             final_embed.color = discord.Color.green()
+            
+#             for child in view.children:
+#                 child.disabled = True
+                
+#             await message.edit(embed=final_embed, view=view)
+
+#             # Create and send scene embed for new location
+#             scene_embed = create_scene_embed(character.current_area)
+#             await bot.get_user(int(user_id)).send(
+#                 f"You have arrived at **{character.current_area.name}**!",
+#                 embed=scene_embed
+#             )
+
+#             # Send arrival notice to guild channel
+#             if hasattr(character, 'last_interaction_guild'):
+#                 guild_id = character.last_interaction_guild
+#                 if guild_id in GUILD_CONFIGS:
+#                     channel_id = GUILD_CONFIGS[guild_id]['channels'].get('game')
+#                     channel = bot.get_channel(channel_id)
+#                     if channel:
+#                         await channel.send(
+#                             f"**{character.name}** has arrived in **{character.current_area.name}**",
+#                             embed=scene_embed
+#                         )
+
+#         # Save character state
+#         characters[user_id] = character
+#         save_characters(characters)
+#         logging.info(f"Character '{character.name}' moved to {character.current_area.name}")
+
+#     except Exception as e:
+#         logging.error(f"Error in travel_task for user '{user_id}': {e}", exc_info=True)
+
+async def travel_task_redis(bot, character, user_id: str, guild_id: str, destination_area, travel_system, view):
+    """Redis version of travel task with party support"""
     try:
-        # Check if destination is on same shard
+        # Check for cross-shard travel
         if character.travel_destination:
-            current_shard = (character.last_interaction_guild >> 22) % bot.shard_count
-            dest_guild_id = character.travel_destination.channel_id  # Assuming channel_id exists
-            dest_shard = (dest_guild_id >> 22) % bot.shard_count
+            current_shard = (int(guild_id) >> 22) % bot.shard_count if bot.shard_count else 0
+            dest_guild_id = character.travel_destination.channel_id
+            dest_shard = (dest_guild_id >> 22) % bot.shard_count if bot.shard_count else 0
             
             if current_shard != dest_shard:
                 logging.info(f"Cross-shard travel detected: {current_shard} -> {dest_shard}")
 
-        # Initialize travel parameters
-        travel_mode = TravelMode.WALKING  # Default to walking
+        # Get travel mode based on party
+        travel_mode = TravelMode.WALKING
         if hasattr(character, 'mount') and character.mount:
             travel_mode = TravelMode.RIDING
-        
-        # Get current weather
-        weather = random.choice(list(WEATHER_EFFECTS.values()))
-        
-        # Set up travel party (for now, just the character)
-        party = TravelParty(character)
-        
-        # Calculate base travel time
-        travel_time = get_travel_time(character, character.travel_destination)
-        
-        # Create and send travel view
-        view = TravelView(party, character.travel_destination, travel_time, travel_mode, weather)
-        message = await bot.get_user(int(user_id)).send(embed=view.get_embed(), view=view)
-
-        # Update travel progress periodically
-        update_interval = min(5, travel_time / 10)
-        end_time = time.time() + travel_time
-        last_encounter_time = time.time()
-        encounter_cooldown = 30  # Minimum seconds between encounters
-
-        while time.time() < end_time and not view.cancelled:
-            await asyncio.sleep(update_interval)
             
-            if view.cancelled:
-                break
+        # If character is in a party, load the party
+        party = None
+        party_key = f"party:{guild_id}:{user_id}"
+        party_data = await bot.redis_player.get(party_key)
+        if party_data:
+            party_dict = pickle.loads(party_data)
+            party = await TravelParty.from_dict(party_dict, bot)
 
-            # Check for encounters
-            current_time = time.time()
-            if current_time - last_encounter_time >= encounter_cooldown:
-                encounter = await generate_encounter(
-                    party, 
-                    weather, 
-                    character.current_area,  # from_area
-                    character.travel_destination  # to_area
-                )
-                if encounter:
-                    view.encounters.append(encounter)
-                    
-                    # Create encounter embed with danger level info
-                    encounter_embed = discord.Embed(
-                        title=f"⚠️ Level {encounter.danger_level} Encounter: {encounter.name}",
-                        description=encounter.description,
-                        color=discord.Color.orange()
-                    )
-                    encounter_embed.add_field(
-                        name="Area Danger",
-                        value=f"Traveling from level {character.current_area.danger_level} to level {character.travel_destination.danger_level} area",
-                        inline=False
-                    )
-                    await bot.get_user(int(user_id)).send(embed=encounter_embed)
-                    
-                    last_encounter_time = current_time
+        # Get travel conditions
+        weather = random.choice(list(WEATHER_EFFECTS.values()))
+        travel_time = get_travel_time(character, destination_area)
+        
+        # If in a party, adjust travel based on slowest member
+        if party:
+            slowest_member = party.get_slowest_member()
+            travel_time = max(travel_time, 
+                            get_travel_time(slowest_member, destination_area))
 
-            # Update travel progress
-            try:
-                await message.edit(embed=view.get_embed())
-            except discord.NotFound:
-                break
+        # Create and send travel view
+        view = TravelView(
+            character if not party else party,
+            destination_area, 
+            travel_time,
+            travel_mode,
+            weather
+        )
+        
+        message = await bot.get_user(int(user_id)).send(
+            embed=view.get_embed(),
+            view=view
+        )
+
+        update_interval = 5  # Update every 5 seconds
+        next_update = time.time() + update_interval
+
+        while time.time() < character.travel_end_time and not view.cancelled:
+            if time.time() >= next_update:
+                # Update progress embed
+                try:
+                    await message.edit(embed=view.get_embed())
+                except discord.NotFound:
+                    break
+                    
+                next_update = time.time() + update_interval
+                
+            await asyncio.sleep(1)
 
         if not view.cancelled:
             # Complete the journey
-            character.is_traveling = False
-            previous_area = character.current_area
-            # Explicitly move the character to the destination
-            character.current_area = character.travel_destination
-            character.travel_destination = None
-            character.travel_end_time = None
+            success, msg = await travel_system.complete_travel(
+                character,
+                user_id,
+                guild_id,
+                view
+            )
+
+            if success and party:
+                # Move all party members
+                for member_id, member in party.members.items():
+                    if member_id != user_id:
+                        await travel_system.complete_travel(
+                            member,
+                            member_id,
+                            guild_id,
+                            view
+                        )
 
             # Update the travel message one last time
             final_embed = view.get_embed()
@@ -1137,43 +1355,85 @@ async def travel_task(bot, character, user_id, characters, save_characters):
             )
 
             # Send arrival notice to guild channel
-            if hasattr(character, 'last_interaction_guild'):
-                guild_id = character.last_interaction_guild
-                if guild_id in GUILD_CONFIGS:
-                    channel_id = GUILD_CONFIGS[guild_id]['channels'].get('game')
+            guild_config = await bot.get_guild_config(guild_id)
+            if guild_config:
+                channel_id = guild_config.get('channels', {}).get('game')
+                if channel_id:
                     channel = bot.get_channel(channel_id)
                     if channel:
-                        await channel.send(
-                            f"**{character.name}** has arrived in **{character.current_area.name}**",
-                            embed=scene_embed
-                        )
+                        if party:
+                            member_names = ", ".join(c.name for c in party.members.values())
+                            await channel.send(
+                                f"The party ({member_names}) has arrived in **{character.current_area.name}**",
+                                embed=scene_embed
+                            )
+                        else:
+                            await channel.send(
+                                f"**{character.name}** has arrived in **{character.current_area.name}**",
+                                embed=scene_embed
+                            )
 
-        # Save character state
-        characters[user_id] = character
-        save_characters(characters)
-        logging.info(f"Character '{character.name}' moved to {character.current_area.name}")
+            logging.info(
+                f"{'Party' if party else 'Character'} '{character.name}' moved to {character.current_area.name}"
+            )
 
     except Exception as e:
         logging.error(f"Error in travel_task for user '{user_id}': {e}", exc_info=True)
 
-def load_actions():
+
+# def load_actions():
+#     """
+#     Loads actions from the ACTIONS_FILE file.
+#     Returns:
+#         dict: A dictionary mapping actions to their associated stats.
+#     """
+#     try:
+#         with open(ACTIONS_FILE, 'r') as f:
+#             actions = json.load(f)
+#             logging.info("ACTIONS_FILE loaded successfully.")
+#             return actions
+#     except FileNotFoundError:
+#         logging.error("ACTIONS_FILE file not found.")
+#         return {}
+#     except json.JSONDecodeError as e:
+#         logging.error(f"Error decoding ACTIONS_FILE: {e}")
+#         return {}
+
+async def load_actions_redis(bot):
     """
-    Loads actions from the ACTIONS_FILE file.
+    Loads actions from Redis. If not found, loads from file and caches in Redis.
     Returns:
         dict: A dictionary mapping actions to their associated stats.
     """
     try:
-        with open(ACTIONS_FILE, 'r') as f:
-            actions = json.load(f)
-            logging.info("ACTIONS_FILE loaded successfully.")
+        # Try to get actions from Redis first
+        actions_data = await bot.redis_game.get("actions")
+        
+        if actions_data:
+            actions = pickle.loads(actions_data)
+            logging.info("Actions loaded successfully from Redis.")
             return actions
-    except FileNotFoundError:
-        logging.error("ACTIONS_FILE file not found.")
+            
+        # If not in Redis, load from file and cache in Redis
+        try:
+            with open(ACTIONS_FILE, 'r') as f:
+                actions = json.load(f)
+                
+            # Cache in Redis
+            await bot.redis_game.set("actions", pickle.dumps(actions))
+            logging.info("Actions loaded from file and cached in Redis.")
+            return actions
+            
+        except FileNotFoundError:
+            logging.error("ACTIONS_FILE file not found.")
+            return {}
+        except json.JSONDecodeError as e:
+            logging.error(f"Error decoding ACTIONS_FILE: {e}")
+            return {}
+            
+    except Exception as e:
+        logging.error(f"Error loading actions from Redis: {e}")
         return {}
-    except json.JSONDecodeError as e:
-        logging.error(f"Error decoding ACTIONS_FILE: {e}")
-        return {}
-
 
 ######################
 #    Game Objects    #
@@ -1777,7 +2037,6 @@ def load_regions(location_lookup, filename=REGIONS_FILE):
     except Exception as e:
         logging.error(f"Error loading Regions: {e}")
         return {}
-
 
 class Location:
     def __init__(self, name, description='', coordinates=(0, 0), area_names=None, connected_area_names=None,
@@ -2779,63 +3038,306 @@ def check_travel_completion(character):
         logging.error(f"Error checking travel completion for character '{character.name}': {e}")
         return False
 
+class TravelParty:
+    def __init__(self, leader: Character):
+        self.leader = leader
+        self.members: Dict[str, Character] = {str(leader.user_id): leader}
+        self.max_size = 6
+        self.invited_players: List[str] = []
+        self._shared_inventory = {}
+        self.shared_currency = {}
+        
+    @property
+    def size(self) -> int:
+        return len(self.members)
+        
+    @property
+    def is_full(self) -> bool:
+        return self.size >= self.max_size
+        
+    def add_member(self, character: Character) -> Tuple[bool, str]:
+        """Add a member to the party"""
+        if self.is_full:
+            return False, "Party is full"
+            
+        user_id = str(character.user_id)
+        if user_id in self.members:
+            return False, "Already in party"
+            
+        self.members[user_id] = character
+        return True, f"{character.name} has joined the party"
+        
+    def remove_member(self, user_id: str) -> Tuple[bool, str]:
+        """Remove a member from the party"""
+        user_id = str(user_id)
+        if user_id not in self.members:
+            return False, "Not in party"
+            
+        character = self.members.pop(user_id)
+        
+        # If leader leaves, assign new leader
+        if user_id == str(self.leader.user_id) and self.members:
+            self.leader = next(iter(self.members.values()))
+            return True, f"{character.name} has left the party. {self.leader.name} is the new leader"
+            
+        return True, f"{character.name} has left the party"
+        
+    def invite_player(self, user_id: str) -> bool:
+        """Invite a player to the party"""
+        user_id = str(user_id)
+        if user_id in self.invited_players:
+            return False
+        self.invited_players.append(user_id)
+        return True
+        
+    def remove_invite(self, user_id: str) -> bool:
+        """Remove a player's invitation"""
+        user_id = str(user_id)
+        if user_id in self.invited_players:
+            self.invited_players.remove(user_id)
+            return True
+        return False
+        
+    def has_invite(self, user_id: str) -> bool:
+        """Check if a player has been invited"""
+        return str(user_id) in self.invited_players
+        
+    def get_slowest_member(self) -> Character:
+        """Get the member with the slowest movement speed"""
+        return min(self.members.values(), key=lambda c: c.movement_speed)
+        
+    def get_average_level(self) -> float:
+        """Get the average level of the party"""
+        return sum(c.level for c in self.members.values()) / len(self.members)
+        
+    def to_dict(self) -> dict:
+        """Convert party to dictionary for storage"""
+        return {
+            'leader_id': str(self.leader.user_id),
+            'member_ids': list(self.members.keys()),
+            'invited_players': self.invited_players,
+            'shared_inventory': self._shared_inventory,
+            'shared_currency': self.shared_currency
+        }
+        
+    @classmethod
+    async def from_dict(cls, data: dict, bot) -> Optional['TravelParty']:
+        """Create party from dictionary data"""
+        try:
+            # Load leader
+            leader_id = data['leader_id']
+            guild_id = data.get('guild_id', '')  # You'll need to store this when saving
+            leader_char = await load_or_get_character_redis(bot, leader_id, guild_id)
+            if not leader_char:
+                return None
+                
+            party = cls(leader_char)
+            
+            # Load other members
+            for member_id in data['member_ids']:
+                if member_id != leader_id:
+                    char = await load_or_get_character_redis(bot, member_id, guild_id)
+                    if char:
+                        party.members[member_id] = char
+                        
+            party.invited_players = data.get('invited_players', [])
+            party._shared_inventory = data.get('shared_inventory', {})
+            party.shared_currency = data.get('shared_currency', {})
+            
+            return party
+            
+        except Exception as e:
+            logging.error(f"Error creating party from dict: {e}")
+            return None
 
-# Point-Buy System Configuration
-POINT_BUY_TOTAL = 15
-ABILITY_SCORE_COSTS = {
-    8: -2,  # Lowering to 8 gains 2 points
-    9: -1,  # Lowering to 9 gains 1 point
-    10: 0,  # Base score, no cost
-    11: 1,
-    12: 2,
-    13: 3,
-    14: 5,
-    15: 7
-}
+class TravelSystem:
+    def __init__(self, bot):
+        self.bot = bot
+        self.area_cache = {}  # Cache for frequently accessed areas
+        self.logger = logging.getLogger('travel_system')
 
-def calculate_score_cost(score):
-    """
-    Returns the point cost for a given ability score based on the point-buy system.
-    Args:
-        score (int): The ability score.
-    Returns:
-        int: The point cost.
-    Raises:
-        ValueError: If the score is not between 8 and 15 inclusive.
-    """
-    if score not in ABILITY_SCORE_COSTS:
-        raise ValueError(f"Invalid ability score: {score}. Must be between 8 and 15.")
-    return ABILITY_SCORE_COSTS[score]
+    async def get_area(self, area_name: str, guild_id: Optional[str] = None) -> Optional[Area]:
+        """
+        Fetches an area, checking server-specific overrides first if guild_id is provided
+        """
+        cache_key = f"{guild_id}:{area_name}" if guild_id else area_name
+        
+        # Check cache first
+        if cache_key in self.area_cache:
+            return self.area_cache[cache_key]
 
-def is_valid_point_allocation(allocation):
-    """
-    Validates if the total points spent/gained in the allocation meet the point-buy criteria.
-    Args:
-        allocation (dict): A dictionary of ability scores.
-    Returns:
-        tuple: (bool, str) indicating validity and a message.
-    """
-    try:
-        total_cost = sum(calculate_score_cost(score) for score in allocation.values())
-    except ValueError as e:
-        return False, str(e)
-    
-    # Calculate the minimum total cost based on possible point gains from lowering scores
-    max_points_gained = 2 * list(allocation.values()).count(8) + 1 * list(allocation.values()).count(9)
-    min_total_cost = POINT_BUY_TOTAL - max_points_gained
-    
-    if total_cost > POINT_BUY_TOTAL:
-        return False, f"Total points spent ({total_cost}) exceed the allowed pool of {POINT_BUY_TOTAL}."
-    elif total_cost < POINT_BUY_TOTAL:
-        return False, f"Total points spent ({total_cost}) are less than the allowed pool of {POINT_BUY_TOTAL}."
+        try:
+            # Check for server-specific override if guild_id provided
+            if guild_id:
+                server_area = await self.bot.redis_server.get(f"server:{guild_id}:area:{area_name}")
+                if server_area:
+                    area_data = pickle.loads(server_area)
+                    area = Area(
+                        name=area_data['name'],
+                        description=area_data.get('description', ''),
+                        coordinates=tuple(area_data.get('coordinates', (0, 0))),
+                        connected_area_names=area_data.get('connected_area_names', []),
+                        channel_id=area_data.get('channel_id'),
+                        allows_intercontinental_travel=area_data.get('allows_intercontinental_travel', False),
+                        danger_level=area_data.get('danger_level', 0)
+                    )
+                    self.area_cache[cache_key] = area
+                    return area
 
-    if total_cost < min_total_cost:
-        return False, f"Total points spent ({total_cost}) are too low. Ensure you spend exactly {POINT_BUY_TOTAL} points."
-        for score in allocation.values():
-            if score < 8 or score > 15:
-                return False, f"Ability scores must be between 8 and 15. Found {score}."
-    return True, "Valid allocation."
+            # Fetch from global areas
+            area_data = await self.bot.redis_game.hget("areas", area_name)
+            if not area_data:
+                return None
+            
+            area_dict = pickle.loads(area_data)
+            area = Area(
+                name=area_dict['name'],
+                description=area_dict.get('description', ''),
+                coordinates=tuple(area_dict.get('coordinates', (0, 0))),
+                connected_area_names=area_dict.get('connected_area_names', []),
+                channel_id=area_dict.get('channel_id'),
+                allows_intercontinental_travel=area_dict.get('allows_intercontinental_travel', False),
+                danger_level=area_dict.get('danger_level', 0)
+            )
+            
+            self.area_cache[cache_key] = area
+            return area
 
+        except Exception as e:
+            self.logger.error(f"Error fetching area {area_name}: {str(e)}")
+            return None
+
+    async def can_travel(self, 
+                        character: Character,
+                        destination_area: Area,
+                        guild_id: str) -> Tuple[bool, str]:
+        """
+        Checks if travel between areas is possible
+        Returns: (can_travel: bool, reason: str)
+        """
+        try:
+            if not destination_area:
+                return False, "Destination area does not exist"
+
+            if character.is_traveling:
+                return False, "You are already traveling"
+
+            # Check if areas are connected
+            if destination_area.name not in [area.name for area in character.current_area.connected_areas]:
+                return False, f"You cannot travel to {destination_area.name} from here"
+
+            # Check for intercontinental travel
+            if (character.current_area.allows_intercontinental_travel != 
+                destination_area.allows_intercontinental_travel):
+                if not character.current_area.allows_intercontinental_travel:
+                    return False, "You must be at a port to travel to this destination"
+
+            return True, "Travel possible"
+
+        except Exception as e:
+            self.logger.error(f"Error checking travel possibility: {str(e)}")
+            return False, "An error occurred while checking travel possibility"
+
+    async def start_travel(self,
+                          character: Character,
+                          destination_area: Area,
+                          guild_id: str,
+                          user_id: str) -> Tuple[bool, str, Optional[TravelView]]:
+        """
+        Initiates travel for a character
+        Returns: (success: bool, message: str, travel_view: Optional[TravelView])
+        """
+        try:
+            # Check if travel is possible
+            can_travel, reason = await self.can_travel(character, destination_area, guild_id)
+            if not can_travel:
+                return False, reason, None
+
+            # Calculate travel time
+            travel_time = max(2, int(calculate_distance(
+                character.current_area.coordinates,
+                destination_area.coordinates
+            )))
+
+            # Set up travel state
+            character.is_traveling = True
+            character.travel_destination = destination_area
+            character.travel_end_time = time.time() + travel_time
+            character.last_interaction_guild = int(guild_id)
+
+            # Save character state to Redis
+            await self.bot.redis_player.set(
+                f"character:{guild_id}:{user_id}",
+                pickle.dumps(character.to_dict())
+            )
+
+            # Set up travel view with mount check
+            travel_mode = TravelMode.RIDING if hasattr(character, 'mount') and character.mount else TravelMode.WALKING
+            weather = random.choice(list(WEATHER_EFFECTS.values()))
+            view = TravelView(character, destination_area, travel_time, travel_mode, weather)
+
+            return True, "Travel initiated successfully", view
+
+        except Exception as e:
+            self.logger.error(f"Error starting travel: {str(e)}")
+            return False, "An error occurred while starting travel", None
+
+    async def complete_travel(self,
+                            character: Character,
+                            user_id: str,
+                            guild_id: str,
+                            view: TravelView) -> Tuple[bool, str]:
+        """
+        Completes the travel process and updates character location
+        """
+        try:
+            if not view.cancelled:
+                # Move character to new area
+                success = character.move_to_area(character.travel_destination)
+                if not success:
+                    return False, "Failed to move to destination area"
+
+                # Update character state
+                character.is_traveling = False
+                character.travel_destination = None
+                character.travel_end_time = None
+
+                # Save to Redis
+                await self.bot.redis_player.set(
+                    f"character:{guild_id}:{user_id}",
+                    pickle.dumps(character.to_dict())
+                )
+
+                return True, "Travel completed successfully"
+            
+            return False, "Travel was cancelled"
+
+        except Exception as e:
+            self.logger.error(f"Error completing travel: {str(e)}")
+            return False, "An error occurred while completing travel"
+
+    async def cancel_travel(self,
+                          character: Character,
+                          user_id: str,
+                          guild_id: str) -> bool:
+        """
+        Cancels ongoing travel and updates character state
+        """
+        try:
+            character.is_traveling = False
+            character.travel_destination = None
+            character.travel_end_time = None
+
+            await self.bot.redis_player.set(
+                f"character:{guild_id}:{user_id}",
+                pickle.dumps(character.to_dict())
+            )
+            
+            return True
+        except Exception as e:
+            self.logger.error(f"Error cancelling travel: {str(e)}")
+            return False
+        
 
 
 class NPC(Entity):
@@ -3036,6 +3538,83 @@ def resolve_area_connections_and_npcs(area_lookup, npc_lookup):
 # ---------------------------- #
 #      UI Component Classes    #
 # ---------------------------- #
+
+class PartyView(View):
+    def __init__(self, party: TravelParty):
+        super().__init__(timeout=180)  # 3 minute timeout
+        self.party = party
+
+    @button(label="Accept Invite", style=discord.ButtonStyle.green, custom_id="accept_invite")
+    async def accept_invite(self, button: Button, interaction: discord.Interaction):
+        user_id = str(interaction.user.id)
+        guild_id = str(interaction.guild_id)
+        
+        if not self.party.has_invite(user_id):
+            await interaction.response.send_message(
+                "This invitation wasn't for you!",
+                ephemeral=True
+            )
+            return
+
+        try:
+            character = await load_or_get_character_redis(interaction.client, user_id, guild_id)
+            if not character:
+                await interaction.response.send_message(
+                    "You need a character to join a party! Use `/create_character` first.",
+                    ephemeral=True
+                )
+                return
+
+            success, msg = self.party.add_member(character)
+            if success:
+                # Save party to Redis
+                party_key = f"party:{guild_id}:{self.party.leader.user_id}"
+                await interaction.client.redis_player.set(
+                    party_key,
+                    pickle.dumps(self.party.to_dict())
+                )
+                
+                # Update UI
+                embed = self.get_party_embed()
+                await interaction.message.edit(embed=embed)
+                await interaction.response.send_message(msg, ephemeral=True)
+            else:
+                await interaction.response.send_message(msg, ephemeral=True)
+
+        except Exception as e:
+            logging.error(f"Error accepting party invite: {e}")
+            await interaction.response.send_message(
+                "An error occurred while joining the party.",
+                ephemeral=True
+            )
+
+    def get_party_embed(self) -> discord.Embed:
+        """Create an embed showing party information"""
+        embed = discord.Embed(
+            title="🎭 Adventure Party",
+            description=f"Led by {self.party.leader.name}",
+            color=discord.Color.blue()
+        )
+
+        # Add member list
+        members_text = ""
+        for member in self.party.members.values():
+            members_text += f"• **{member.name}** (Level {member.level} {member.char_class})\n"
+        embed.add_field(
+            name=f"Members ({self.party.size}/{self.party.max_size})",
+            value=members_text or "No members yet",
+            inline=False
+        )
+
+        # Add party stats
+        embed.add_field(
+            name="Party Stats",
+            value=f"Average Level: {self.party.get_average_level():.1f}\n"
+                  f"Movement Speed: {self.party.get_slowest_member().movement_speed}",
+            inline=False
+        )
+
+        return embed
 
 def create_character_progress_embed(user_id: str, current_step: int) -> discord.Embed:
     """
@@ -3637,6 +4216,61 @@ class MentalAbilitiesView(discord.ui.View):
         self.add_item(FinishAssignmentButton(user_id, self.area_lookup))
         logging.info(f"MentalAbilitiesView created for user {user_id} with {len(self.children)} components.")
 
+# Point-Buy System Configuration
+POINT_BUY_TOTAL = 15
+ABILITY_SCORE_COSTS = {
+    8: -2,  # Lowering to 8 gains 2 points
+    9: -1,  # Lowering to 9 gains 1 point
+    10: 0,  # Base score, no cost
+    11: 1,
+    12: 2,
+    13: 3,
+    14: 5,
+    15: 7
+}
+
+def calculate_score_cost(score):
+    """
+    Returns the point cost for a given ability score based on the point-buy system.
+    Args:
+        score (int): The ability score.
+    Returns:
+        int: The point cost.
+    Raises:
+        ValueError: If the score is not between 8 and 15 inclusive.
+    """
+    if score not in ABILITY_SCORE_COSTS:
+        raise ValueError(f"Invalid ability score: {score}. Must be between 8 and 15.")
+    return ABILITY_SCORE_COSTS[score]
+
+def is_valid_point_allocation(allocation):
+    """
+    Validates if the total points spent/gained in the allocation meet the point-buy criteria.
+    Args:
+        allocation (dict): A dictionary of ability scores.
+    Returns:
+        tuple: (bool, str) indicating validity and a message.
+    """
+    try:
+        total_cost = sum(calculate_score_cost(score) for score in allocation.values())
+    except ValueError as e:
+        return False, str(e)
+    
+    # Calculate the minimum total cost based on possible point gains from lowering scores
+    max_points_gained = 2 * list(allocation.values()).count(8) + 1 * list(allocation.values()).count(9)
+    min_total_cost = POINT_BUY_TOTAL - max_points_gained
+    
+    if total_cost > POINT_BUY_TOTAL:
+        return False, f"Total points spent ({total_cost}) exceed the allowed pool of {POINT_BUY_TOTAL}."
+    elif total_cost < POINT_BUY_TOTAL:
+        return False, f"Total points spent ({total_cost}) are less than the allowed pool of {POINT_BUY_TOTAL}."
+
+    if total_cost < min_total_cost:
+        return False, f"Total points spent ({total_cost}) are too low. Ensure you spend exactly {POINT_BUY_TOTAL} points."
+        for score in allocation.values():
+            if score < 8 or score > 15:
+                return False, f"Ability scores must be between 8 and 15. Found {score}."
+    return True, "Valid allocation."
 
 class AbilitySelect(discord.ui.Select):
     """
@@ -4924,73 +5558,111 @@ class CancelTravelButton(discord.ui.Button):
 # ---------------------------- #
 #          Helper Functions    #
 # ---------------------------- #
-def load_or_get_character(user_id: str, force_reload: bool = False):
-    global character_cache, last_cache_update, characters
+
+# def load_or_get_character(user_id: str, force_reload: bool = False):
+#     global character_cache, last_cache_update, characters
     
-    # Clean the input user_id
-    user_id = clean_user_id(user_id)
-    logging.info(f"Looking for cleaned user_id: {user_id}")
+#     # Clean the input user_id
+#     user_id = clean_user_id(user_id)
+#     logging.info(f"Looking for cleaned user_id: {user_id}")
     
-    current_time = time.time()
+#     current_time = time.time()
     
+#     try:
+#         if (force_reload or 
+#             not character_cache or 
+#             (current_time - last_cache_update) >= CACHE_DURATION):
+            
+#             logging.info("Reloading character cache from file")
+            
+#             try:
+#                 with open('characters.json', 'r', encoding='utf-8') as f:
+#                     char_data = json.load(f)
+                
+#                 # Convert the loaded data into Character objects
+#                 characters = {}
+#                 for uid, data in char_data.items():
+#                     uid = str(uid)  # Ensure key is string
+#                     try:
+#                         logging.info(f"Creating character for {uid} with data: {data}")
+#                         character_obj = Character.from_dict(
+#                             data=data,
+#                             user_id=uid,
+#                             area_lookup=area_lookup,
+#                             item_lookup=items
+#                         )
+#                         if character_obj:
+#                             characters[uid] = character_obj
+#                             logging.info(f"Successfully created character for {uid}")
+#                     except Exception as e:
+#                         logging.error(f"Error creating character for {uid}: {e}")
+#                         continue
+                
+#                 # Update cache
+#                 character_cache = characters.copy()
+#                 last_cache_update = current_time
+                
+#                 logging.info(f"Successfully loaded {len(characters)} characters. Available IDs: {list(characters.keys())}")
+                
+#             except FileNotFoundError:
+#                 logging.warning("characters.json not found - creating new file")
+#                 characters = {}
+#                 character_cache = {}
+#                 with open('characters.json', 'w', encoding='utf-8') as f:
+#                     json.dump({}, f)
+#             except json.JSONDecodeError as e:
+#                 logging.error(f"Error decoding characters.json: {e}")
+#                 return None
+        
+#         # Get character from cache
+#         character = character_cache.get(user_id)
+#         if character:
+#             logging.info(f"Found character {character.name} for user {user_id}")
+#             return character
+        
+#         logging.info(f"No character found for user {user_id} in cache")
+#         return None
+        
+#     except Exception as e:
+#         logging.error(f"Error loading character for user {user_id}: {e}", exc_info=True)
+#         return None
+
+async def load_or_get_character_redis(bot, user_id: str, guild_id: str, force_reload: bool = False):
+    """Redis version of load_or_get_character with caching"""
     try:
-        if (force_reload or 
-            not character_cache or 
-            (current_time - last_cache_update) >= CACHE_DURATION):
-            
-            logging.info("Reloading character cache from file")
-            
-            try:
-                with open('characters.json', 'r', encoding='utf-8') as f:
-                    char_data = json.load(f)
-                
-                # Convert the loaded data into Character objects
-                characters = {}
-                for uid, data in char_data.items():
-                    uid = str(uid)  # Ensure key is string
-                    try:
-                        logging.info(f"Creating character for {uid} with data: {data}")
-                        character_obj = Character.from_dict(
-                            data=data,
-                            user_id=uid,
-                            area_lookup=area_lookup,
-                            item_lookup=items
-                        )
-                        if character_obj:
-                            characters[uid] = character_obj
-                            logging.info(f"Successfully created character for {uid}")
-                    except Exception as e:
-                        logging.error(f"Error creating character for {uid}: {e}")
-                        continue
-                
-                # Update cache
-                character_cache = characters.copy()
-                last_cache_update = current_time
-                
-                logging.info(f"Successfully loaded {len(characters)} characters. Available IDs: {list(characters.keys())}")
-                
-            except FileNotFoundError:
-                logging.warning("characters.json not found - creating new file")
-                characters = {}
-                character_cache = {}
-                with open('characters.json', 'w', encoding='utf-8') as f:
-                    json.dump({}, f)
-            except json.JSONDecodeError as e:
-                logging.error(f"Error decoding characters.json: {e}")
-                return None
+        # Clean the input user_id
+        user_id = clean_user_id(user_id)
+        logging.info(f"Looking for user_id: {user_id} in guild: {guild_id}")
+
+        # Check cache first (you can implement a similar caching mechanism)
+        if not force_reload and user_id in character_cache:
+            return character_cache[user_id]
+
+        # Get character from Redis
+        key = f"character:{guild_id}:{user_id}"
+        data = await bot.redis_player.get(key)
         
-        # Get character from cache
-        character = character_cache.get(user_id)
-        if character:
-            logging.info(f"Found character {character.name} for user {user_id}")
-            return character
-        
-        logging.info(f"No character found for user {user_id} in cache")
+        if data:
+            char_data = pickle.loads(data)
+            character = Character.from_dict(
+                data=char_data,
+                user_id=user_id,
+                area_lookup=area_lookup,
+                item_lookup=items
+            )
+            
+            if character:
+                character_cache[user_id] = character
+                logging.info(f"Loaded character {character.name} for user {user_id}")
+                return character
+
+        logging.info(f"No character found for user {user_id}")
         return None
-        
+
     except Exception as e:
         logging.error(f"Error loading character for user {user_id}: {e}", exc_info=True)
         return None
+
 
 def format_duration(seconds):
     """Format seconds into a readable string"""
@@ -5158,8 +5830,249 @@ def create_progress_bar(current: int, maximum: int, length: int = 10) -> str:
  
 
 # ---------------------------- #
-#          Commands           #
+#          Commands            #
 # ---------------------------- #
+
+@bot.slash_command(
+    name="create_party",
+    description="Create a new adventure party"
+)
+async def create_party(ctx: discord.ApplicationContext):
+    try:
+        user_id = str(ctx.author.id)
+        guild_id = str(ctx.guild_id)
+
+        # Check if user already has a party
+        existing_party_key = f"party:{guild_id}:{user_id}"
+        if await bot.redis_player.exists(existing_party_key):
+            await ctx.respond(
+                "You're already in a party! Leave your current party first.",
+                ephemeral=True
+            )
+            return
+
+        # Load character
+        character = await load_or_get_character_redis(bot, user_id, guild_id)
+        if not character:
+            await ctx.respond(
+                "You need a character to create a party! Use `/create_character` first.",
+                ephemeral=True
+            )
+            return
+
+        # Create new party
+        party = TravelParty(character)
+        
+        # Save to Redis
+        await bot.redis_player.set(
+            existing_party_key,
+            pickle.dumps(party.to_dict())
+        )
+
+        # Create and send party view
+        view = PartyView(party)
+        embed = view.get_party_embed()
+        await ctx.respond(
+            "Created a new party!",
+            embed=embed,
+            view=view
+        )
+
+    except Exception as e:
+        logging.error(f"Error creating party: {e}")
+        await ctx.respond(
+            "An error occurred while creating the party.",
+            ephemeral=True
+        )
+
+@bot.slash_command(
+    name="invite_to_party",
+    description="Invite a player to your party"
+)
+async def invite_to_party(
+    ctx: discord.ApplicationContext,
+    player: discord.Option(
+        discord.Member,
+        description="The player to invite"
+    )
+):
+    try:
+        if player.bot:
+            await ctx.respond("You can't invite bots to your party!", ephemeral=True)
+            return
+
+        user_id = str(ctx.author.id)
+        guild_id = str(ctx.guild_id)
+        target_id = str(player.id)
+
+        # Load party
+        party_key = f"party:{guild_id}:{user_id}"
+        party_data = await bot.redis_player.get(party_key)
+        
+        if not party_data:
+            await ctx.respond(
+                "You need to create a party first! Use `/create_party`",
+                ephemeral=True
+            )
+            return
+
+        party = await TravelParty.from_dict(pickle.loads(party_data), bot)
+        
+        if str(ctx.author.id) != str(party.leader.user_id):
+            await ctx.respond(
+                "Only the party leader can invite new members!",
+                ephemeral=True
+            )
+            return
+
+        if party.is_full:
+            await ctx.respond(
+                f"Your party is full! Maximum size is {party.max_size}",
+                ephemeral=True
+            )
+            return
+
+        if target_id in party.members:
+            await ctx.respond(
+                f"{player.display_name} is already in your party!",
+                ephemeral=True
+            )
+            return
+
+        # Send invite
+        if party.invite_player(target_id):
+            # Save updated party
+            await bot.redis_player.set(
+                party_key,
+                pickle.dumps(party.to_dict())
+            )
+
+            view = PartyView(party)
+            embed = view.get_party_embed()
+            
+            # Send invite message
+            try:
+                await player.send(
+                    f"{ctx.author.display_name} has invited you to join their party!",
+                    embed=embed,
+                    view=view
+                )
+                await ctx.respond(
+                    f"Sent party invitation to {player.display_name}!",
+                    ephemeral=True
+                )
+            except discord.Forbidden:
+                await ctx.respond(
+                    f"I couldn't send a DM to {player.display_name}. They need to enable DMs from server members.",
+                    ephemeral=True
+                )
+        else:
+            await ctx.respond(
+                f"{player.display_name} has already been invited!",
+                ephemeral=True
+            )
+
+    except Exception as e:
+        logging.error(f"Error inviting to party: {e}")
+        await ctx.respond(
+            "An error occurred while sending the invitation.",
+            ephemeral=True
+        )
+
+@bot.slash_command(
+    name="leave_party",
+    description="Leave your current party"
+)
+async def leave_party(ctx: discord.ApplicationContext):
+    try:
+        user_id = str(ctx.author.id)
+        guild_id = str(ctx.guild_id)
+
+        # Find party
+        async for key in bot.redis_player.scan_iter(f"party:{guild_id}:*"):
+            party_data = await bot.redis_player.get(key)
+            if not party_data:
+                continue
+
+            party = await TravelParty.from_dict(pickle.loads(party_data), bot)
+            if user_id in party.members:
+                success, msg = party.remove_member(user_id)
+                if success:
+                    if party.members:  # If party still has members
+                        # Save updated party
+                        await bot.redis_player.set(
+                            key,
+                            pickle.dumps(party.to_dict())
+                        )
+                    else:  # If party is empty
+                        await bot.redis_player.delete(key)
+
+                    await ctx.respond(msg, ephemeral=True)
+                    return
+
+        await ctx.respond(
+            "You're not in a party!",
+            ephemeral=True
+        )
+
+    except Exception as e:
+        logging.error(f"Error leaving party: {e}")
+        await ctx.respond(
+            "An error occurred while leaving the party.",
+            ephemeral=True
+        )
+
+@bot.slash_command(
+    name="disband_party",
+    description="Disband your party (leader only)"
+)
+async def disband_party(ctx: discord.ApplicationContext):
+    try:
+        user_id = str(ctx.author.id)
+        guild_id = str(ctx.guild_id)
+
+        # Load party
+        party_key = f"party:{guild_id}:{user_id}"
+        party_data = await bot.redis_player.get(party_key)
+        
+        if not party_data:
+            await ctx.respond(
+                "You don't have a party to disband!",
+                ephemeral=True
+            )
+            return
+
+        party = await TravelParty.from_dict(pickle.loads(party_data), bot)
+        
+        if str(ctx.author.id) != str(party.leader.user_id):
+            await ctx.respond(
+                "Only the party leader can disband the party!",
+                ephemeral=True
+            )
+            return
+
+        # Delete party from Redis
+        await bot.redis_player.delete(party_key)
+
+        # Notify all members
+        for member_id in party.members:
+            try:
+                user = await bot.fetch_user(int(member_id))
+                await user.send(f"The party has been disbanded by {ctx.author.display_name}.")
+            except (discord.NotFound, discord.Forbidden):
+                continue
+
+        await ctx.respond(
+            "Party disbanded!",
+            ephemeral=True
+        )
+
+    except Exception as e:
+        logging.error(f"Error disbanding party: {e}")
+        await ctx.respond(
+            "An error occurred while disbanding the party.",
+            ephemeral=True
+        )
 
 @bot.slash_command(
     name="examine",
@@ -5845,8 +6758,11 @@ async def travel(
 ):
     try:
         user_id = str(ctx.author.id)
-        character = load_or_get_character(user_id)
-
+        guild_id = str(ctx.guild_id)
+        
+        # Load character using Redis
+        character = await load_or_get_character_redis(bot, user_id, guild_id)
+        
         if not character:
             await ctx.respond(
                 "You don't have a character yet. Use `/create_character` to get started.",
@@ -5854,7 +6770,7 @@ async def travel(
             )
             return
 
-        # Find destination area
+        # Find destination area (keeping existing logic)
         destination_area = None
         for area in character.current_area.connected_areas:
             if area.name.lower() == destination.lower():
@@ -5875,7 +6791,7 @@ async def travel(
             )
             return
 
-        # Calculate travel time based on distance
+        # Calculate travel time based on distance (keeping existing logic)
         travel_time = max(2, int(calculate_distance(
             character.current_area.coordinates,
             destination_area.coordinates
@@ -5887,12 +6803,14 @@ async def travel(
         character.travel_end_time = time.time() + travel_time
         character.last_interaction_guild = ctx.guild_id
 
-        # Save character state
-        characters[user_id] = character
-        save_characters(characters)
+        # Save character state to Redis
+        await bot.redis_player.set(
+            f"character:{guild_id}:{user_id}",
+            pickle.dumps(character.to_dict())
+        )
 
-        # Create travel view with mode and weather
-        travel_mode = TravelMode.WALKING  # Default to walking
+        # Create travel view with mode and weather (keeping existing logic)
+        travel_mode = TravelMode.WALKING
         if hasattr(character, 'mount') and character.mount:
             travel_mode = TravelMode.RIDING
             
@@ -5916,9 +6834,17 @@ async def travel(
             )
             return
 
-        # Start travel task
-        asyncio.create_task(travel_task(bot, character, user_id, characters, save_characters))
-        logging.info(f"User '{user_id}' started traveling to '{destination_area.name}'.")
+        # Start travel task with Redis context
+        asyncio.create_task(
+            travel_task_redis(
+                bot=bot,
+                character=character,
+                user_id=user_id,
+                guild_id=guild_id,
+                destination_area=destination_area
+            )
+        )
+        logging.info(f"User '{user_id}' started traveling to '{destination_area.name}'")
 
     except Exception as e:
         logging.error(f"Error in travel command: {e}", exc_info=True)
