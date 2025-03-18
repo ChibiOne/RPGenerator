@@ -1,14 +1,11 @@
-# utils/travel_ui.py
+# utils/travel_system/ui.py
 import discord
 from discord.ui import View, Button
 import time
 from datetime import datetime
 import random
 from typing import List, Optional
-from ..travel_conditions import TravelMode, WeatherEffect
-from .travel_system import calculate_distance
-from .conditions import TravelMode, WeatherEffect, WEATHER_EFFECTS
-
+from .core import TravelSystem
 class TravelView(discord.ui.View):
     """UI View for handling travel progress and interactions"""
     
@@ -43,7 +40,7 @@ class TravelView(discord.ui.View):
         route_display = (
             f"**From:** {self.character.current_area.name} (Danger Level {self.character.current_area.danger_level})\n"
             f"**To:** {self.destination.name} (Danger Level {self.destination.danger_level})\n"
-            f"**Distance:** {calculate_distance(self.character.current_area.coordinates, self.destination.coordinates):.1f} units\n"
+            f"**Distance:** {TravelSystem.calculate_distance(self.character.current_area.coordinates, self.destination.coordinates):.1f} units\n"
             f"**Mode:** {self.travel_mode['name']}"
         )
         embed.add_field(name="Route", value=route_display, inline=False)

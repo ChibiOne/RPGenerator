@@ -2,8 +2,10 @@
 import discord
 from discord.ext import commands
 import logging
-from config.settings import REDIS_CONFIG
+from config.settings import REDIS_CONFIG, GUILD_CONFIGS
 import redis.asyncio as redis
+from utils.rate_limiter import RateLimit
+from utils.game_loader import load_actions_redis, load_game_data
 
 class BotCore(commands.Cog):
     def __init__(self, bot):
@@ -13,6 +15,7 @@ class BotCore(commands.Cog):
         self.redis_player = None
         self.redis_server = None
         self.synced_guilds = set()
+        self.actions = {}
 
     async def cog_load(self):
         """Initialize cog connections and data"""
@@ -34,8 +37,12 @@ class BotCore(commands.Cog):
                 decode_responses=False
             )
             
-            # Load actions
-            self.actions = await load_actions_redis(self.bot)
+            # Load game data including actions
+            game_data = await load_game_data(self.bot)
+            if not game_data:
+                raise Exception("Failed to load game data")
+            
+            self.actions = game_data.get('actions', {})
             
             logging.info("Bot Core cog initialized successfully")
         except Exception as e:
@@ -50,9 +57,9 @@ class BotCore(commands.Cog):
         except Exception as e:
             logging.error(f"Error syncing commands for guild {guild.id}: {e}")
 
-    @bot.slash_command(name="sync", description="Manually sync bot commands")
+    @commands.slash_command(name="sync", description="Manually sync bot commands")
     @commands.has_permissions(administrator=True)
-    async def sync(ctx: discord.ApplicationContext):
+    async def sync(self, ctx: discord.ApplicationContext):
         """Manual command to sync commands to the current guild"""
         try:
             if ctx.guild_id not in GUILD_CONFIGS:
@@ -62,7 +69,7 @@ class BotCore(commands.Cog):
                 )
                 return
 
-            synced = await bot.sync_commands()
+            synced = await self.bot.sync_commands()
             
             await ctx.respond(
                 f"Successfully synced {len(synced)} commands to this guild!",

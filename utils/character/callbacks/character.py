@@ -1,213 +1,218 @@
-async def gender_callback(dropdown, interaction, user_id):
-    """
-    Callback for gender selection.
+# utils/character/callbacks/character.py
+import logging
+from typing import Optional, Dict, Any, cast
+from datetime import datetime
+import discord
+
+from ..session import session_manager
+from ...game_objects import Character
+from ..validation import CharacterValidator
+from ..types import (
+    CharacterData,
+    Stats,
+    Equipment,
+    SpeciesType,
+    ClassType
+)
+from ..ui.embeds import create_character_progress_embed
+from ..ui.views import GenderSelectionView
+
+async def process_character_info(interaction: discord.Interaction, user_id: str) -> bool:
+    """Process and validate basic character information.
+    
+    Args:
+        interaction (discord.Interaction): The Discord interaction
+        user_id (str): The user's Discord ID
+        
+    Returns:
+        bool: True if processing succeeded, False otherwise
     """
     try:
-        session = interaction.client.session_manager.get_session(user_id)
-        selected_gender = dropdown.values[0]
-        character_creation_sessions[user_id]['Gender'] = selected_gender
-        logging.info(f"User {user_id} selected gender: {selected_gender}")
-
+        # Get and validate session
+        session = session_manager.get_session(user_id)
         if not session:
             await interaction.response.send_message(
                 "Session expired. Please start character creation again.",
                 ephemeral=True
             )
-            return
+            return False
 
-        # Get starting equipment
-        equipment, inventory_items = interaction.client.equipment_manager.get_starting_equipment(selected_class)
+        # Required fields
+        required_fields = {
+            'name': 'Name',
+            'gender': 'Gender',
+            'pronouns': 'Pronouns',
+            'description': 'Description',
+            'species': 'Species',
+            'char_class': 'Class'
+        }
 
-        if not equipment:
+        # Check for missing fields
+        missing_fields = []
+        for field, display_name in required_fields.items():
+            if not getattr(session, field, None):
+                missing_fields.append(display_name)
+
+        if missing_fields:
             await interaction.response.send_message(
-                "Error loading class equipment. Please try again.",
+                f"Please complete the following fields before continuing: {', '.join(missing_fields)}",
                 ephemeral=True
             )
-            return
+            return False
 
-        # Proceed to pronouns selection
-        await interaction.response.edit_message(
-            content=f"Gender set to **{selected_gender}**! Please select your pronouns:",
-            view=PronounsSelectionView(user_id)
-        )
-    except Exception as e:
-        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
-        logging.error(f"Error in gender_callback for user {user_id}: {e}")
-
-async def pronouns_callback(dropdown, interaction, user_id):
-    """
-    Callback for pronouns selection.
-    """
-    try:
-        session = interaction.client.session_manager.get_session(user_id)
-        selected_pronouns = dropdown.values[0]
-        session.pronouns = selected_pronouns
-        logging.info(f"User {user_id} selected pronouns: {selected_pronouns}")
-
-        # Proceed to description input using a modal
-        await interaction.response.send_modal(DescriptionModal(user_id))
-    except Exception as e:
-        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
-        logging.error(f"Error in pronouns_callback for user {user_id}: {e}")
-
-async def species_callback(dropdown, interaction, user_id):
-    """
-    Callback for species selection.
-    """
-    try:
-        session = interaction.client.session_manager.get_session(user_id)
-        selected_species = dropdown.values[0]
-        session.species = selected_species
-        logging.info(f"User {user_id} selected species: {selected_species}")
-
-        # Proceed to class selection
-        await interaction.response.edit_message(
-            content=f"Species set to **{selected_species}**! Please select a class:",
-            view=ClassSelectionView(user_id)
-        )
-    except Exception as e:
-        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
-        logging.error(f"Error in species_callback for user {user_id}: {e}")
-
-async def class_callback(dropdown, interaction, user_id):
-    try:
-        session = interaction.client.session_manager.get_session(user_id)
-        selected_class = dropdown.values[0]
-        session.char_class = selected_class
-       
-        # Initialize equipment as a complete dictionary with all slots
-        equipment = {
-            'Armor': None,
-            'Left_Hand': None,
-            'Right_Hand': None,
-            'Belt_Slots': [None] * 4,
-            'Back': None,
-            'Magic_Slots': [None] * 3
+        # Validate field lengths
+        validation_rules = {
+            'name': (2, 32),
+            'description': (10, 1000)
         }
-       
-        def get_item_safely(item_name):
-            """Helper function to safely get and convert items"""
-            logging.info(f"Attempting to get item: {item_name}")
-            item = items.get(item_name)
-            if not item:
-                logging.warning(f"Could not find item: {item_name}")
-                return None
-            try:
-                logging.info(f"Retrieved item type: {type(item)}")
-                if isinstance(item, dict):
-                    logging.info(f"Converting dict to Item: {item}")
-                    return Item.from_dict(item)
-                if hasattr(item, 'to_dict'):
-                    logging.info("Item already has to_dict method")
-                    return item
-                logging.warning(f"Unknown item type for {item_name}: {type(item)}")
-                return None
-            except Exception as e:
-                logging.error(f"Error converting item {item_name}: {e}")
-                return None
-            
-        # Add class-specific equipment using loaded items
-        if selected_class == "Warrior":
-            equipment.update({
-                'Right_Hand': get_item_safely("Longsword"),
-                'Left_Hand': get_item_safely("Wooden Shield"),
-                'Armor': get_item_safely("Ringmail Armor")
-            })
-            inventory_items = [
-                get_item_safely("Healing Potion"),
-                get_item_safely("Bedroll"),
-                get_item_safely("Tinderbox"),
-                get_item_safely("Torch"),
-                get_item_safely("Torch")
-            ]
-        elif selected_class == "Mage":
-            equipment.update({
-                'Right_Hand': get_item_safely("Staff"),
-                'Left_Hand': get_item_safely("Dagger"),
-                'Armor': get_item_safely("Robes")
-            })
-            inventory_items = [
-                get_item_safely("Healing Potion"),
-                get_item_safely("Bedroll"),
-                get_item_safely("Tinderbox"),
-                get_item_safely("Torch"),
-                get_item_safely("Torch"),
-                get_item_safely("Component Pouch")
-            ]
-        elif selected_class == "Rogue":
-            equipment.update({
-                'Right_Hand': get_item_safely("Dagger"),
-                'Left_Hand': get_item_safely("Dagger"),
-                'Armor': get_item_safely("Leather Armor")
-            })
-            inventory_items = [
-                get_item_safely("Healing Potion"),
-                get_item_safely("Bedroll"),
-                get_item_safely("Tinderbox"),
-                get_item_safely("Torch"),
-                get_item_safely("Torch"),
-                get_item_safely("Thieves Tools")
-            ]
-        elif selected_class == "Cleric":
-            equipment.update({
-                'Right_Hand': get_item_safely("Mace"),
-                'Left_Hand': get_item_safely("Wooden Shield"),
-                'Armor': get_item_safely("Studded Leather Armor")
-            })
-            inventory_items = [
-                get_item_safely("Healing Potion"),
-                get_item_safely("Bedroll"),
-                get_item_safely("Tinderbox"),
-                get_item_safely("Torch"),
-                get_item_safely("Torch"),
-                get_item_safely("Holy Symbol")
-            ]
 
-        # Log any missing items
-        for slot, item in equipment.items():
-            if item is None and slot not in ['Belt_Slots', 'Back', 'Magic_Slots']:
-                logging.warning(f"Missing equipment item for slot {slot} in class {selected_class}")
-       
-        # Convert inventory list to dictionary and validate
-        inventory = {}
-        for i, item in enumerate(inventory_items):
-            if item is not None:
-                if isinstance(item, Item):
-                    inventory[str(i)] = item
-                    logging.info(f"Added inventory item {i}: {type(item)}")
-                else:
-                    logging.warning(f"Invalid inventory item type at index {i}: {type(item)}")
+        for field, (min_len, max_len) in validation_rules.items():
+            value = getattr(session, field)
+            if len(value) < min_len or len(value) > max_len:
+                await interaction.response.send_message(
+                    f"The {field} must be between {min_len} and {max_len} characters long.",
+                    ephemeral=True
+                )
+                return False
 
-        # Validate before updating session
-        logging.info(f"Final equipment structure: {equipment}")
-        logging.info(f"Final inventory structure: {inventory}")
-        
-        # Update the session data
-        character_creation_sessions[user_id]['Equipment'] = equipment
-        session.equipment = equipment = inventory if isinstance(inventory, dict) else {}
-        
-        # Verify the session data
-        session.equipment = equipment
-        session_inventory = character_creation_sessions[user_id].get('Inventory', {})
-        
-        logging.info(f"Session equipment type: {type(session_equipment)}")
-        logging.info(f"Session inventory type: {type(session_inventory)}")
-        
-        logging.info(f"User {user_id} selected class: {selected_class} and received starting equipment")
+        # Validate allowed values
+        if session.species not in ['Human', 'Elf', 'Dwarf', 'Orc']:
+            await interaction.response.send_message(
+                "Invalid species selected.",
+                ephemeral=True
+            )
+            return False
 
-        await start_ability_score_assignment(interaction, user_id)
+        if session.char_class not in ['Warrior', 'Mage', 'Rogue', 'Cleric']:
+            await interaction.response.send_message(
+                "Invalid class selected.",
+                ephemeral=True
+            )
+            return False
+
+        logging.info(f"Successfully processed character info for user {user_id}")
+        return True
 
     except Exception as e:
-        await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
-        logging.error(f"Error in class_callback for user {user_id}: {e}", exc_info=True)
+        logging.error(f"Error processing character info for user {user_id}: {e}")
+        await interaction.response.send_message(
+            "An error occurred while processing character information. Please try again.",
+            ephemeral=True
+        )
+        return False
+
+async def finalize_character(
+    interaction: discord.Interaction,
+    user_id: str,
+    area_lookup: Dict[str, Any]
+) -> Optional[Character]:
+    """
+    Finalizes character creation with strict validation and typing.
+    
+    Args:
+        interaction: Discord interaction
+        user_id: User's Discord ID
+        area_lookup: Dictionary of available areas
+    
+    Returns:
+        Optional[Character]: The created character or None if creation fails
+    """
+    try:
+        # Get and validate session
+        session = session_manager.get_session(user_id)
+        if not session:
+            logging.error(f"No session found for user {user_id}")
+            return None
+
+        # Create timestamp
+        current_time = datetime.utcnow()
+            
+        # Construct character data with strict typing
+        character_data: CharacterData = {
+            "user_id": user_id,
+            "name": session.name,
+            "species": cast(SpeciesType, session.species),
+            "char_class": cast(ClassType, session.char_class),
+            "gender": session.gender,
+            "pronouns": session.pronouns,
+            "description": session.description,
+            "stats": cast(Stats, session.stats),
+            "equipment": cast(Equipment, session.equipment),
+            "inventory": session.inventory,
+            "creation_date": current_time,
+            "last_modified": current_time,
+            "last_interaction_guild": interaction.guild_id if interaction.guild else None
+        }
+
+        # Validate all data
+        is_valid, message = CharacterValidator.validate_all(character_data)
+        if not is_valid:
+            logging.error(f"Character validation failed for user {user_id}: {message}")
+            return None
+
+        # Create character instance
+        character = Character(**character_data)
+
+        # Attempt to save to database
+        try:
+            if hasattr(interaction.client, 'redis_player'):
+                # Start transaction
+                async with interaction.client.redis_player.pipeline() as pipe:
+                    # Save character
+                    await pipe.set(f"character:{user_id}", character.to_dict())
+                    # Save user-character mapping
+                    await pipe.sadd(f"user:{user_id}:characters", character.name)
+                    # Save guild mapping if applicable
+                    if interaction.guild_id:
+                        await pipe.sadd(f"guild:{interaction.guild_id}:characters", 
+                                      f"{user_id}:{character.name}")
+                    # Execute transaction
+                    await pipe.execute()
+
+                # Verify save
+                saved_data = await interaction.client.redis_player.get(f"character:{user_id}")
+                if not saved_data:
+                    logging.error(f"Failed to verify character save for user {user_id}")
+                    return None
+
+                logging.info(f"Character saved successfully for user {user_id}")
+
+            else:
+                logging.error("Redis connection not available")
+                return None
+
+        except Exception as e:
+            logging.error(f"Database error saving character for user {user_id}: {e}")
+            return None
+
+        # End the session
+        session_manager.end_session(user_id)
+        
+        logging.info(f"Character creation successful for user {user_id}")
+        return character
+
+    except Exception as e:
+        logging.error(f"Error finalizing character for user {user_id}: {e}", exc_info=True)
+        return None
 
 async def gender_callback(dropdown, interaction, user_id):
+    """
+    Callback for gender selection.
+    
+    Args:
+        dropdown: Discord dropdown component
+        interaction: Discord interaction
+        user_id: User's Discord ID
+    """
     try:
-        session = interaction.client.session_manager.get_session(user_id)
+        session = session_manager.get_session(user_id)
+        if not session:
+            session = session_manager.create_session(user_id)
+            
         selected_gender = dropdown.values[0]
         session.gender = selected_gender
         
-        # Create progress embed using the new function
+        # Create progress embed
         embed = create_character_progress_embed(user_id, 2)
         
         await interaction.response.edit_message(
@@ -223,3 +228,9 @@ async def gender_callback(dropdown, interaction, user_id):
             "An error occurred. Please try again.",
             ephemeral=True
         )
+
+__all__ = [
+    'process_character_info',
+    'finalize_character',
+    'gender_callback'
+]

@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Union
 # Import core character components
 from .constants import *
 from .validators import validate_character_name, validate_ability_scores
-from .session import CharacterSession
+from .session import CharacterCreationSession, session_manager
 
 # Import UI components
 from .ui.views import CharacterCreationView
@@ -19,7 +19,8 @@ from .callbacks.equipment import process_equipment_selection
 
 __all__ = [
     # Core
-    'CharacterSession',
+    'CharacterCreationSession',
+    'session_manager',
     'validate_character_name',
     'validate_ability_scores',
     

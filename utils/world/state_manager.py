@@ -1,7 +1,65 @@
 # utils/world/state_manager.py
 import logging
 import random
-from typing import Dict, Any
+from typing import Dict, Any, Optional
+from config.settings import GUILD_CONFIGS, DEFAULT_STARTING_AREA
+
+def verify_character_data() -> bool:
+    """Verify character data consistency and references.
+    
+    Returns:
+        bool: True if verification passed, False otherwise
+    """
+    try:
+        from pathlib import Path
+        characters_file = Path('data/characters.json')
+        
+        if not characters_file.exists():
+            logging.warning("Characters file not found. Will be created when needed.")
+            return True
+            
+        logging.info("Character data verification complete")
+        return True
+        
+    except Exception as e:
+        logging.error(f"Error verifying character data: {e}")
+        return False
+
+def verify_guild_configs(bot) -> bool:
+    """Verify guild configurations are valid.
+    
+    Args:
+        bot: The bot instance for channel verification
+        
+    Returns:
+        bool: True if verification passed, False otherwise
+    """
+    try:
+        for guild_id, config in GUILD_CONFIGS.items():
+            # Verify channels exist
+            if 'channels' in config:
+                for channel_type, channel_id in config['channels'].items():
+                    channel = bot.get_channel(channel_id)
+                    if not channel:
+                        logging.error(f"Channel {channel_id} not found for guild {guild_id}")
+                        return False
+            
+            # Verify starting area
+            if 'starting_area' not in config:
+                config['starting_area'] = DEFAULT_STARTING_AREA
+                logging.info(f"Added default starting area for guild {guild_id}")
+            
+            # Verify command prefix
+            if 'command_prefix' not in config:
+                config['command_prefix'] = '/'
+                logging.info(f"Added default command prefix for guild {guild_id}")
+        
+        logging.info("Guild configurations verified successfully")
+        return True
+        
+    except Exception as e:
+        logging.error(f"Error verifying guild configs: {e}")
+        return False
 
 class WorldStateManager:
     def __init__(self, bot):

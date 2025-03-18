@@ -1,13 +1,15 @@
 # utils/game_objects/base.py
 
 from typing import Optional, List, Dict, Any
+from .items import Item
+
 
 class InventoryMixin:
     def __init__(self, inventory=None, capacity=None):
         self.inventory = inventory if inventory is not None else []
         self.capacity = capacity
 
-    def add_item_to_inventory(self, item: Item) -> None:
+    def add_item_to_inventory(self, item: 'Item') -> None:
         if not isinstance(item, Item):
             raise TypeError("Only items of type 'Item' can be added to the inventory.")
         if self.can_add_item(item):

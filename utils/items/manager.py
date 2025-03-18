@@ -4,7 +4,7 @@ import logging
 import json
 import pickle
 from pathlib import Path
-from .item import Item, Weapon, Armor, Shield  # Your existing item classes
+from utils.game_objects.items import Item, Weapon, Armor, Shield
 
 class ItemManager:
     """Manages item loading, caching, and retrieval"""

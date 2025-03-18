@@ -318,6 +318,37 @@ def assign_npcs_to_areas(area_lookup, npc_lookup):
     for area in area_lookup.values():
         area.npcs = [npc_lookup[npc_name] for npc_name in area.npc_names if npc_name in npc_lookup]
 
+async def sync_commands(bot) -> bool:
+    """Synchronize application commands with Discord.
+    
+    Args:
+        bot: The bot instance to sync commands for
+        
+    Returns:
+        bool: True if sync was successful, False otherwise
+    """
+    try:
+        logging.info("Starting command synchronization...")
+        
+        # Get list of guild IDs from config
+        guild_ids = list(GUILD_CONFIGS.keys())
+        
+        # Sync to each configured guild
+        for guild_id in guild_ids:
+            try:
+                await bot.sync_guild_commands(guild_id)
+                logging.info(f"Synced commands for guild {guild_id}")
+            except Exception as e:
+                logging.error(f"Failed to sync commands for guild {guild_id}: {e}")
+                return False
+        
+        logging.info("Command synchronization complete")
+        return True
+        
+    except Exception as e:
+        logging.error(f"Error in command synchronization: {e}")
+        return False
+
 # Helper function to get the correct channel for a guild
 async def get_guild_game_channel(guild_id: int, channel_type: str = 'game'):
     """

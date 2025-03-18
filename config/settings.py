@@ -46,6 +46,9 @@ FILE_PATHS = {
     'WORLD': 'world.json',
 }
 
+# Special file paths
+CHARACTERS_FILE = FILE_PATHS['CHARACTERS']
+
 # Game Constants
 DEFAULT_STARTING_AREA = "Marketplace Square"
 GLOBAL_COOLDOWN = 5

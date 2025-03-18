@@ -5,7 +5,7 @@ import pickle
 import logging
 import asyncio
 from typing import Optional, Dict, Any, List
-from config.settings import REDIS_CONFIG
+from config.settings import REDIS_CONFIG, CHARACTERS_FILE
 
 class ShardAwareRedisDB:
     def __init__(self, bot):

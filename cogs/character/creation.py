@@ -1,6 +1,9 @@
 # cogs/character/creation.py
-from ...utils.character.session import session_manager
-from ...utils.character.equipment import EquipmentManager
+from utils.character.session import session_manager
+from utils.character.equipment import EquipmentManager
+from discord.ext import commands
+import discord
+import logging
 
 class CharacterCreation(commands.Cog):
     def __init__(self, bot):
@@ -8,9 +11,8 @@ class CharacterCreation(commands.Cog):
         self.equipment_manager = EquipmentManager(bot.equipment_manager)
         self.item_manager = bot.item_manager
 
-    @bot.slash_command(name="create_character", description="Create a new character")
-    async def create_character(ctx: discord.ApplicationContext):
-        global character_creation_sessions
+    @commands.slash_command(name="create_character", description="Create a new character")
+    async def create_character(self, ctx: discord.ApplicationContext):
         try:
             # Respond to the interaction first
             await ctx.defer(ephemeral=True)
@@ -18,14 +20,12 @@ class CharacterCreation(commands.Cog):
             try:
                 # Initialize character creation session
                 user_id = str(ctx.author.id)
-                if character_creation_sessions is None:
-                    character_creation_sessions = {}
-                character_creation_sessions[user_id] = {'Stats': {}, 'points_spent': 0}
+                session = self.bot.session_manager.create_session(user_id)
                 
                 # Send DM with character creation view
                 await ctx.author.send(
                     "Let's create your character!", 
-                    view=CharacterCreationView(bot)
+                    view=CharacterCreationView(self.bot)
                 )
                 
                 # Follow up to the original interaction

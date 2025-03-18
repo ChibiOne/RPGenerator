@@ -1,5 +1,5 @@
 # utils/game_objects/items.py
-from typing import Optional, Dict, Any, Tuple, Union, List, TypeVar
+from typing import Optional, Dict, Any, Tuple, Union, List, TypeVar, Type
 import logging
 import random
 

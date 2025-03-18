@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 import logging
 from typing import Optional, List
-from ..utils.redis_manager import ShardAwareRedisDB
+from utils.redis_manager import ShardAwareRedisDB
 
 class DatabaseManager(commands.Cog):
     def __init__(self, bot):

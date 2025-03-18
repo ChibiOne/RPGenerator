@@ -92,6 +92,30 @@ async def load_game_data(bot) -> Dict[str, Any]:
         logging.error(f"Error in load_game_data: {e}")
         return {}
 
+def initialize_game_data() -> bool:
+    """
+    Initialize game data and verify loaded correctly.
+    Returns:
+        bool: True if initialization successful, False otherwise
+    """
+    try:
+        from pathlib import Path
+        data_dir = Path('data')
+        
+        # Verify required data files exist
+        required_files = ['actions.json', 'items.json', 'npcs.json', 'areas.json']
+        for file in required_files:
+            if not (data_dir / file).exists():
+                logging.error(f"Required data file {file} not found")
+                return False
+        
+        logging.info("Data files verified successfully")
+        return True
+        
+    except Exception as e:
+        logging.error(f"Error initializing game data: {e}")
+        return False
+
 async def resolve_area_connections_and_npcs(redis_db: ShardAwareRedisDB, 
                                           area_lookup: Dict[str, Any], 
                                           npc_lookup: Dict[str, Any]) -> bool:

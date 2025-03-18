@@ -2,8 +2,11 @@
 import logging
 from typing import List, Tuple, Optional, Dict, Any, Union
 
-from ..items import Item
-from ..npc import NPC
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..items import Item
+    from ..npc import NPC
 
 class Area:
     """
@@ -17,9 +20,9 @@ class Area:
         coordinates: Tuple[float, float] = (0, 0),
         connected_area_names: Optional[List[str]] = None,
         connected_areas: Optional[List['Area']] = None,
-        inventory: Optional[List[Item]] = None,
+        inventory: Optional[List[Any]] = None,  # Runtime type: List[Item]
         npc_names: Optional[List[str]] = None,
-        npcs: Optional[List[NPC]] = None,
+        npcs: Optional[List[Any]] = None,  # Runtime type: List[NPC]
         channel_id: Optional[int] = None,
         allows_intercontinental_travel: bool = False,
         danger_level: int = 0,
@@ -52,7 +55,7 @@ class Area:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], item_lookup: Optional[Dict[str, Item]] = None) -> 'Area':
+    def from_dict(cls, data: Dict[str, Any], item_lookup: Optional[Dict[str, Any]] = None) -> 'Area':  # Runtime type: Dict[str, Item]
         """Create area from dictionary data."""
         try:
             name = data.get('name', '')
@@ -98,7 +101,7 @@ class Area:
         except Exception as e:
             logging.error(f"Error updating Area {self.name}: {e}")
 
-    def add_npc(self, npc: NPC) -> bool:
+    def add_npc(self, npc: Any) -> bool:  # Runtime type: NPC
         """Add an NPC to the area."""
         try:
             if npc not in self.npcs:
@@ -109,7 +112,7 @@ class Area:
             logging.error(f"Error adding NPC to Area {self.name}: {e}")
             return False
 
-    def remove_npc(self, npc: Union[NPC, str]) -> bool:
+    def remove_npc(self, npc: Union[Any, str]) -> bool:  # Runtime type: Union[NPC, str]
         """Remove an NPC from the area."""
         try:
             if isinstance(npc, str):
@@ -125,7 +128,7 @@ class Area:
             logging.error(f"Error removing NPC from Area {self.name}: {e}")
             return False
 
-    def add_item(self, item: Item) -> bool:
+    def add_item(self, item: Any) -> bool:  # Runtime type: Item
         """Add an item to the area's inventory."""
         try:
             if item not in self.inventory:
@@ -136,7 +139,7 @@ class Area:
             logging.error(f"Error adding item to Area {self.name}: {e}")
             return False
 
-    def remove_item(self, item: Union[Item, str]) -> bool:
+    def remove_item(self, item: Union[Any, str]) -> bool:  # Runtime type: Union[Item, str]
         """Remove an item from the area's inventory."""
         try:
             if isinstance(item, str):
@@ -180,7 +183,7 @@ class Area:
             logging.error(f"Error disconnecting areas {self.name} and {area.name}: {e}")
             return False
 
-    def get_npc(self, npc_name: str) -> Optional[NPC]:
+    def get_npc(self, npc_name: str) -> Optional[Any]:  # Runtime type: Optional[NPC]
         """Get an NPC by name."""
         try:
             return next(

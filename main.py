@@ -1,16 +1,28 @@
 # main.py
+import os
+import sys
+import asyncio
 import discord
-from discord.ext import commands
-from utils.rate_limiter import RateLimit
 import logging
-from config.settings import REDIS_CONFIG
-import utils
+from discord.ext import commands
+
+# Add the project root to Python path
+project_root = os.path.dirname(os.path.abspath(__file__))
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
+# Now import project modules
+from utils.rate_limiter import RateLimit
+from config.settings import REDIS_CONFIG, DISCORD_BOT_TOKEN
 from cogs.bot_core import BotCore
 from cogs.database import DatabaseManager
 from cogs.state_manager import StateManager
 from utils.character.session import SessionManager
 from utils.character.equipment import EquipmentManager
 from utils.items.manager import ItemManager
+from utils.game_loader import initialize_game_data
+from utils.world.state_manager import verify_character_data, verify_guild_configs
+from utils.helpers import sync_commands
 
 
 class RPGBot(discord.Bot):
@@ -18,7 +30,7 @@ class RPGBot(discord.Bot):
         super().__init__(*args, **kwargs)
         self.rate_limiter = RateLimit()
         self.session_manager = SessionManager()
-        self.item_manager = ItemManager()  # Create this if you haven't already
+        self.item_manager = ItemManager(self)  # Pass bot instance
         self.equipment_manager = EquipmentManager(self.item_manager)
 
     async def process_application_commands(self, interaction: discord.Interaction):

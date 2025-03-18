@@ -1,107 +1,86 @@
-# utils/character/equipment.py
-from typing import Dict, Optional, List, Any
-from dataclasses import dataclass
+# utils/character/callbacks/equipment.py
 import logging
-from ..items import Item
+import discord
+from typing import Optional
 
-@dataclass
-class EquipmentTemplate:
-    """Template for class-specific starting equipment"""
-    right_hand: Optional[str] = None
-    left_hand: Optional[str] = None
-    armor: Optional[str] = None
-    inventory_items: List[str] = field(default_factory=list)
+from ..session import session_manager
+from ..ui.embeds import create_character_progress_embed
 
-class EquipmentManager:
-    def __init__(self, item_manager):
-        self.item_manager = bot.item_manager
-        self.class_templates = {
-            "Warrior": EquipmentTemplate(
-                right_hand="Longsword",
-                left_hand="Wooden Shield",
-                armor="Ringmail Armor",
-                inventory_items=[
-                    "Healing Potion",
-                    "Bedroll",
-                    "Tinderbox",
-                    "Torch",
-                    "Torch"
-                ]
-            ),
-            "Mage": EquipmentTemplate(
-                right_hand="Staff",
-                left_hand="Dagger",
-                armor="Robes",
-                inventory_items=[
-                    "Healing Potion",
-                    "Bedroll",
-                    "Tinderbox",
-                    "Torch",
-                    "Torch",
-                    "Component Pouch"
-                ]
-            ),
-            # ... other class templates
-        }
-
-    def get_starting_equipment(self, char_class: str) -> tuple[Dict[str, Any], List[Item]]:
-        """Get starting equipment for a character class"""
-        try:
-            template = self.class_templates.get(char_class)
-            if not template:
-                raise ValueError(f"No equipment template for class: {char_class}")
-
-            equipment = {
-                'Armor': None,
-                'Left_Hand': None,
-                'Right_Hand': None,
-                'Belt_Slots': [None] * 4,
-                'Back': None,
-                'Magic_Slots': [None] * 3
-            }
-
-            # Load equipment items
-            if template.right_hand:
-                equipment['Right_Hand'] = self.item_manager.get_item(template.right_hand)
-            if template.left_hand:
-                equipment['Left_Hand'] = self.item_manager.get_item(template.left_hand)
-            if template.armor:
-                equipment['Armor'] = self.item_manager.get_item(template.armor)
-
-            # Load inventory items
-            inventory_items = [
-                self.item_manager.get_item(item_name)
-                for item_name in template.inventory_items
-            ]
-
-            # Filter out any None values from failed item loading
-            inventory_items = [item for item in inventory_items if item is not None]
-
-            return equipment, inventory_items
-
-        except Exception as e:
-            logging.error(f"Error getting starting equipment for {char_class}: {e}")
-            return {}, []
-
-    def validate_equipment(self, equipment: Dict[str, Any]) -> bool:
-        """Validate equipment structure and items"""
-        try:
-            required_slots = {
-                'Armor', 'Left_Hand', 'Right_Hand', 
-                'Belt_Slots', 'Back', 'Magic_Slots'
-            }
-            
-            if not all(slot in equipment for slot in required_slots):
-                return False
-
-            if not isinstance(equipment['Belt_Slots'], list) or len(equipment['Belt_Slots']) != 4:
-                return False
-
-            if not isinstance(equipment['Magic_Slots'], list) or len(equipment['Magic_Slots']) != 3:
-                return False
-
-            return True
-
-        except Exception as e:
-            logging.error(f"Error validating equipment: {e}")
+async def process_equipment_selection(interaction: discord.Interaction, user_id: str) -> bool:
+    """Process and validate equipment selection for character creation.
+    
+    Args:
+        interaction (discord.Interaction): The Discord interaction
+        user_id (str): The user's Discord ID
+        
+    Returns:
+        bool: True if processing succeeded, False otherwise
+    """
+    try:
+        # Get and validate session
+        session = session_manager.get_session(user_id)
+        if not session:
+            await interaction.response.send_message(
+                "Session expired. Please start character creation again.",
+                ephemeral=True
+            )
             return False
+
+        if not session.char_class:
+            await interaction.response.send_message(
+                "Please select a class before proceeding with equipment.",
+                ephemeral=True
+            )
+            return False
+
+        # Get equipment manager from client
+        equipment_manager = interaction.client.equipment_manager
+        if not equipment_manager:
+            logging.error("Equipment manager not found in client")
+            await interaction.response.send_message(
+                "Error accessing equipment system. Please try again.",
+                ephemeral=True
+            )
+            return False
+
+        # Get starting equipment
+        equipment, inventory = equipment_manager.get_starting_equipment(session.char_class)
+        
+        # Validate equipment structure
+        if not equipment_manager.validate_equipment(equipment):
+            await interaction.response.send_message(
+                "Error setting up starting equipment. Please try again.",
+                ephemeral=True
+            )
+            return False
+
+        # Update session with equipment and inventory
+        session.equipment = equipment
+        session.inventory = inventory
+
+        # Create progress embed
+        embed = create_character_progress_embed(user_id, 7)  # Equipment is step 7
+
+        # Import view here to avoid circular dependency
+        from ..ui.views import ConfirmationView
+        
+        await interaction.response.edit_message(
+            content="Starting equipment assigned! Review and confirm your character:",
+            embed=embed,
+            view=ConfirmationView(user_id)
+        )
+        
+        logging.info(f"Successfully processed equipment for user {user_id}")
+        return True
+
+    except Exception as e:
+        logging.error(f"Error processing equipment for user {user_id}: {e}")
+        await interaction.response.send_message(
+            "An error occurred while processing equipment. Please try again.",
+            ephemeral=True
+        )
+        return False
+
+__all__ = [
+    'process_equipment_selection'
+]

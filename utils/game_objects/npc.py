@@ -1,10 +1,13 @@
 # utils/game_objects/npc.py
 import logging
 import random
-from typing import Optional, Dict, List, Any, Union
+from typing import Optional, Dict, List, Any, Union, TYPE_CHECKING
 
 from .base import Entity
 from .items import Item, Weapon
+
+if TYPE_CHECKING:
+    from .world.area import Area
 
 class NPC(Entity):
     """
